@@ -1,36 +1,53 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# SC-System Frontend(仮)
+学校葉チャットボットのフロント部分
+## FW
+Tailwind.css or module.csss
 
-## Getting Started
+## 始め方 〜作業をする前に読むこと〜
+### 始めてやる方へ
 
-First, run the development server:
+1.担当範囲の確認  
+->まず、先輩にフロントエンドのどの部分を担当すればよいか確認してください。  
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+2.リポジトリへのアクセス  
+->以下のリンクにアクセスします: SC-system-frontend リポジトリ  
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+3.リポジトリのクローン  
+->ターミナルを開き、以下のコマンドを入力してリモートリポジトリの内容をローカルにクローンします：  
+`git clone https://github.com/KTC-Security-Circle/SC-system-frontend.git` //ブランチの作成  
+`cd SC-system-frontend` //ブランチの移動
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+4.ブランチの作成  
+->ターミナルで以下のコマンドを入力してブランチを作成し、移動します：  
+`git branch`    // ブランチの一覧表示  
+`git branch feature/自分の担当する内容を英単語で`  // ブランチの作成  
+`git checkout feature/自分の担当する内容を英単語で`  // ブランチの移動  
+`code . ` // VSCodeを開く  
+例: チャット画面を担当する場合、feature/Chat
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+### いつもと違う環境でやる時（以前と違うPCでの使用時）  
+1.リポジトリのクローン  
+->ターミナルを開き、以下のコマンドを入力します：  
+`git clone --branch 自分の作成したブランチ名 https://github.com/KTC-Security-Circle/SC-system-frontend.git`  
+### 注意点  
+以前に他のPCで作業していた場合、リモートリポジトリとローカルリポジトリの内容が異なることがあります。  
+その場合は、以下のコマンドを実行してください：  
+`git fetch origin`  // リモートリポジトリから変更を取得  
+`git merge origin/自分の作成したブランチ名 ` // ローカルブランチにマージ  
+コンフリクトが発生した場合は、検索して自分で解決するか連絡してください。  
 
-## Learn More
+## 自分の変更をコミットする時  
+1.ターミナルを開く  
+->VSCodeではなく、ターミナルを使用してください。
+2.変更のステージングとコミット  
+->以下のコマンドを入力して変更をステージングし、コミットします：  
+`git add .`  // 変更をすべてステージング  
+`git status`  // ステージングの確認（任意）  
+`git commit -m "自分が行った内容を日本語または英語で入力"`  
+`git push origin 自分の作成したブランチ名`
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+### コミットの頻度  
+コミットは細かく行ってください。  
+多くの変更を一度にコミットすると、コミットメッセージからどの変更が何のためか分かりにくくなります。  
+以上の手順を参考に作業を進めてください。  
+初めての方でも簡単にリポジトリをクローンし、ブランチを作成して作業を始めることができます。
