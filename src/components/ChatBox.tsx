@@ -1,14 +1,50 @@
 'use client';
-import React,{ useState } from "react";
+import React, { useState, useEffect } from "react";
 import { ChatMessage } from "../types/ChatMessage";
 import { ChatMessages } from "./elements/ChatMessage";
+
+// APIとの通信を行う関数
+const fetchMessages = async () => {
+  const response = await fetch('/api/route?action=GetMessages', {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  });
+  if (!response.ok) throw new Error('Failed to fetch messages');
+  return response.json();
+};
+
+const sendMessageToApi = async (text: string) => {
+  const response = await fetch('/api/route?action=PostMessage', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ text }),
+  });
+  if (!response.ok) throw new Error('Failed to send message');
+  return response.json();
+};
 
 export const ChatBot: React.FC = () => {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleSendMessage = () => {
-    if (input.trim() === '') return;
+  // コンポーネントマウント時にメッセージを取得
+  useEffect(() => {
+    const loadMessages = async () => {
+      try {
+        const fetchedMessages = await fetchMessages();
+        setMessages(fetchedMessages);
+      } catch (error) {
+        console.error('Failed to load messages:', error);
+      }
+    };
+    loadMessages();
+  }, []);
+
+  const handleSendMessage = async () => {
+    if (input.trim() === '' || isLoading) return;
 
     const userMessage: ChatMessage = {
       id: messages.length,
@@ -18,16 +54,27 @@ export const ChatBot: React.FC = () => {
 
     setMessages([...messages, userMessage]);
     setInput('');
+    setIsLoading(true);
 
-    // ここでボットの応答を生成するロジックを実装します
-    setTimeout(() => {
+    try {
+      const response = await sendMessageToApi(input);
       const botMessage: ChatMessage = {
         id: messages.length + 1,
-        text: `申し訳ありません。現在、ボットの応答機能は実装されていません。`,
+        text: response.text,
         isUser: false,
       };
       setMessages((prevMessages) => [...prevMessages, botMessage]);
-    }, 1000);
+    } catch (error) {
+      console.error('Failed to send message:', error);
+      const errorMessage: ChatMessage = {
+        id: messages.length + 1,
+        text: "申し訳ありません。メッセージの送信中にエラーが発生しました。",
+        isUser: false,
+      };
+      setMessages((prevMessages) => [...prevMessages, errorMessage]);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -45,12 +92,16 @@ export const ChatBot: React.FC = () => {
             onChange={(e) => setInput(e.target.value)}
             className="flex-1 border rounded-l-lg p-2"
             placeholder="メッセージを入力..."
+            disabled={isLoading}
           />
           <button
             onClick={handleSendMessage}
-            className="bg-blue-500 text-white px-4 py-2 rounded-r-lg"
+            className={`text-white px-4 py-2 rounded-r-lg ${
+              isLoading ? 'bg-gray-400' : 'bg-blue-500 hover:bg-blue-600'
+            }`}
+            disabled={isLoading}
           >
-            送信
+            {isLoading ? '送信中...' : '送信'}
           </button>
         </div>
       </div>

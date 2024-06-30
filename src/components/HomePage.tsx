@@ -20,7 +20,7 @@ const FunctionCard: React.FC<FunctionCardProps> = ({ title, description, link, i
   );
 };
 
-export const Home: React.FC = () => {
+export const HomePage: React.FC = () => {
   return (
     <div className="container mx-auto px-4 py-8">
       <h1 className="text-4xl font-bold text-center mb-8">学校総合サポートシステム</h1>
