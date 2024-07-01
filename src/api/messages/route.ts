@@ -7,7 +7,7 @@ const api = axios.create({
 
 export async function GET() {
     try {
-        const response = await api.get('/demo/messages');
+        const response = await api.get('/api/messages');
         return NextResponse.json(response.data);
     } catch (error) {
         console.error('Get Messages Failed', error);
@@ -18,7 +18,7 @@ export async function GET() {
 export async function POST(request: Request) {
     try {
         const { text } = await request.json();
-        const response = await api.post('/demo/messages', { text });
+        const response = await api.post('/api/messages', { text });
         return NextResponse.json(response.data);
     } catch (error) {
         console.error('Post Message Failed', error);
