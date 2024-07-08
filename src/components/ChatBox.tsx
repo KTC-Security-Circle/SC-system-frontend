@@ -5,7 +5,7 @@ import { ChatMessages } from "./elements/ChatMessage";
 
 // APIとの通信を行う関数
 const fetchMessages = async () => {
-  const response = await fetch('/api/messages', {
+  const response = await fetch('https://sc-test-api.azurewebsites/demo/messages/', {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json'
@@ -16,7 +16,7 @@ const fetchMessages = async () => {
 };
 
 const sendMessageToApi = async (text: string) => {
-  const response = await fetch('/api/messages', {
+  const response = await fetch('https://sc-test-api.azurewebsites/demo/messages/', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ text }),
