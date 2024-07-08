@@ -5,7 +5,7 @@ import { ChatMessages } from "./elements/ChatMessage";
 
 // APIとの通信を行う関数
 const fetchMessages = async () => {
-  const response = await fetch('https://sc-test-api.azurewebsites/demo/messages/', {
+  const response = await fetch('https://sc-test-api.azurewebsites.net/demo/messages/', {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json'
@@ -15,11 +15,11 @@ const fetchMessages = async () => {
   return response.json();
 };
 
-const sendMessageToApi = async (text: string) => {
-  const response = await fetch('https://sc-test-api.azurewebsites/demo/messages/', {
+const sendMessageToApi = async (content: string) => {
+  const response = await fetch('https://sc-test-api.azurewebsites.net/demo/messages/', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ text }),
+    body: JSON.stringify({ content }),
   });
   if (!response.ok) throw new Error('Failed to send message');
   return response.json();
@@ -48,7 +48,7 @@ export const ChatBot: React.FC = () => {
 
     const userMessage: ChatMessage = {
       id: messages.length,
-      text: input,
+      content: input,
       isUser: true,
     };
 
@@ -60,7 +60,7 @@ export const ChatBot: React.FC = () => {
       const response = await sendMessageToApi(input);
       const botMessage: ChatMessage = {
         id: messages.length + 1,
-        text: response.text,
+        content: response.text,
         isUser: false,
       };
       setMessages((prevMessages) => [...prevMessages, botMessage]);
@@ -68,7 +68,7 @@ export const ChatBot: React.FC = () => {
       console.error('Failed to send message:', error);
       const errorMessage: ChatMessage = {
         id: messages.length + 1,
-        text: "申し訳ありません。メッセージの送信中にエラーが発生しました。",
+        content: "申し訳ありません。メッセージの送信中にエラーが発生しました。",
         isUser: false,
       };
       setMessages((prevMessages) => [...prevMessages, errorMessage]);
