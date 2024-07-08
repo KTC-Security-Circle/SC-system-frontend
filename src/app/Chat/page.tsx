@@ -1,5 +1,5 @@
 import React from 'react';
-import { ChatBot } from '@/components/ChatBox';
+import { ChatBot } from '@/components/ChatBot';
 import Link from 'next/link';
 
 const ChatPage: React.FC = () => {
