@@ -87,7 +87,7 @@ export const ChatBot: React.FC = () => {
       <div className="p-4 border-t">
         <div className="flex">
           <input
-            type="text"
+            type="content"
             value={input}
             onChange={(e) => setInput(e.target.value)}
             className="flex-1 border rounded-l-lg p-2"
