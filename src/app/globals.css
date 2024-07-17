@@ -1,33 +1,39 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
-:root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
-  }
-}
-
 body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
+  font-family: Arial, sans-serif;
+  background-color: #F7F7F8;
+  margin: 0;
+  padding-bottom: 80px; /* 検索バーの高さを考慮 */
 }
 
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
-  }
+.search-bar {
+  display: flex;
+  align-items: center;
+  background-color: #F1F1F1;
+  border-radius: 50px;
+  padding: 10px 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  width: 600px;
+  max-width: 90%;
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+.search-bar input {
+  border: none;
+  background: none;
+  outline: none;
+  flex-grow: 1;
+  font-size: 16px;
+  color: #333;
+}
+.search-bar button {
+  border: none;
+  background: none;
+  cursor: pointer;
+  outline: none;
+}
+.search-bar button img {
+  width: 24px;
+  height: 24px;
 }
