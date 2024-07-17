@@ -1,9 +1,9 @@
 'use client';
 import React, { useState, useEffect } from "react";
-import { ChatMessage } from "../types/ChatMessage";
-import { ChatMessages } from "./elements/ChatMessage";
+import { ChatMessage } from "@/types/ChatMessage";
+import { ChatMessages } from "../components/elements/ChatMessage";
+import { useChat } from "../components/elements/ChatContext";
 
-// APIとの通信を行う関数
 const fetchMessages = async () => {
   const response = await fetch('https://sc-test-api.azurewebsites.net/demo/messages/', {
     method: 'GET',
@@ -25,9 +25,10 @@ const sendMessageToApi = async (content: string) => {
   return response.json();
 };
 
-export const ChatBot: React.FC = () => {
+const ChatBot: React.FC = () => {
+  const { message, setMessage } = useChat();
   const [messages, setMessages] = useState<ChatMessage[]>([]);
-  const [input, setInput] = useState('');
+  const [input, setInput] = useState(message);
   const [isLoading, setIsLoading] = useState(false);
 
   // コンポーネントマウント時にメッセージを取得
@@ -41,6 +42,10 @@ export const ChatBot: React.FC = () => {
       }
     };
     loadMessages();
+
+    if (message) {
+      handleSendMessage();
+    }
   }, []);
 
   const handleSendMessage = async () => {
@@ -55,6 +60,7 @@ export const ChatBot: React.FC = () => {
     setMessages([...messages, userMessage]);
     setInput('');
     setIsLoading(true);
+    setMessage(''); // リセット
 
     try {
       const response = await sendMessageToApi(input);
@@ -87,7 +93,7 @@ export const ChatBot: React.FC = () => {
       <div className="p-4 border-t">
         <div className="flex">
           <input
-            type="content"
+            type="text"
             value={input}
             onChange={(e) => setInput(e.target.value)}
             className="flex-1 border rounded-l-lg p-2"
@@ -108,3 +114,5 @@ export const ChatBot: React.FC = () => {
     </div>
   );
 };
+
+export default ChatBot;

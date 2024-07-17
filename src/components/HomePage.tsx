@@ -1,5 +1,8 @@
+'use client';
 import React from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { useChat } from '../components/elements/ChatContext';
 
 interface FunctionCardProps {
   title: string;
@@ -12,24 +15,45 @@ const FunctionCard: React.FC<FunctionCardProps> = ({ title, description, link, i
   return (
     <Link href={link} className="block">
       <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300">
-        <div className="text-4xl mb-4">{icon}</div>
-        <h2 className="text-xl font-semibold mb-2">{title}</h2>
-        <p className="text-gray-600">{description}</p>
+        <div className="text-6xl mb-4 text-center">{icon}</div>
+        <h2 className="text-2xl font-semibold mb-2 text-center">{title}</h2>
+        <p className="text-gray-700 text-center">{description}</p>
       </div>
     </Link>
   );
 };
 
 export const HomePage: React.FC = () => {
+  const { message, setMessage } = useChat();
+  const router = useRouter();
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    router.push('/Chat'); // チャットページに遷移
+  };
+
   return (
     <div className="container mx-auto px-4 py-8">
-      <h1 className="text-4xl font-bold text-center mb-8">学校総合サポートシステム</h1>
-      
-      <div className="grid md:grid-cols-3 gap-6">
+      <h1 className="text-5xl font-bold text-center mb-12">学校総合サポートシステム</h1>
+
+      <form onSubmit={handleSubmit} className="mb-8 text-center">
+        <input
+          type="text"
+          value={message}
+          onChange={(e) => setMessage(e.target.value)}
+          className="p-2 border border-gray-300 rounded mr-2"
+          placeholder="チャット入力"
+        />
+        <button type="submit" className="bg-blue-500 text-white p-2 rounded">
+          チャット送信
+        </button>
+      </form>
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
         <FunctionCard
           title="チャットボット"
           description="学校に関する質問にお答えします"
-          link="/Chat"
+          link="/Chat/ChatBot"
           icon="💬"
         />
         <FunctionCard
@@ -66,4 +90,3 @@ export const HomePage: React.FC = () => {
     </div>
   );
 };
-
