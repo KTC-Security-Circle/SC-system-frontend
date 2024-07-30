@@ -7,7 +7,7 @@ export default function Page() {
 
   async function getMessage() {
     try {
-      const res = await fetch(`/api/weather`);
+      const res = await fetch(`/api/chat/message`);
       if (!res.ok) {
         throw new Error("messageの取得に失敗しました");
       }
@@ -26,7 +26,7 @@ export default function Page() {
   return (
     <div className="text-center mt-8">
       <button className="bg-gray-200 p-2" onClick={handleButtonClick}>
-        Get weather info
+        Get Message
       </button>
       <p>Message: {message}</p>
     </div>
