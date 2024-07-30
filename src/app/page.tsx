@@ -1,44 +1,34 @@
+"use client";
+
 import { useState } from "react";
-import useSWR from "swr";
 
-const fetcher = (url: string) => fetch(url).then((res) => res.json());
+export default function Page() {
+  const [city, setCity] = useState("");
+  const [weather, setWeather] = useState("");
 
-const Home = () => {
-  const { data, error, mutate } = useSWR('/api/messages', fetcher);
-  const [message, setMessage] = useState("");
-
-  if (error) return <div>Failed to load messages</div>;
-  if (!data) return <div>Loading...</div>;
-
-  const sendMessage = async () => {
-    await fetch('/api/messages', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ message }),
-    });
-
-    setMessage("");
-    mutate();  // Revalidate the data
-  };
+  async function getWeather() {
+    const res = await fetch(`/api/chat/message`);
+    const data = await res.json();
+    setCity(data.weather.name);
+    setWeather(data.weather.weather[0].main);
+  }
 
   return (
-    <div>
-      <h1>Chat App</h1>
-      <div>
-        {data.messages.map((msg: string, index: number) => (
-          <div key={index}>{msg}</div>
-        ))}
-      </div>
+    <div className="text-center mt-8">
       <input
         type="text"
-        value={message}
-        onChange={(e) => setMessage(e.target.value)}
+        placeholder="Enter city name"
+        className="border p-2 mr-3 mb-5"
+        onChange={(e) => {
+          setCity(e.target.value);
+        }}
+        value={city}
       />
-      <button onClick={sendMessage}>Send</button>
+      <button className="bg-gray-200 p-2" onClick={getWeather}>
+        Get weather info
+      </button>
+      <h1>City: {city}</h1>
+      <p>Weather: {weather}</p>
     </div>
   );
-};
-
-export default Home;
+}
