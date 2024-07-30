@@ -3,7 +3,7 @@ export async function GET(req: Request): Promise<Response> {
   const message = searchParams.get("message");
   
   if (!message) {
-    return new Response(JSON.stringify({ error: "メッセージがありません" }), { status: 200 });
+    return new Response(JSON.stringify({ error: "メッセージがありません" }), { status: 400 });
   }
 
   const url = `https://sc-test-api.azurewebsites.net/root`;
@@ -11,7 +11,7 @@ export async function GET(req: Request): Promise<Response> {
   try {
     const res = await fetch(url);
     if (!res.ok) {
-      throw new Error("Failed to fetch weather data");
+      throw new Error("Failed to fetch Message");
     }
     const result = await res.json();
     return new Response(JSON.stringify({ result }), { status: 200 });

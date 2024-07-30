@@ -1,34 +1,34 @@
 "use client";
 
-import { useState } from "react";
+import { useState, MouseEvent } from "react";
 
 export default function Page() {
-  const [city, setCity] = useState("");
-  const [weather, setWeather] = useState("");
+  const [message, setMessage] = useState<string>("");
 
-  async function getWeather() {
-    const res = await fetch(`/api/chat/message`);
-    const data = await res.json();
-    setCity(data.weather.name);
-    setWeather(data.weather.weather[0].main);
+  async function getMessage() {
+    try {
+      const res = await fetch(`/api/weather`);
+      if (!res.ok) {
+        throw new Error("messageの取得に失敗しました");
+      }
+      const data = await res.json();
+      setMessage(data.message);  // 'message' プロパティをセット
+    } catch (error) {
+      console.error("エラーが発生しました:", error);
+      setMessage("エラーが発生しました");
+    }
   }
+
+  const handleButtonClick = (e: MouseEvent<HTMLButtonElement>) => {
+    getMessage();
+  };
 
   return (
     <div className="text-center mt-8">
-      <input
-        type="text"
-        placeholder="Enter city name"
-        className="border p-2 mr-3 mb-5"
-        onChange={(e) => {
-          setCity(e.target.value);
-        }}
-        value={city}
-      />
-      <button className="bg-gray-200 p-2" onClick={getWeather}>
+      <button className="bg-gray-200 p-2" onClick={handleButtonClick}>
         Get weather info
       </button>
-      <h1>City: {city}</h1>
-      <p>Weather: {weather}</p>
+      <p>Message: {message}</p>
     </div>
   );
 }
