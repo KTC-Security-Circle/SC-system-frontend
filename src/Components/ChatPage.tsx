@@ -102,7 +102,7 @@ export const ChatComponent: React.FC = () => {
   const displayedMessages = user ? messages : sampleMessages;
 
   return (
-    <Container maxWidth="sm" sx={{ height: '100vh', display: 'flex', flexDirection: 'column' }}>
+    <Container maxWidth="lg" sx={{ height: '100vh', display: 'flex', flexDirection: 'column' }}>
       <Box sx={{ flexGrow: 1, overflowY: 'auto', mb: 2 }}>
         <List>
           {displayedMessages.map((msg: Message) => (
@@ -115,8 +115,8 @@ export const ChatComponent: React.FC = () => {
                 elevation={1}
                 sx={{
                   p: 2,
-                  backgroundColor: msg.sender === (user?.id || 'user1') ? '#3b82f6' : '#e5e7eb', 
-                  color: msg.sender === (user?.id || 'user1') ? '#ffffff' : '#1f2937',
+                  backgroundColor: msg.sender === (user?.id || 'user1') ? '#1E3C5F' : '#e5e7eb', 
+                  color: msg.sender === (user?.id || 'user1') ? '#ffffff' : '#1E3C5F',
                   textAlign: msg.sender === (user?.id || 'user1') ? 'center' : 'center',
                   position: 'relative',
                   borderRadius: '20px',
@@ -129,7 +129,7 @@ export const ChatComponent: React.FC = () => {
                     borderStyle: 'solid',
                     borderColor:
                       msg.sender === (user?.id || 'user1')
-                        ? 'transparent transparent transparent #3b82f6'
+                        ? 'transparent transparent transparent #1E3C5F'
                         : 'transparent #e5e7eb transparent transparent',
                     right: msg.sender === (user?.id || 'user1') ? '-20px' : 'auto',
                     left: msg.sender !== (user?.id || 'user1') ? '-20px' : 'auto',
@@ -143,7 +143,7 @@ export const ChatComponent: React.FC = () => {
           ))}
         </List>
       </Box>
-      <Box component="form" onSubmit={sendMessage} sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+      <Box component="form" onSubmit={sendMessage} sx={{ display: 'flex', alignItems: 'center', mb: 2, width: '80%' }}>
         <TextField
           id="message-input"
           name="message"
@@ -169,7 +169,7 @@ export const ChatComponent: React.FC = () => {
             }}
           value={message}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) => setMessage(e.target.value)}
-          sx={{ mr: 2 }}
+          sx={{  }}
         />
         <IconButton aria-label="Send"
                 size="large"
