@@ -143,7 +143,7 @@ export const ChatComponent: React.FC = () => {
           ))}
         </List>
       </Box>
-      <Box component="form" onSubmit={sendMessage} sx={{ display: 'flex', alignItems: 'center', mb: 2, width: '80%' }}>
+      <Box component="form" onSubmit={sendMessage} sx={{ display: 'flex',alignItems: 'center', justifyContent: 'center', mb: 2 }}>
         <TextField
           id="message-input"
           name="message"
@@ -169,7 +169,9 @@ export const ChatComponent: React.FC = () => {
             }}
           value={message}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) => setMessage(e.target.value)}
-          sx={{  }}
+          sx={{ 
+            mx:'auto',
+           }}
         />
         <IconButton aria-label="Send"
                 size="large"
