@@ -114,7 +114,8 @@ export const ChatComponent: React.FC = () => {
               <Paper
                 elevation={1}
                 sx={{
-                  p: 2,
+                  p: 1.4,
+                  m: 1,
                   backgroundColor: msg.sender === (user?.id || 'user1') ? '#1E3C5F' : '#e5e7eb', 
                   color: msg.sender === (user?.id || 'user1') ? '#ffffff' : '#1E3C5F',
                   textAlign: msg.sender === (user?.id || 'user1') ? 'center' : 'center',
@@ -125,7 +126,7 @@ export const ChatComponent: React.FC = () => {
                     position: 'absolute',
                     top: '50%',
                     transform: 'translateY(-50%)',
-                    borderWidth: '10px',
+                    borderWidth: '11px',
                     borderStyle: 'solid',
                     borderColor:
                       msg.sender === (user?.id || 'user1')
@@ -158,6 +159,7 @@ export const ChatComponent: React.FC = () => {
                 '& .MuiOutlinedInput-notchedOutline': {
                   borderColor: '#1E3C5F', // 枠線の色
                   borderRadius: '30px', // 角を丸く
+                  
                 },
                 '&:hover .MuiOutlinedInput-notchedOutline': {
                   borderColor: '#1E3C5F', // ホバー時の枠線の色
