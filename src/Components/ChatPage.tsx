@@ -116,8 +116,8 @@ export const ChatComponent: React.FC = () => {
                 sx={{
                   p: 1.4,
                   m: 1,
-                  backgroundColor: msg.sender === (user?.id || 'user1') ? '#1E3C5F' : '#e5e7eb', 
-                  color: msg.sender === (user?.id || 'user1') ? '#ffffff' : '#1E3C5F',
+                  backgroundColor: msg.sender === (user?.id || 'user1') ? '#e5e7eb' : '#e5e7eb', 
+                  color: msg.sender === (user?.id || 'user1') ? '#000000' : '#000000',
                   textAlign: msg.sender === (user?.id || 'user1') ? 'center' : 'center',
                   position: 'relative',
                   borderRadius: '20px',
@@ -130,7 +130,7 @@ export const ChatComponent: React.FC = () => {
                     borderStyle: 'solid',
                     borderColor:
                       msg.sender === (user?.id || 'user1')
-                        ? 'transparent transparent transparent #1E3C5F'
+                        ? 'transparent transparent transparent #e5e7eb'
                         : 'transparent #e5e7eb transparent transparent',
                     right: msg.sender === (user?.id || 'user1') ? '-20px' : 'auto',
                     left: msg.sender !== (user?.id || 'user1') ? '-20px' : 'auto',
