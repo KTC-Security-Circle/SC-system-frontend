@@ -30,7 +30,7 @@ export const RegisterForm: React.FC = () => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          username: name,
+          name: name,
           email: email,
           password: password,
           authority: "student"
@@ -55,7 +55,7 @@ export const RegisterForm: React.FC = () => {
 
   return (
     <Box sx={{ mt: 8, mb: 4 }}>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={ handleSubmit }>
         <Grid container spacing={3}>
           <Grid item xs={12}>
             <TextField
