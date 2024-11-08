@@ -29,71 +29,69 @@ const sampleMessages: Message[] = [
   { id: '3', content: 'はい、元気です！', sender: 'user1', timestamp: '2024-03-15T09:02:00Z' },
 ];
 
-const fetcher = (url: string, token: string | null) => {
+const fetcher = (url: string) => {
   return fetch(url, {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${token}`,
-    },
+      method: 'GET',
+      headers: {
+          'Content-Type': 'application/json',
+      },
+      credentials: 'include',  
   }).then((res) => {
-    if (!res.ok) {
-      throw new Error('Failed to fetch');
-    }
-    return res.json();
+      if (!res.ok) {
+          throw new Error('Failed to fetch');
+      }
+      return res.json();
   });
 };
 
 export const ChatComponent: React.FC = () => {
-  const { token, user } = useAuth();
+  const {user } = useAuth();
   const [message, setMessage] = useState<string>('');
-  const [authToken, setAuthToken] = useState<string | null>(null);
-
-  useEffect(() => {
-    if (token) {
-      setAuthToken(token);
-    }
-  }, [token]);
 
   // トークンが存在する場合にのみSWRを実行
   const { data: messages = [], error, mutate } = useSWR<Message[]>(
-    authToken ? ['http://localhost:7071/api/app/view/chat/', authToken] : null,
-    ([url, token]) => fetcher(url, token as string),
-  );
+    'http://localhost:7071/api/app/view/chat/', 
+    fetcher,
+);
 
-  const sendMessage = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    if (!message.trim() || !authToken) return;
+const sendMessage = async (e: FormEvent<HTMLFormElement>) => {
+  e.preventDefault();
+  if (!message.trim() || !user) return;
 
-    const optimisticMessage: Message = {
+  const optimisticMessage: Message = {
       id: Date.now().toString(),
       content: message,
-      sender: user?.id || 'user1',
+      sender: user.id,
       timestamp: new Date().toISOString(),
-    };
-    const originalMessages = messages ? [...messages] : [];
-    mutate([...messages, optimisticMessage], false);
-    setMessage('');
-    try {
+  };
+
+  const originalMessages = messages ? [...messages] : [];
+
+  // 楽観的更新
+  mutate([...messages, optimisticMessage], false);
+
+  setMessage('');
+
+  try {
       const response = await fetch('http://localhost:7071/api/app/input/chat/', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${authToken}`,
-        },
-        body: JSON.stringify({ content: message, sender: optimisticMessage.sender }),
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/json',
+          },
+          credentials: 'include',  // クッキーを送信するように設定
+          body: JSON.stringify({ content: message, sender: user.id }),
       });
 
       if (response.ok) {
-        mutate();
+          mutate();
       } else {
-        mutate(originalMessages, false);
-        console.error('Failed to send message');
+          mutate(originalMessages, false);
+          console.error('Failed to send message');
       }
-    } catch (error) {
+  } catch (error) {
       mutate(originalMessages, false);
       console.error('Failed to send message:', error);
-    }
+  }
   };
 
   if (error) return <Typography color="error">Failed to load messages</Typography>;
