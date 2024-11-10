@@ -1,0 +1,15 @@
+{
+  "name": "sc-system-frontend-dev",
+  "dockerComposeFile": ["../compose.yml"],
+  "service": "app",
+  "workspaceFolder": "/app",
+
+  "remoteUser": "node",
+  "customizations": {
+    "vscode": {
+      "settings": {
+        "terminal.integrated.shell.linux": "/bin/bash"
+      }
+    }
+  }
+}
