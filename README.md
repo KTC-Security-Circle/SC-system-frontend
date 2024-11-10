@@ -1,4 +1,4 @@
-# SC-System Frontend(仮)
+# SC-System Frontend
 学校用チャットボットのフロントエンド
 ## 使用言語・FW
 React.js・MaterialUI・TypeScript
@@ -10,12 +10,12 @@ React.js・MaterialUI・TypeScript
 1.担当範囲の確認  
 ->まず、先輩にフロントエンドのどの部分を担当すればよいか確認してください。  
 
-1.リポジトリのクローン  
+2.リポジトリのクローン  
 ->ターミナルを開き、以下のコマンドを入力してリモートリポジトリの内容をローカルにクローンします：  
 `git clone https://github.com/KTC-Security-Circle/SC-system-frontend.git` //ブランチの作成  
 `cd SC-system-frontend` //ブランチの移動
 
-1.ブランチの作成  
+3.ブランチの作成  
 ->ターミナルで以下のコマンドを入力してブランチを作成し、移動します：  
 ```
 `git branch`    // ブランチの一覧表示  
@@ -25,14 +25,14 @@ React.js・MaterialUI・TypeScript
 ```
 例: チャット画面を担当する場合、feature/Chat
 
-### いつもと違う環境でやる時（以前と違うPCでの使用時）  
-1.リポジトリのクローン  
+### 普段と異なる環境で作業を行う時 
+#### リポジトリのクローン  
 ->ターミナルを開き、以下のコマンドを入力します：  
 ```
 `git clone --branch 自分の作成したブランチ名 https://github.com/KTC-Security-Circle/SC-system-frontend.git`
 ```
 ### 注意点  
-以前に他のPCで作業していた場合、リモートリポジトリとローカルリポジトリの内容が異なることがあります。  
+以前に、他のPCで作業していた場合、リモートリポジトリとローカルリポジトリの内容が異なることがあります。  
 その場合は、以下のコマンドを実行してください：  
 ```
 `git fetch origin`  // リモートリポジトリから変更を取得  
