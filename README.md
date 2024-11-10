@@ -20,8 +20,8 @@ Next.js・React.js・MaterialUI・TypeScript
 ->ターミナルで以下のコマンドを入力してブランチを作成し、移動します：  
 ```
 `git branch`    // ブランチの一覧表示  
-`git branch feature/自分の担当する内容を英単語で`  // ブランチの作成  
-`git checkout feature/自分の担当する内容を英単語で`  // ブランチの移動  
+`git branch feature/担当内容を英単語で`  // ブランチの作成  
+`git checkout feature/担当内容を英単語で`  // ブランチの移動  
 `code . ` // VSCodeを開く
 ```
 例: チャット画面を担当する場合、feature/Chat
@@ -49,7 +49,7 @@ Next.js・React.js・MaterialUI・TypeScript
 ```
 `git add .`  // 変更をすべてステージング  
 `git status`  // ステージングの確認（任意）  
-`git commit -m "自分が行った内容を日本語で入力"`  
+`git commit -m "作業内容を日本語で入力"`  
 `git push origin 作成したブランチ名`
 ```
 ### コミットの頻度  
