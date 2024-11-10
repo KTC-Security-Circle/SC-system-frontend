@@ -1,39 +1,43 @@
 # SC-System Frontend(仮)
-学校葉チャットボットのフロント部分
-## FW
-Tailwind.css or module.csss
+学校用チャットボットのフロントエンド
+## 使用言語・FW
+React.js・MaterialUI・TypeScript
 
 ## 始め方 〜作業をする前に読むこと〜
+
 ### 始めてやる方へ
 
 1.担当範囲の確認  
 ->まず、先輩にフロントエンドのどの部分を担当すればよいか確認してください。  
 
-2.リポジトリへのアクセス  
-->以下のリンクにアクセスします: SC-system-frontend リポジトリ  
-
-3.リポジトリのクローン  
+1.リポジトリのクローン  
 ->ターミナルを開き、以下のコマンドを入力してリモートリポジトリの内容をローカルにクローンします：  
 `git clone https://github.com/KTC-Security-Circle/SC-system-frontend.git` //ブランチの作成  
 `cd SC-system-frontend` //ブランチの移動
 
-4.ブランチの作成  
+1.ブランチの作成  
 ->ターミナルで以下のコマンドを入力してブランチを作成し、移動します：  
+```
 `git branch`    // ブランチの一覧表示  
 `git branch feature/自分の担当する内容を英単語で`  // ブランチの作成  
 `git checkout feature/自分の担当する内容を英単語で`  // ブランチの移動  
-`code . ` // VSCodeを開く  
+`code . ` // VSCodeを開く
+```
 例: チャット画面を担当する場合、feature/Chat
 
 ### いつもと違う環境でやる時（以前と違うPCでの使用時）  
 1.リポジトリのクローン  
 ->ターミナルを開き、以下のコマンドを入力します：  
-`git clone --branch 自分の作成したブランチ名 https://github.com/KTC-Security-Circle/SC-system-frontend.git`  
+```
+`git clone --branch 自分の作成したブランチ名 https://github.com/KTC-Security-Circle/SC-system-frontend.git`
+```
 ### 注意点  
 以前に他のPCで作業していた場合、リモートリポジトリとローカルリポジトリの内容が異なることがあります。  
 その場合は、以下のコマンドを実行してください：  
+```
 `git fetch origin`  // リモートリポジトリから変更を取得  
-`git merge origin/自分の作成したブランチ名 ` // ローカルブランチにマージ  
+`git merge origin/自分の作成したブランチ名 ` // ローカルブランチにマージ
+```
 コンフリクトが発生した場合は、検索して自分で解決するか連絡してください。  
 
 ## 自分の変更をコミットする時  
@@ -41,11 +45,12 @@ Tailwind.css or module.csss
 ->VSCodeではなく、ターミナルを使用してください。
 2.変更のステージングとコミット  
 ->以下のコマンドを入力して変更をステージングし、コミットします：  
+```
 `git add .`  // 変更をすべてステージング  
 `git status`  // ステージングの確認（任意）  
 `git commit -m "自分が行った内容を日本語または英語で入力"`  
 `git push origin 自分の作成したブランチ名`
-
+```
 ### コミットの頻度  
 コミットは細かく行ってください。  
 多くの変更を一度にコミットすると、コミットメッセージからどの変更が何のためか分かりにくくなります。  
