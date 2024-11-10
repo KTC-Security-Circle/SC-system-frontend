@@ -12,9 +12,10 @@ Next.js・React.js・MaterialUI・TypeScript
 
 2.リポジトリのクローン  
 ->ターミナルを開き、以下のコマンドを入力してリモートリポジトリの内容をローカルにクローンします：  
+```
 `git clone https://github.com/KTC-Security-Circle/SC-system-frontend.git` //ブランチの作成  
 `cd SC-system-frontend` //ブランチの移動
-
+```
 3.ブランチの作成  
 ->ターミナルで以下のコマンドを入力してブランチを作成し、移動します：  
 ```
