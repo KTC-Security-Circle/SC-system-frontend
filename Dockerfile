@@ -1,8 +1,8 @@
 FROM node:22.11.0
-WORKDIR /app/src
+WORKDIR /app
 
 COPY package.json package-lock.json ./
-COPY tsconfig.json
+# COPY tsconfig.json
 RUN npm install
 COPY . .
 EXPOSE 3000
