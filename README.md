@@ -8,7 +8,7 @@ Next.js・React.js・MaterialUI・TypeScript
 ### 始めてやる方へ
 
 1.担当範囲の確認  
-->まず、先輩にフロントエンドのどの部分を担当すればよいか確認してください  
+->まず、チームリーダーにフロントエンドのどの部分を担当すればよいか確認してください  
 
 2.リポジトリのクローン  
 ->ターミナルを開き、以下のコマンドを入力してリモートリポジトリの内容をローカルにクローンします：  
@@ -29,14 +29,14 @@ Next.js・React.js・MaterialUI・TypeScript
 #### リポジトリのクローン  
 ->ターミナルを開き、以下のコマンドを入力します：  
 ```
-`git clone --branch 自分の作成したブランチ名 https://github.com/KTC-Security-Circle/SC-system-frontend.git`
+`git clone --branch 作成したブランチ名 https://github.com/KTC-Security-Circle/SC-system-frontend.git`
 ```
 ### 注意点  
 以前に、他のPCで作業していた場合、リモートリポジトリとローカルリポジトリの内容が異なることがあります
 その場合は、以下のコマンドを実行してください：  
 ```
 `git fetch origin`  // リモートリポジトリから変更を取得  
-`git merge origin/自分の作成したブランチ名 ` // ローカルブランチにマージ
+`git merge origin/作成したブランチ名 ` // ローカルブランチにマージ
 ```
 コンフリクトが発生した場合は、自己解決するか連絡すること 
 
@@ -48,8 +48,8 @@ Next.js・React.js・MaterialUI・TypeScript
 ```
 `git add .`  // 変更をすべてステージング  
 `git status`  // ステージングの確認（任意）  
-`git commit -m "自分が行った内容を日本語または英語で入力"`  
-`git push origin 自分の作成したブランチ名`
+`git commit -m "自分が行った内容を日本語で入力"`  
+`git push origin 作成したブランチ名`
 ```
 ### コミットの頻度  
 コミットは細かく行ってください  
