@@ -1,8 +1,12 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import { AuthProvider } from "@/Context/authContext";
+import { Provider,useDispatch } from "react-redux";
 import { AppRouterCacheProvider } from '@mui/material-nextjs/v14-appRouter';
+import  store  from "@/store/index";
+import { fetchUser } from "@/Context/parts/authSlice";
+
+
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -20,9 +24,9 @@ const RootLayout: React.FC<RootLayoutProps> = ({ children }) => {
     <html lang="en">
       <body className={inter.className}>
         <AppRouterCacheProvider>
-          <AuthProvider>
+          <Provider store={store}>
             {children}
-          </AuthProvider>
+          </Provider>
         </AppRouterCacheProvider>
       </body>
     </html>
