@@ -1,4 +1,5 @@
 'use client';
+import Cookies from 'js-cookie';
 import React, { useState, FormEvent } from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from '../store';
@@ -16,6 +17,7 @@ import {
 } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
 
+
 interface Message {
   id: string;
   content: string;
@@ -32,12 +34,15 @@ const sampleMessages: Message[] = [
 
 // fetcher 関数
 const fetcher = (url: string) => {
+  const token = Cookies.get('access_token');
+  console.log(token);
   return fetch(url, {
     method: 'GET',
     headers: {
+      credentials: 'include',
       'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`,
     },
-    credentials: 'include',
   }).then((res) => {
     if (!res.ok) {
       throw new Error('Failed to fetch');
@@ -52,7 +57,7 @@ export const ChatComponent: React.FC = () => {
 
   // SWR でメッセージを取得
   const { data: messages = [], error, mutate } = useSWR<Message[]>(
-    user ? 'http://localhost:7071/api/app/view/chat/' : null, 
+    user ? 'http://localhost:7071/api/app/view/chat' : null, 
     fetcher
   );
 
@@ -69,34 +74,36 @@ export const ChatComponent: React.FC = () => {
 
     const originalMessages = messages ? [...messages] : [];
 
-    // 楽観的更新
     mutate([...messages, optimisticMessage], false);
 
     setMessage('');
 
     try {
-      const response = await fetch('http://localhost:7071/api/app/input/chat/', {
+      const token = Cookies.get('access_token'); 
+      if (!token) {
+        throw new Error('No token found');
+      }
+      const response = await fetch('http://localhost:7071/api/app/input/chat', {
         method: 'POST',
         headers: {
+          credentials: 'include',
           'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
         },
-        credentials: 'include',
         body: JSON.stringify({ content: message, sender: user.id }),
       });
 
       if (response.ok) {
-        mutate(); // サーバーの最新状態を取得
+        mutate(); 
       } else {
-        mutate(originalMessages, false); // エラー時に元の状態にロールバック
+        mutate(originalMessages, false); 
         console.error('Failed to send message');
       }
     } catch (error) {
-      mutate(originalMessages, false); // エラー時に元の状態にロールバック
+      mutate(originalMessages, false); 
       console.error('Failed to send message:', error);
     }
   };
-
-  // エラー表示
   if (error) {
     return (
       <Typography color="error" sx={{ mt: 2, textAlign: 'center' }}>
