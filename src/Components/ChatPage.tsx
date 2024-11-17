@@ -35,7 +35,6 @@ const sampleMessages: Message[] = [
 // fetcher 関数
 const fetcher = (url: string) => {
   const token = Cookies.get('access_token');
-  console.log(token);
   return fetch(url, {
     method: 'GET',
     headers: {
