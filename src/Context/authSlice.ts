@@ -29,7 +29,7 @@ export const fetchUser = createAsyncThunk<User, void, { rejectValue: string }>(
       const response = await axios.get("http://localhost:7071/user/me", {
         withCredentials: true,
       });
-      return response.data; // User 情報が直接返されると仮定
+      return response.data; 
     } catch (err) {
       console.error("Fetch user failed:", err);
       return thunkAPI.rejectWithValue("Failed to fetch user");
@@ -53,10 +53,11 @@ export const login = createAsyncThunk<User, { email: string; password: string },
         }
       );
       console.log("Login response:", response.data);
-      Cookies.set('access_token', response.data.access_token, { expires: 1, sameSite: 'Lax' });
+      const expires = new Date(new Date().getTime() + 30 * 60 * 1000); // 30 分
+      Cookies.set('access_token', response.data.access_token, { expires, sameSite: 'Lax' });
       const user = {
         id: "temporary-id", // 必要ならバックエンドから適切に取得
-        email: response.data.email, // レスポンスに email を含める必要があります
+        email: response.data.email, 
         role: response.data.role,
       };
       return user;
