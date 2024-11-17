@@ -1,6 +1,7 @@
 'use client';
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
+import Cookies from 'js-cookie';
 
 interface User {
   id: string;
@@ -52,6 +53,7 @@ export const login = createAsyncThunk<User, { email: string; password: string },
         }
       );
       console.log("Login response:", response.data);
+      Cookies.set('access_token', response.data.access_token, { expires: 1, sameSite: 'Lax' });
       const user = {
         id: "temporary-id", // 必要ならバックエンドから適切に取得
         email: response.data.email, // レスポンスに email を含める必要があります
