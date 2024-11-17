@@ -12,7 +12,7 @@ const Redirect: React.FC<RedirectProps> = ({ children, requiredrole }) => {
   const user = useSelector((state:RootState) => state.auth.user);
   const router = useRouter();
   if(!user){
-    router.push('/login');
+    router.push('/');
     return null;
   }
   if(user.role == 'student'){
@@ -20,15 +20,15 @@ const Redirect: React.FC<RedirectProps> = ({ children, requiredrole }) => {
     return null;
   }
   else if(user.role == 'staff'){
-    router.push('#');
+    router.push('/Chat');
     return null;
   }
   else if(user.role == 'admin'){
-    router.push('#');
+    router.push('/Chat');
     return null;
   }
   else{
-    router.push('/login');
+    router.push('/');
     return null;
   }
 }
