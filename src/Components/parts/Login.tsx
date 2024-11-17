@@ -2,7 +2,7 @@
 import React, { useState, FormEvent, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState, AppDispatch } from '@/store/index';
-import { login } from '@/Context/parts/authSlice';
+import { login } from '@/Context/authSlice';
 import {
   Button, Grid, TextField, Snackbar, Alert, InputAdornment,
   IconButton, Box
