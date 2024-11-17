@@ -28,9 +28,10 @@ export const fetchUser = createAsyncThunk<User, void, { rejectValue: string }>(
       const response = await axios.get("http://localhost:7071/user/me", {
         withCredentials: true,
       });
-      return response.data; 
+      return response.data; // User 情報が直接返されると仮定
     } catch (err) {
-      return thunkAPI.rejectWithValue("Failed to fetch user"); 
+      console.error("Fetch user failed:", err);
+      return thunkAPI.rejectWithValue("Failed to fetch user");
     }
   }
 );
@@ -50,29 +51,36 @@ export const login = createAsyncThunk<User, { email: string; password: string },
           },
         }
       );
-      return response.data.user; 
+      console.log("Login response:", response.data);
+      const user = {
+        id: "temporary-id", // 必要ならバックエンドから適切に取得
+        email: response.data.email, // レスポンスに email を含める必要があります
+        role: response.data.role,
+      };
+      return user;
     } catch (err) {
-      return thunkAPI.rejectWithValue("Invalid username or password"); 
+      console.error("Login failed:", err);
+      return thunkAPI.rejectWithValue("Invalid username or password");
     }
   }
 );
 
 // 非同期でログアウト処理
-export const logout = createAsyncThunk<void, void, {rejectValue:string}>(
-  'users/logout',
-  async(_, thunkAPI) => {
-    try{
-      const response = await axios.post(
+export const logout = createAsyncThunk<void, void, { rejectValue: string }>(
+  "users/logout",
+  async (_, thunkAPI) => {
+    try {
+      await axios.post(
         "http://localhost:7071/api/logout/",
-        {},{
-          withCredentials: true,
-        }
-      )
-    }catch(err){
+        {},
+        { withCredentials: true }
+      );
+    } catch (err) {
+      console.error("Logout failed:", err);
       return thunkAPI.rejectWithValue("Failed to logout");
     }
   }
-)
+);
 
 // authSlice の作成
 const authSlice = createSlice({
@@ -88,7 +96,7 @@ const authSlice = createSlice({
       })
       .addCase(fetchUser.fulfilled, (state, action) => {
         state.loading = false;
-        state.user = action.payload;
+        state.user = action.payload; 
       })
       .addCase(fetchUser.rejected, (state, action) => {
         state.loading = false;
@@ -102,7 +110,7 @@ const authSlice = createSlice({
       })
       .addCase(login.fulfilled, (state, action) => {
         state.loading = false;
-        state.user = action.payload;
+        state.user = action.payload; 
       })
       .addCase(login.rejected, (state, action) => {
         state.loading = false;
@@ -116,12 +124,12 @@ const authSlice = createSlice({
       })
       .addCase(logout.fulfilled, (state) => {
         state.loading = false;
-        state.user = null;
+        state.user = null; 
       })
       .addCase(logout.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload || "An unknown error occurred";
-      })
+      });
   },
 });
 
