@@ -3,6 +3,7 @@ import React, { useState, FormEvent, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState, AppDispatch } from '@/store/index';
 import { login } from '@/Context/authSlice';
+import { useRouter } from 'next/navigation';
 import {
   Button, Grid, TextField, Snackbar, Alert, InputAdornment,
   IconButton, Box
@@ -19,6 +20,7 @@ export const LoginForm: React.FC = () => {
 
   const dispatch = useDispatch<AppDispatch>();
   const { error, loading } = useSelector((state: RootState) => state.auth);
+  const router = useRouter();
 
   const handleClickShowPassword = () => setShowPassword((show) => !show);
   const handleMouseDownPassword = (e: React.MouseEvent<HTMLButtonElement>) => e.preventDefault();
@@ -26,10 +28,22 @@ export const LoginForm: React.FC = () => {
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      await dispatch(login({ email, password })).unwrap();
+      const { role } = await dispatch(login({ email, password })).unwrap();
       setSnackbarMessage('ログインに成功しました');
       setSnackbarSeverity('success');
-    } catch {
+
+      switch (role) {
+        case 'student':
+        case 'staff':
+        case 'admin':
+          router.push('/Chat');
+          break;
+        default:
+          router.push('/');
+          break;
+      }
+    } catch (err) {
+      console.error(err);
       setSnackbarMessage('ログインに失敗しました');
       setSnackbarSeverity('error');
     } finally {
@@ -42,7 +56,6 @@ export const LoginForm: React.FC = () => {
   };
 
   useEffect(() => {
-    // Redux のエラーが発生した場合に Snackbar を表示
     if (error) {
       setSnackbarMessage(error);
       setSnackbarSeverity('error');
