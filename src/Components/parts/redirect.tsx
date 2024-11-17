@@ -8,6 +8,7 @@ interface RedirectProps {
   requiredrole: string;
 }
 
+// 認証状態とロールを確認し、適切なページにリダイレクトする
 const Redirect: React.FC<RedirectProps> = ({ children, requiredrole }) => {
   const user = useSelector((state:RootState) => state.auth.user);
   const router = useRouter();
