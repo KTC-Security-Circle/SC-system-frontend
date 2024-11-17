@@ -1,9 +1,11 @@
 'use client';
-import React, { useState, FormEvent } from 'react';
-import { useAuth } from '../../Context/authContext';
+import React, { useState, FormEvent, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState, AppDispatch } from '@/store/index';
+import { login } from '@/Context/parts/authSlice';
 import {
-  Button, Container, Grid, TextField, Typography, InputAdornment,
-  IconButton, Box, Link, Snackbar, Alert
+  Button, Grid, TextField, Snackbar, Alert, InputAdornment,
+  IconButton, Box
 } from '@mui/material';
 import { Visibility, VisibilityOff, Email, Lock } from '@mui/icons-material';
 
@@ -14,19 +16,20 @@ export const LoginForm: React.FC = () => {
   const [showSnackbar, setShowSnackbar] = useState<boolean>(false);
   const [snackbarMessage, setSnackbarMessage] = useState<string>('');
   const [snackbarSeverity, setSnackbarSeverity] = useState<'success' | 'error'>('success');
-  const { login, error } = useAuth();  // エラーとlogin関数を取得
+
+  const dispatch = useDispatch<AppDispatch>();
+  const { error, loading } = useSelector((state: RootState) => state.auth);
 
   const handleClickShowPassword = () => setShowPassword((show) => !show);
   const handleMouseDownPassword = (e: React.MouseEvent<HTMLButtonElement>) => e.preventDefault();
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log("Form submitted, calling login function...");
     try {
-      await login(email, password);
+      await dispatch(login({ email, password })).unwrap();
       setSnackbarMessage('ログインに成功しました');
       setSnackbarSeverity('success');
-    } catch (err) {
+    } catch {
       setSnackbarMessage('ログインに失敗しました');
       setSnackbarSeverity('error');
     } finally {
@@ -37,6 +40,15 @@ export const LoginForm: React.FC = () => {
   const handleSnackbarClose = () => {
     setShowSnackbar(false);
   };
+
+  useEffect(() => {
+    // Redux のエラーが発生した場合に Snackbar を表示
+    if (error) {
+      setSnackbarMessage(error);
+      setSnackbarSeverity('error');
+      setShowSnackbar(true);
+    }
+  }, [error]);
 
   return (
     <Box sx={{ mt: 8, mb: 4 }}>
@@ -86,7 +98,7 @@ export const LoginForm: React.FC = () => {
                       {showPassword ? <Visibility /> : <VisibilityOff />}
                     </IconButton>
                   </InputAdornment>
-                )
+                ),
               }}
             />
           </Grid>
@@ -97,8 +109,9 @@ export const LoginForm: React.FC = () => {
               variant="contained"
               color="primary"
               size="large"
+              disabled={loading}
             >
-              ログイン
+              {loading ? 'ログイン中...' : 'ログイン'}
             </Button>
           </Grid>
         </Grid>
