@@ -43,7 +43,7 @@ export const login = createAsyncThunk<User, { email: string; password: string },
   async ({ email, password }, thunkAPI) => {
     try {
       const response = await axios.post(
-        "http://localhost:7071/api/login",
+        "http://localhost:7071/api/login/",
         { email, password },
         {
           headers: {
