@@ -4,6 +4,7 @@ export interface DrawerItem {
     text: string;
     icon: ReactNode;
     tips: string;
+    onClick?: () => void;
 }
 
 export interface DrawerListProps {

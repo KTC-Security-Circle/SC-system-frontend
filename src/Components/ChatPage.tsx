@@ -94,7 +94,7 @@ const sendMessage = async (e: FormEvent<HTMLFormElement>) => {
   }
   };
 
-  if (error) return <Typography color="error">Failed to load messages</Typography>;
+  //if (error) return <Typography color="error">Failed to load messages</Typography>;
 
   // ログインしていない場合はサンプルメッセージを使用
   const displayedMessages = user ? messages : sampleMessages;
