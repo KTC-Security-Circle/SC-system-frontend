@@ -18,3 +18,8 @@ export interface SessionItem {
     text: string;
     icon: ReactNode;
 }
+
+export interface PopoverItem {
+    text: string;
+    icon: ReactNode;
+}

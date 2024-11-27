@@ -6,6 +6,10 @@ import AddCommentIcon from '@mui/icons-material/AddComment';
 import { ChatComponent } from './ChatPage';
 import AlignHorizontalLeftIcon from '@mui/icons-material/AlignHorizontalLeft';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
+import DeleteIcon from '@mui/icons-material/Delete';
+import DriveFileRenameOutlineIcon from '@mui/icons-material/DriveFileRenameOutline';
+import ArchiveIcon from '@mui/icons-material/Archive';
+
 import { 
   Box,
   CssBaseline,
@@ -17,10 +21,11 @@ import {
   ListItemText,
   Tooltip,
   Divider,
+  Popover,
 
 } from '@mui/material';
 
-import { DrawerItem } from '../types/drawer';
+import { DrawerItem, PopoverItem, SessionItem } from '../types/drawer';
 
 const drawerWidth = 240;
 
@@ -29,6 +34,22 @@ interface Props {
 }
 
 export const ResponsiveDrawer: React.FC<Props> = (props: Props) => {
+
+  {/*popover*/}
+  const [activePopover, setActivePopover] = React.useState<string | null>(null);
+
+  const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>(null);
+
+  const handlePopoverOpen = (id: string) => (event: React.MouseEvent<HTMLButtonElement>) => {
+    setActivePopover(id);
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handlePopoverClose = () => {
+    setActivePopover(null);
+    setAnchorEl(null);
+  };
+  
   const { window } = props;
   {/*モバイル用の開閉状態*/}
   const [mobileOpen, setMobileOpen] = React.useState(false);
@@ -72,6 +93,27 @@ export const ResponsiveDrawer: React.FC<Props> = (props: Props) => {
     { text: 'button3', icon: <AlignHorizontalLeftIcon /> ,tips: 'ボタン3' },
   ];
 
+  const sessionItems: SessionItem[] = [
+    { id: '1', text: 'session1', icon: <MoreHorizIcon /> },
+    { id: '2', text: 'session2', icon: <MoreHorizIcon /> },
+    { id: '3', text: 'session3', icon: <MoreHorizIcon /> },
+    { id: '4', text: 'session4', icon: <MoreHorizIcon /> },
+    { id: '5', text: 'session5', icon: <MoreHorizIcon /> },
+    { id: '6', text: 'session6', icon: <MoreHorizIcon /> },
+    { id: '7', text: 'session7', icon: <MoreHorizIcon /> },
+    { id: '8', text: 'session8', icon: <MoreHorizIcon /> },
+    { id: '9', text: 'session9', icon: <MoreHorizIcon /> },
+    { id: '10', text: 'session10', icon: <MoreHorizIcon /> },
+    { id: '11', text: 'session11', icon: <MoreHorizIcon /> },
+    { id: '12', text: 'session12', icon: <MoreHorizIcon /> },
+  ];
+
+  const popoverLists: PopoverItem [] = [
+    { text: 'rename', icon: <DriveFileRenameOutlineIcon /> },
+    { text: 'archive', icon: <ArchiveIcon /> },
+    { text: 'delete', icon: <DeleteIcon /> },
+  ];
+
 
   const drawer = (
     <>
@@ -101,23 +143,52 @@ export const ResponsiveDrawer: React.FC<Props> = (props: Props) => {
       </div>
       <Divider />
       <List
-        sx={{ 
-          height: { sm: `calc(100% - ${height}px)` },
-          overflow: 'auto',
-        }}>
-        {Array.from({ length: 12 }, (_, index) => `session${index + 1}`).map((text) => (
-          <ListItem key={text} disablePadding>
-            <ListItemButton>
-              <ListItemText primary={text} />
-              <Tooltip title="More options" placement='top' enterDelay={500} arrow>
-          <IconButton>
-            <MoreHorizIcon />
-          </IconButton>
-              </Tooltip>
-            </ListItemButton>
-          </ListItem>
-        ))}
-      </List>
+      sx={{ 
+        height: { sm: `calc(100% - ${height}px)` },
+        overflow: 'auto',
+      }}>
+  {sessionItems.map((item) => (
+    <ListItem key={item.id} disablePadding>
+      <ListItemButton>
+        <ListItemText primary={item.text} />
+        <Tooltip title="More options" placement="top" enterDelay={500} arrow>
+          <>
+            <IconButton onClick={handlePopoverOpen(item.id)}>
+              <MoreHorizIcon />
+            </IconButton>
+            <Popover
+              id={item.id}
+              open={activePopover === item.id && Boolean(anchorEl)}
+              anchorEl={anchorEl}
+              onClose={handlePopoverClose}
+              anchorOrigin={{
+                vertical: 'bottom',
+                horizontal: 'right',
+              }}
+              transformOrigin={{
+                vertical: 'top',
+                horizontal: 'left',
+              }}
+            >
+              <List
+                sx={{pr: 1, pl: 1}}>
+                {popoverLists.map((item) => (
+                  <ListItem key={item.text} disablePadding>
+                    <ListItemButton>
+                      <ListItemIcon>{ item.icon }</ListItemIcon>
+                      <ListItemText primary={item.text} />
+                    </ListItemButton>
+                  </ListItem>
+                ))}
+              </List>
+            </Popover>
+          </>
+        </Tooltip>
+      </ListItemButton>
+    </ListItem>
+  ))}
+</List>
+
     </>
   );
 
