@@ -106,7 +106,7 @@ export const ResponsiveDrawer: React.FC<Props> = (props: Props) => {
   const popoverLists: PopoverItem [] = [
     { text: 'rename', icon: <DriveFileRenameOutlineIcon /> },
     { text: 'archive', icon: <ArchiveIcon /> },
-    { text: 'delete', icon: <DeleteIcon sx={{ color: 'red' }} /> },
+    { text: 'delete', icon: <DeleteIcon sx={{ color: '#f44336' }} />},
   ];
 
 
