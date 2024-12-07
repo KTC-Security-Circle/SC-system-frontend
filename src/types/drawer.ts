@@ -7,12 +7,6 @@ export interface DrawerItem {
     onClick?: () => void;
 }
 
-export interface DrawerListProps {
-    items: DrawerItem[];
-    onNavigate: (url: string) => void;
-    onClose: () => void;
-}
-
 export interface SessionItem {
     id: string;
     text: string;

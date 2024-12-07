@@ -50,10 +50,10 @@ export const ResponsiveDrawer: React.FC<Props> = (props: Props) => {
     setAnchorEl(null);
   };
   
-  const { window } = props;
+
   {/*モバイル用の開閉状態*/}
   const [mobileOpen, setMobileOpen] = React.useState(false);
-  const [isClosing, setIsClosing] = React.useState(false);
+  const [pcOpen, setPcOpen] = React.useState(true); // PC画面用の状態を追加
 
   {/*リストの高さ*/}
   const [height, setHeight] = React.useState<number | null>(null);
@@ -66,24 +66,19 @@ export const ResponsiveDrawer: React.FC<Props> = (props: Props) => {
     }
   }, [])
 
-  const handleDrawerClose = () => {
-    setIsClosing(true);
-    setMobileOpen(false);
-  };
-
-  const handleDrawerTransitionEnd = () => {
-    setIsClosing(false);
-  };
-
   const handleDrawerToggle = () => {
-    if (!isClosing) {
+    if (window.innerWidth >= 600) {
+      // PC画面用のDrawerを制御
+      setPcOpen(!pcOpen);
+    } else {
+      // モバイル用のDrawerを制御
       setMobileOpen(!mobileOpen);
     }
   };
 
   {/* 一番上の閉じる（閉じない）ボタンと新しいセッション開始があるとこ */}
   const drawerButton: DrawerItem[] = [
-    { text: 'サイドバーボタン', icon: <AlignHorizontalLeftIcon /> ,tips: '閉じる', onClick: handleDrawerClose },
+    { text: 'サイドバーボタン', icon: <AlignHorizontalLeftIcon /> ,tips: '閉じる', onClick: handleDrawerToggle },
     { text: 'newsession', icon: <AddCommentIcon /> ,tips: '新しいセッションを作成' },
   ];
 
@@ -111,7 +106,7 @@ export const ResponsiveDrawer: React.FC<Props> = (props: Props) => {
   const popoverLists: PopoverItem [] = [
     { text: 'rename', icon: <DriveFileRenameOutlineIcon /> },
     { text: 'archive', icon: <ArchiveIcon /> },
-    { text: 'delete', icon: <DeleteIcon /> },
+    { text: 'delete', icon: <DeleteIcon sx={{ color: 'red' }} /> },
   ];
 
 
@@ -192,38 +187,41 @@ export const ResponsiveDrawer: React.FC<Props> = (props: Props) => {
     </>
   );
 
-  // Remove this const when copying and pasting into your project.
-  const container = window !== undefined ? () => window().document.body : undefined;
-
   return (
     <Box sx={{ display: 'flex', height: '100vh'}}>
       <CssBaseline />
+      {/* 開閉ボタン */}
+      {!pcOpen && (
+        <IconButton
+          onClick={handleDrawerToggle}
+          sx={{
+            position: 'fixed',
+            m:1,
+            zIndex: mobileOpen ? 0 : 1300, // Drawer が開いた時は非表示
+          }}
+        >
+         <AlignHorizontalLeftIcon />
+        </IconButton>
+      )}
       <Box
         component="nav"
-        sx={{ width: { sm: drawerWidth }, flexShrink: { sm: 0 }}}
+        sx={{ width: { sm: pcOpen ? drawerWidth : 0 }, flexShrink: { sm: 0 }}}
         aria-label=""
       >
-        <IconButton
-          aria-label="open drawer"
-          edge="start"
-          onClick={handleDrawerToggle}
-          sx={{ m:1, display: { sm: 'none' } }}
-        >
-          <AlignHorizontalLeftIcon />
-        </IconButton>
         {/* The implementation can be swapped with js to avoid SEO duplication of links. */}
         <Drawer
-          container={container}
           variant="temporary"
           open={mobileOpen}
-          onTransitionEnd={handleDrawerTransitionEnd}
-          onClose={handleDrawerClose}
+          onClose={handleDrawerToggle}
           ModalProps={{
             keepMounted: true, // Better open performance on mobile.
           }}
           sx={{
             display: { xs: 'block', sm: 'none' },
-            '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth },
+            '& .MuiDrawer-paper': { 
+              boxSizing: 'border-box', 
+              width: drawerWidth
+            },
           }}
         >
           {drawer}
@@ -232,7 +230,11 @@ export const ResponsiveDrawer: React.FC<Props> = (props: Props) => {
           variant="permanent"
           sx={{
             display: { xs: 'none', sm: 'block' },
-            '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth },
+            '& .MuiDrawer-paper': { 
+              boxSizing: 'border-box', 
+              width: pcOpen ? drawerWidth : 0, // PC画面で開閉状態を反映
+              transition: 'width 0.2s ease-in-out', // アニメーションを追加
+            },
           }}
           open
         >
