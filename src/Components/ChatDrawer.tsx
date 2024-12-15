@@ -1,31 +1,24 @@
 "use client"
 
 import * as React from 'react';
-import IconButton from '@mui/material/IconButton';
-import AddCommentIcon from '@mui/icons-material/AddComment';
 import { ChatComponent } from './ChatPage';
+import { DrawerContent } from './DrawerContent';
+import { DrawerItem, PopoverItem, SessionItem } from '../types/drawer';
+
+import AddCommentIcon from '@mui/icons-material/AddComment';
 import AlignHorizontalLeftIcon from '@mui/icons-material/AlignHorizontalLeft';
-import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
+import ArchiveIcon from '@mui/icons-material/Archive';
 import DeleteIcon from '@mui/icons-material/Delete';
 import DriveFileRenameOutlineIcon from '@mui/icons-material/DriveFileRenameOutline';
-import ArchiveIcon from '@mui/icons-material/Archive';
+import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 
 import { 
   Box,
   CssBaseline,
   Drawer,
-  List,
-  ListItem,
-  ListItemButton,
-  ListItemIcon,
-  ListItemText,
-  Tooltip,
-  Divider,
-  Popover,
-
+  IconButton,
 } from '@mui/material';
 
-import { DrawerItem, PopoverItem, SessionItem } from '../types/drawer';
 
 const drawerWidth = 240;
 
@@ -34,11 +27,57 @@ interface Props {
 }
 
 export const ResponsiveDrawer: React.FC<Props> = (props: Props) => {
-
+  
   {/*popover*/}
   const [activePopover, setActivePopover] = React.useState<string | null>(null);
-
+  
   const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>(null);
+
+  {/*モバイル用の開閉状態*/}
+  const [mobileOpen, setMobileOpen] = React.useState(false);
+  const [pcOpen, setPcOpen] = React.useState(window.innerWidth >= 600); // PC画面用の状態を追加
+  
+  {/*リストの高さ*/}
+  const [height, setHeight] = React.useState<number | null>(null);
+  const listRef = React.useRef<HTMLDivElement | null>(null);
+
+  React.useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth < 600) {
+        // モバイルサイズの場合
+        setPcOpen(false); // PC用Drawerを閉じる
+        setMobileOpen(false); // モバイルDrawerも閉じる（初期状態）
+      }
+    };
+  
+    // 初期実行
+    handleResize();
+  
+    // イベントリスナーを追加
+    window.addEventListener('resize', handleResize);
+  
+    // クリーンアップ
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, [pcOpen]); // pcOpenが変化した場合に再実行
+  
+  React.useEffect(() => {
+    if (listRef.current) {
+      {/*リストとDividerの合計高さを取得*/}
+      setHeight(listRef.current.clientHeight);
+    }
+  }, [])
+  
+  const handleDrawerToggle = () => {
+    if (window.innerWidth >= 600) {
+      // PC画面用のDrawerを制御
+      setPcOpen(!pcOpen);
+    } else {
+      // モバイル用のDrawerを制御
+      setMobileOpen(!mobileOpen);
+    }
+  };
 
   const handlePopoverOpen = (id: string) => (event: React.MouseEvent<HTMLButtonElement>) => {
     setActivePopover(id);
@@ -49,32 +88,7 @@ export const ResponsiveDrawer: React.FC<Props> = (props: Props) => {
     setActivePopover(null);
     setAnchorEl(null);
   };
-  
 
-  {/*モバイル用の開閉状態*/}
-  const [mobileOpen, setMobileOpen] = React.useState(false);
-  const [pcOpen, setPcOpen] = React.useState(true); // PC画面用の状態を追加
-
-  {/*リストの高さ*/}
-  const [height, setHeight] = React.useState<number | null>(null);
-  const listRef = React.useRef<HTMLDivElement | null>(null);
-
-  React.useEffect(() => {
-    if (listRef.current) {
-      {/*リストとDividerの合計高さを取得*/}
-      setHeight(listRef.current.clientHeight);
-    }
-  }, [])
-
-  const handleDrawerToggle = () => {
-    if (window.innerWidth >= 600) {
-      // PC画面用のDrawerを制御
-      setPcOpen(!pcOpen);
-    } else {
-      // モバイル用のDrawerを制御
-      setMobileOpen(!mobileOpen);
-    }
-  };
 
   {/* 一番上の閉じる（閉じない）ボタンと新しいセッション開始があるとこ */}
   const drawerButton: DrawerItem[] = [
@@ -109,89 +123,11 @@ export const ResponsiveDrawer: React.FC<Props> = (props: Props) => {
     { text: 'delete', icon: <DeleteIcon sx={{ color: '#f44336' }} />},
   ];
 
-
-  const drawer = (
-    <>
-      <div ref = {listRef}>
-        <List sx={{ display: 'flex', justifyContent:'space-between'}}>
-          {drawerButton.map((item) => (
-            <ListItem key={item.text} disablePadding>
-              <Tooltip title={item.tips} placement='top' enterDelay={500} arrow>
-                <ListItemButton onClick={item.onClick}>
-                  <ListItemIcon>{ item.icon }</ListItemIcon>
-                </ListItemButton>
-              </Tooltip>
-            </ListItem>
-          ))}
-        </List>
-        <Divider />
-        <List>
-          {menuItems.map((item) => (
-            <ListItem key={item.text} disablePadding>
-              <ListItemButton>
-                <ListItemIcon>{ item.icon }</ListItemIcon>
-                <ListItemText primary={item.text} />
-              </ListItemButton>
-            </ListItem>
-          ))}
-        </List>
-      </div>
-      <Divider />
-      <List
-      sx={{ 
-        height: { sm: `calc(100% - ${height}px)` },
-        overflow: 'auto',
-      }}>
-  {sessionItems.map((item) => (
-    <ListItem key={item.id} disablePadding>
-      <ListItemButton>
-        <ListItemText primary={item.text} />
-        <Tooltip title="More options" placement="top" enterDelay={500} arrow>
-          <>
-            <IconButton onClick={handlePopoverOpen(item.id)}>
-              <MoreHorizIcon />
-            </IconButton>
-            <Popover
-              id={item.id}
-              open={activePopover === item.id && Boolean(anchorEl)}
-              anchorEl={anchorEl}
-              onClose={handlePopoverClose}
-              anchorOrigin={{
-                vertical: 'bottom',
-                horizontal: 'right',
-              }}
-              transformOrigin={{
-                vertical: 'top',
-                horizontal: 'left',
-              }}
-            >
-              <List
-                sx={{pr: 1, pl: 1}}>
-                {popoverLists.map((item) => (
-                  <ListItem key={item.text} disablePadding>
-                    <ListItemButton>
-                      <ListItemIcon>{ item.icon }</ListItemIcon>
-                      <ListItemText primary={item.text} />
-                    </ListItemButton>
-                  </ListItem>
-                ))}
-              </List>
-            </Popover>
-          </>
-        </Tooltip>
-      </ListItemButton>
-    </ListItem>
-  ))}
-</List>
-
-    </>
-  );
-
   return (
     <Box sx={{ display: 'flex', height: '100vh'}}>
       <CssBaseline />
       {/* 開閉ボタン */}
-      {!pcOpen && (
+      {(window.innerWidth < 600 || !pcOpen) && (
         <IconButton
           onClick={handleDrawerToggle}
           sx={{
@@ -208,13 +144,12 @@ export const ResponsiveDrawer: React.FC<Props> = (props: Props) => {
         sx={{ width: { sm: pcOpen ? drawerWidth : 0 }, flexShrink: { sm: 0 }}}
         aria-label=""
       >
-        {/* The implementation can be swapped with js to avoid SEO duplication of links. */}
         <Drawer
           variant="temporary"
           open={mobileOpen}
           onClose={handleDrawerToggle}
           ModalProps={{
-            keepMounted: true, // Better open performance on mobile.
+            keepMounted: true,
           }}
           sx={{
             display: { xs: 'block', sm: 'none' },
@@ -224,7 +159,19 @@ export const ResponsiveDrawer: React.FC<Props> = (props: Props) => {
             },
           }}
         >
-          {drawer}
+          <DrawerContent
+            listRef={listRef}
+            drawerButton={drawerButton}
+            menuItems={menuItems}
+            sessionItems={sessionItems}
+            popoverLists={popoverLists}
+            activePopover={activePopover}
+            anchorEl={anchorEl}
+            handleDrawerToggle={handleDrawerToggle}
+            handlePopoverOpen={handlePopoverOpen}
+            handlePopoverClose={handlePopoverClose}
+            height={height}
+          />
         </Drawer>
         <Drawer
           variant="permanent"
@@ -238,7 +185,19 @@ export const ResponsiveDrawer: React.FC<Props> = (props: Props) => {
           }}
           open
         >
-          {drawer}
+          <DrawerContent
+            listRef={listRef}
+            drawerButton={drawerButton}
+            menuItems={menuItems}
+            sessionItems={sessionItems}
+            popoverLists={popoverLists}
+            activePopover={activePopover}
+            anchorEl={anchorEl}
+            handleDrawerToggle={handleDrawerToggle}
+            handlePopoverOpen={handlePopoverOpen}
+            handlePopoverClose={handlePopoverClose}
+            height={height}
+          />
         </Drawer>
       </Box>
       <Box
