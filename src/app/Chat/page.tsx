@@ -1,9 +1,8 @@
 import React from 'react';
-import { ChatComponent } from '../../Components/ChatPage';
-
+import { ResponsiveDrawer }from '../../Components/ChatDrawer';
 const ChatPage: React.FC = () => {
   return (
-    <ChatComponent />
+    <ResponsiveDrawer />
   );
 };
 export default ChatPage;
