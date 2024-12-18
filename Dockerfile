@@ -1,9 +1,13 @@
 FROM node:22.11.0
-WORKDIR /app
+WORKDIR /workspace
 
 COPY package.json package-lock.json ./
-# COPY tsconfig.json
 RUN npm install
-COPY . .
-EXPOSE 3000
+RUN chown -R node:node ./
+USER node
+
+# Next.jsによってテレメトリデータを収集するのを無効にする
+ARG NEXT_TELEMETRY_DISABLED=1
+ENV NEXT_TELEMETRY_DISABLED=$NEXT_TELEMETRY_DISABLED
+
 CMD ["npm", "run", "dev"]
