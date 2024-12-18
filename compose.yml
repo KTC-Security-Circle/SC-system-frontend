@@ -1,11 +1,26 @@
-version: '3.8'
 services:
-    app:
-        build:
-            context: .
-            dockerfile: Dockerfile
-        ports:
-            - "3000:3000"
-        volumes:
-            - .:/app
-        command: ["npm", "run", "dev"]
+  src:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    volumes:
+      - type: bind
+        source: .
+        target: /workspace
+      - type: volume
+        source: node_modules
+        target: /workspace/node_modules
+    networks:
+      - next_app_network
+    user: node
+
+networks:
+  next_app_network:
+    name: sc-system-frontend_next_app_network
+    driver: bridge
+
+volumes:
+  node_modules:
+    name: next_app_node_modules
