@@ -21,12 +21,14 @@ const initialState: AuthState = {
   loading: false,
 };
 
+const API_LINK = process.env.CONNECTION_DEV_LINK;
+
 // 非同期でユーザー情報を取得
 export const fetchUser = createAsyncThunk<User, void, { rejectValue: string }>(
   "users/fetchUser",
   async (_, thunkAPI) => {
     try {
-      const response = await axios.get("http://localhost:7071/user/me", {
+      const response = await axios.get(`${API_LINK}/user/me`, {
         withCredentials: true,
       });
       return response.data; 
@@ -43,7 +45,7 @@ export const login = createAsyncThunk<User, { email: string; password: string },
   async ({ email, password }, thunkAPI) => {
     try {
       const response = await axios.post(
-        "http://localhost:7071/api/login/",
+        `${API_LINK}/auth/login/`,
         { email, password },
         {
           headers: {
@@ -74,7 +76,7 @@ export const logout = createAsyncThunk<void, void, { rejectValue: string }>(
   async (_, thunkAPI) => {
     try {
       await axios.post(
-        "http://localhost:7071/api/logout/",
+        `${API_LINK}/api/logout/`,
         {},
         { withCredentials: true }
       );
