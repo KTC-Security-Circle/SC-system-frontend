@@ -1,186 +1,218 @@
-'use client';
-import React, { useState, useEffect, FormEvent } from 'react';
-import useSWR from 'swr';
-import { useAuth } from '../Context/authContext';
-import {
-  Box,
-  Container,
-  TextField,
-  IconButton,
-  Typography,
-  List,
-  ListItem,
-  ListItemText,
-  Paper
-} from '@mui/material';
-import SendIcon from '@mui/icons-material/Send';
+"use client"
 
-interface Message {
-  id: string;
-  content: string;
-  sender: string;
-  timestamp: string;
+import * as React from 'react';
+import { ChatComponent } from '@/Components/parts/Chat/Chat';
+import { DrawerContent } from './DrawerContent';
+import { DrawerItem, PopoverItem, SessionItem } from '../types/drawer';
+
+import AddCommentIcon from '@mui/icons-material/AddComment';
+import AlignHorizontalLeftIcon from '@mui/icons-material/AlignHorizontalLeft';
+import ArchiveIcon from '@mui/icons-material/Archive';
+import DeleteIcon from '@mui/icons-material/Delete';
+import DriveFileRenameOutlineIcon from '@mui/icons-material/DriveFileRenameOutline';
+import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
+
+import { 
+  Box,
+  CssBaseline,
+  Drawer,
+  IconButton,
+} from '@mui/material';
+
+
+const drawerWidth = 240;
+
+interface Props {
+  window?: () => Window;
 }
 
-// サンプルメッセージ
-const sampleMessages: Message[] = [
-  { id: '1', content: 'こんにちは！', sender: 'user1', timestamp: '2024-03-15T09:00:00Z' },
-  { id: '2', content: 'お元気ですか？', sender: 'ai', timestamp: '2024-03-15T09:01:00Z' },
-  { id: '3', content: 'はい、元気です！', sender: 'user1', timestamp: '2024-03-15T09:02:00Z' },
-];
+export const Chatwindow: React.FC<Props> = (props: Props) => {
+  
+  {/*popover*/}
+  const [activePopover, setActivePopover] = React.useState<string | null>(null);
+  
+  const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>(null);
 
-const fetcher = (url: string) => {
-  return fetch(url, {
-      method: 'GET',
-      headers: {
-          'Content-Type': 'application/json',
-      },
-      credentials: 'include',  
-  }).then((res) => {
-      if (!res.ok) {
-          throw new Error('Failed to fetch');
+  {/*モバイル用の開閉状態*/}
+  const [mobileOpen, setMobileOpen] = React.useState(false);
+  const [pcOpen, setPcOpen] = React.useState(window.innerWidth >= 600); // PC画面用の状態を追加
+  
+  {/*リストの高さ*/}
+  const [height, setHeight] = React.useState<number | null>(null);
+  const listRef = React.useRef<HTMLDivElement | null>(null);
+
+  React.useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth < 600) {
+        // モバイルサイズの場合
+        setPcOpen(false); // PC用Drawerを閉じる
+        setMobileOpen(false); // モバイルDrawerも閉じる（初期状態）
       }
-      return res.json();
-  });
-};
-
-export const ChatComponent: React.FC = () => {
-  const {user } = useAuth();
-  const [message, setMessage] = useState<string>('');
-
-  // トークンが存在する場合にのみSWRを実行
-  const { data: messages = [], error, mutate } = useSWR<Message[]>(
-    'http://localhost:7071/api/app/view/chat/', 
-    fetcher,
-);
-
-const sendMessage = async (e: FormEvent<HTMLFormElement>) => {
-  e.preventDefault();
-  if (!message.trim() || !user) return;
-
-  const optimisticMessage: Message = {
-      id: Date.now().toString(),
-      content: message,
-      sender: user.id,
-      timestamp: new Date().toISOString(),
+    };
+  
+    // 初期実行
+    handleResize();
+  
+    // イベントリスナーを追加
+    window.addEventListener('resize', handleResize);
+  
+    // クリーンアップ
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, [pcOpen]); // pcOpenが変化した場合に再実行
+  
+  React.useEffect(() => {
+    if (listRef.current) {
+      {/*リストとDividerの合計高さを取得*/}
+      setHeight(listRef.current.clientHeight);
+    }
+  }, [])
+  
+  const handleDrawerToggle = () => {
+    if (window.innerWidth >= 600) {
+      // PC画面用のDrawerを制御
+      setPcOpen(!pcOpen);
+    } else {
+      // モバイル用のDrawerを制御
+      setMobileOpen(!mobileOpen);
+    }
   };
 
-  const originalMessages = messages ? [...messages] : [];
-
-  // 楽観的更新
-  mutate([...messages, optimisticMessage], false);
-
-  setMessage('');
-
-  try {
-      const response = await fetch('http://localhost:7071/api/app/input/chat/', {
-          method: 'POST',
-          headers: {
-              'Content-Type': 'application/json',
-          },
-          credentials: 'include',  // クッキーを送信するように設定
-          body: JSON.stringify({ content: message, sender: user.id }),
-      });
-
-      if (response.ok) {
-          mutate();
-      } else {
-          mutate(originalMessages, false);
-          console.error('Failed to send message');
-      }
-  } catch (error) {
-      mutate(originalMessages, false);
-      console.error('Failed to send message:', error);
-  }
+  const handlePopoverOpen = (id: string) => (event: React.MouseEvent<HTMLButtonElement>) => {
+    setActivePopover(id);
+    setAnchorEl(event.currentTarget);
   };
 
-  if (error) return <Typography color="error">Failed to load messages</Typography>;
+  const handlePopoverClose = () => {
+    setActivePopover(null);
+    setAnchorEl(null);
+  };
 
-  // ログインしていない場合はサンプルメッセージを使用
-  const displayedMessages = user ? messages : sampleMessages;
+
+  {/* 一番上の閉じる（閉じない）ボタンと新しいセッション開始があるとこ */}
+  const drawerButton: DrawerItem[] = [
+    { text: 'サイドバーボタン', icon: <AlignHorizontalLeftIcon /> ,tips: '閉じる', onClick: handleDrawerToggle },
+    { text: 'newsession', icon: <AddCommentIcon /> ,tips: '新しいセッションを作成' },
+  ];
+
+  const menuItems: DrawerItem[] = [
+    { text: 'button1', icon: <AlignHorizontalLeftIcon /> ,tips: 'ボタン１' },
+    { text: 'button2', icon: <AlignHorizontalLeftIcon /> ,tips: 'ボタン２' },
+    { text: 'button3', icon: <AlignHorizontalLeftIcon /> ,tips: 'ボタン3' },
+  ];
+
+  const sessionItems: SessionItem[] = [
+    { id: '1', text: 'session1', icon: <MoreHorizIcon /> },
+    { id: '2', text: 'session2', icon: <MoreHorizIcon /> },
+    { id: '3', text: 'session3', icon: <MoreHorizIcon /> },
+    { id: '4', text: 'session4', icon: <MoreHorizIcon /> },
+    { id: '5', text: 'session5', icon: <MoreHorizIcon /> },
+    { id: '6', text: 'session6', icon: <MoreHorizIcon /> },
+    { id: '7', text: 'session7', icon: <MoreHorizIcon /> },
+    { id: '8', text: 'session8', icon: <MoreHorizIcon /> },
+    { id: '9', text: 'session9', icon: <MoreHorizIcon /> },
+    { id: '10', text: 'session10', icon: <MoreHorizIcon /> },
+    { id: '11', text: 'session11', icon: <MoreHorizIcon /> },
+    { id: '12', text: 'session12', icon: <MoreHorizIcon /> },
+  ];
+
+  const popoverLists: PopoverItem [] = [
+    { text: 'rename', icon: <DriveFileRenameOutlineIcon /> },
+    { text: 'archive', icon: <ArchiveIcon /> },
+    { text: 'delete', icon: <DeleteIcon sx={{ color: '#f44336' }} />},
+  ];
 
   return (
-    <Container maxWidth="lg" sx={{ height: '100vh', display: 'flex', flexDirection: 'column' }}>
-      <Box sx={{ flexGrow: 1, overflowY: 'auto', mb: 2 }}>
-        <List>
-          {displayedMessages.map((msg: Message) => (
-            <ListItem
-            key={msg.id}
-            sx={{ justifyContent: msg.sender === (user?.id || 'user1') ? 'flex-end' : 'flex-start' }}
-          >
-            <Box sx={{ maxWidth: '75%', position: 'relative' }}>
-              <Paper
-                elevation={1}
-                sx={{
-                  p: 1.4,
-                  m: 1,
-                  backgroundColor: msg.sender === (user?.id || 'user1') ? '#e5e7eb' : '#e5e7eb', 
-                  color: msg.sender === (user?.id || 'user1') ? '#000000' : '#000000',
-                  textAlign: msg.sender === (user?.id || 'user1') ? 'center' : 'center',
-                  position: 'relative',
-                  borderRadius: '20px',
-                  '&::after': {
-                    content: '""',
-                    position: 'absolute',
-                    top: '50%',
-                    transform: 'translateY(-50%)',
-                    borderWidth: '11px',
-                    borderStyle: 'solid',
-                    borderColor:
-                      msg.sender === (user?.id || 'user1')
-                        ? 'transparent transparent transparent #e5e7eb'
-                        : 'transparent #e5e7eb transparent transparent',
-                    right: msg.sender === (user?.id || 'user1') ? '-20px' : 'auto',
-                    left: msg.sender !== (user?.id || 'user1') ? '-20px' : 'auto',
-                  },
-                }}
-              >
-                <ListItemText primary={msg.content} sx={{ wordWrap: 'break-word' }} />
-              </Paper>
-            </Box>
-          </ListItem>
-          ))}
-        </List>
+    <Box sx={{ display: 'flex', height: '100vh'}}>
+      <CssBaseline />
+      {/* 開閉ボタン */}
+      {(window.innerWidth < 600 || !pcOpen) && (
+        <IconButton
+          onClick={handleDrawerToggle}
+          sx={{
+            position: 'fixed',
+            m:1,
+            zIndex: mobileOpen ? 0 : 1300, // Drawer が開いた時は非表示
+          }}
+        >
+         <AlignHorizontalLeftIcon />
+        </IconButton>
+      )}
+      <Box
+        component="nav"
+        sx={{ width: { sm: pcOpen ? drawerWidth : 0 }, flexShrink: { sm: 0 }}}
+        aria-label=""
+      >
+        <Drawer
+          variant="temporary"
+          open={mobileOpen}
+          onClose={handleDrawerToggle}
+          ModalProps={{
+            keepMounted: true,
+          }}
+          sx={{
+            display: { xs: 'block', sm: 'none' },
+            '& .MuiDrawer-paper': { 
+              boxSizing: 'border-box', 
+              width: drawerWidth
+            },
+          }}
+        >
+          <DrawerContent
+            listRef={listRef}
+            drawerButton={drawerButton}
+            menuItems={menuItems}
+            sessionItems={sessionItems}
+            popoverLists={popoverLists}
+            activePopover={activePopover}
+            anchorEl={anchorEl}
+            handleDrawerToggle={handleDrawerToggle}
+            handlePopoverOpen={handlePopoverOpen}
+            handlePopoverClose={handlePopoverClose}
+            height={height}
+          />
+        </Drawer>
+        <Drawer
+          variant="permanent"
+          sx={{
+            display: { xs: 'none', sm: 'block' },
+            '& .MuiDrawer-paper': { 
+              boxSizing: 'border-box', 
+              width: pcOpen ? drawerWidth : 0, // PC画面で開閉状態を反映
+              transition: 'width 0.2s ease-in-out', // アニメーションを追加
+            },
+          }}
+          open
+        >
+          <DrawerContent
+            listRef={listRef}
+            drawerButton={drawerButton}
+            menuItems={menuItems}
+            sessionItems={sessionItems}
+            popoverLists={popoverLists}
+            activePopover={activePopover}
+            anchorEl={anchorEl}
+            handleDrawerToggle={handleDrawerToggle}
+            handlePopoverOpen={handlePopoverOpen}
+            handlePopoverClose={handlePopoverClose}
+            height={height}
+          />
+        </Drawer>
       </Box>
-      <Box component="form" onSubmit={sendMessage} sx={{ display: 'flex',alignItems: 'center', justifyContent: 'center', mb: 2 }}>
-        <TextField
-          id="message-input"
-          name="message"
-          fullWidth
-          variant="outlined"
-          placeholder="Type a message..."
-          InputProps={{
-            sx: {
-                '&::placeholder': {
-                  fontSize: '18px', // プレースホルダーのフォントサイズ
-                },
-                '& .MuiOutlinedInput-notchedOutline': {
-                  borderColor: '#1E3C5F', // 枠線の色
-                  borderRadius: '30px', // 角を丸く
-                  
-                },
-                '&:hover .MuiOutlinedInput-notchedOutline': {
-                  borderColor: '#1E3C5F', // ホバー時の枠線の色
-                },
-                '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                  borderColor: 'rgb(0, 123, 255)', // フォーカス時の枠線の色
-                },
-              },
-            }}
-          value={message}
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) => setMessage(e.target.value)}
-          sx={{ 
-            mx:'auto',
-           }}
-        />
-        <IconButton aria-label="Send"
-                size="large"
-                className="send-button"
-                type="submit"
-                sx={{color: '#1E3C5F'}}>
-                <SendIcon fontSize="inherit" />
-            </IconButton>
+      <Box
+        component="main"
+        sx={{
+          flexGrow: 1,
+          width: {
+            sm: `calc(100% - ${drawerWidth}px)`,
+            xs: '100%'
+          },
+          transition: 'width 0.3s ease-in-out',   
+          }}
+      >
+        <ChatComponent />
       </Box>
-    </Container>
+    </Box>
   );
-};
+}
