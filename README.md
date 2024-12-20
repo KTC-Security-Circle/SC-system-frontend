@@ -46,6 +46,7 @@ NEXT_PUBLIC_BACKEND_DEV_URL= "http://localhost:7071"
 ```
 git clone --branch 作成したブランチ名 https://github.com/KTC-Security-Circle/SC-system-frontend.git
 ```
+---
 ### 注意点  
 以前に、他のPCで作業していた場合、リモートリポジトリとローカルリポジトリの内容が異なることがあります
 その場合は、以下のコマンドを実行してください：  
@@ -54,7 +55,6 @@ git fetch origin                  // リモートリポジトリから変更を�
 git merge origin/作成したブランチ名  // ローカルブランチにマージ
 ```
 コンフリクトが発生した場合は、自己解決するか連絡すること 
-
 ## 自分の変更をコミットする時  
 1.ターミナルを開く  
 -> VSCodeではなく、ターミナルを極力使用してください  
@@ -67,6 +67,7 @@ git status
 git commit -m "作業内容を日本語で入力"  
 git push origin 作成したブランチ名
 ```
+---
 ### コミットの頻度  
 コミットは細かく行ってください  
 多くの変更を一度にコミットすると、コミットメッセージからどの変更が何か分かりにくくなります  
