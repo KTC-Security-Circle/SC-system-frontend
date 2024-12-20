@@ -21,14 +21,14 @@ const initialState: AuthState = {
   loading: false,
 };
 
-const API_LINK = process.env.CONNECTION_DEV_LINK;
+const API_LINK = process.env.NEXT_PUBLIC_BACKEND_DEV_URL;
 
 // 非同期でユーザー情報を取得
 export const fetchUser = createAsyncThunk<User, void, { rejectValue: string }>(
   "users/fetchUser",
   async (_, thunkAPI) => {
     try {
-      const response = await axios.get(`${API_LINK}/user/me`, {
+      const response = await axios.get(`${API_LINK}/user/me/`, {
         withCredentials: true,
       });
       return response.data; 
@@ -76,7 +76,7 @@ export const logout = createAsyncThunk<void, void, { rejectValue: string }>(
   async (_, thunkAPI) => {
     try {
       await axios.post(
-        `${API_LINK}/api/logout/`,
+        `${API_LINK}/api/logout`,
         {},
         { withCredentials: true }
       );
