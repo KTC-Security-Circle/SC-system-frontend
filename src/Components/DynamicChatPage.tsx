@@ -1,7 +1,7 @@
 "use client"
 
 import * as React from 'react';
-import { DynamicChat } from './parts/Chat/DynamincChat';
+import { DynamicChatComponent } from '@/Components/parts/Chat/DynamincChat';
 import { DrawerContent } from './DrawerContent';
 import { DrawerItem, PopoverItem, SessionItem } from '../types/drawer';
 
@@ -26,7 +26,7 @@ interface Props {
   window?: () => Window;
 }
 
-export const Chatwindow: React.FC<Props> = (props: Props) => {
+export const DynamicChatwindow: React.FC<Props> = (props: Props) => {
   
   {/*popover*/}
   const [activePopover, setActivePopover] = React.useState<string | null>(null);
@@ -211,7 +211,7 @@ export const Chatwindow: React.FC<Props> = (props: Props) => {
           transition: 'width 0.3s ease-in-out',   
           }}
       >
-        <DynamicChat />
+        <DynamicChatComponent  />
       </Box>
     </Box>
   );
