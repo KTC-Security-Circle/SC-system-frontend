@@ -27,7 +27,7 @@ export const RegisterForm: React.FC = () => {
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      const res = await fetch(`${API_LINK}/auth/signup`, {
+      const res = await fetch(`${API_LINK}/auth/signup/`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
