@@ -94,14 +94,14 @@ const sendMessage = async (e: FormEvent<HTMLFormElement>) => {
   }
   };
 
-  if (error) return <Typography color="error">Failed to load messages</Typography>;
+  if (error) return <Typography color="error" sx={{mt:8}}>Failed to load messages</Typography>;
 
   // ログインしていない場合はサンプルメッセージを使用
   const displayedMessages = user ? messages : sampleMessages;
 
   return (
     <Container maxWidth="lg" sx={{ height: '100vh', display: 'flex', flexDirection: 'column' }}>
-      <Box sx={{ flexGrow: 1, overflowY: 'auto', mb: 2 }}>
+      <Box sx={{ flexGrow: 1, overflowY: 'auto', mt:6, mb: 2 }}>
         <List>
           {displayedMessages.map((msg: Message) => (
             <ListItem
