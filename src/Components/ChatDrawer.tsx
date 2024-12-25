@@ -35,7 +35,7 @@ export const ResponsiveDrawer: React.FC<Props> = (props: Props) => {
 
   {/*モバイル用の開閉状態*/}
   const [mobileOpen, setMobileOpen] = React.useState(false);
-  const [pcOpen, setPcOpen] = React.useState(window.innerWidth >= 600); // PC画面用の状態を追加
+  const [pcOpen, setPcOpen] = React.useState(false); // PC画面用の状態を追加
   
   {/*リストの高さ*/}
   const [height, setHeight] = React.useState<number | null>(null);
@@ -43,24 +43,14 @@ export const ResponsiveDrawer: React.FC<Props> = (props: Props) => {
 
   React.useEffect(() => {
     const handleResize = () => {
-      if (window.innerWidth < 600) {
-        // モバイルサイズの場合
-        setPcOpen(false); // PC用Drawerを閉じる
-        setMobileOpen(false); // モバイルDrawerも閉じる（初期状態）
-      }
+      setPcOpen(window.innerWidth >= 600);
     };
   
-    // 初期実行
-    handleResize();
+    handleResize(); // 初回実行
+    window.addEventListener("resize", handleResize);
   
-    // イベントリスナーを追加
-    window.addEventListener('resize', handleResize);
-  
-    // クリーンアップ
-    return () => {
-      window.removeEventListener('resize', handleResize);
-    };
-  }, [pcOpen]); // pcOpenが変化した場合に再実行
+    return () => window.removeEventListener("resize", handleResize); // クリーンアップ
+  }, []);
   
   React.useEffect(() => {
     if (listRef.current) {
