@@ -3,7 +3,6 @@
 import * as React from 'react';
 import { ChatComponent } from './ChatPage';
 import { DrawerContent } from './DrawerContent';
-import { ChatAppbar } from './ChatAppbar';
 import { DrawerItem, PopoverItem, SessionItem } from '../types/drawer';
 
 import AddCommentIcon from '@mui/icons-material/AddComment';
@@ -117,11 +116,7 @@ export const ResponsiveDrawer: React.FC<Props> = (props: Props) => {
     <Box sx={{ display: 'flex', height: '100vh'}}>
       <CssBaseline />
       {/* ChatAppbar コンポーネント */}
-      <ChatAppbar
-        pcOpen={pcOpen}
-        mobileOpen={mobileOpen}
-        handleDrawerToggle={handleDrawerToggle}
-      />
+      {/**/}
       <Box
         component="nav"
         sx={{ width: { sm: pcOpen ? drawerWidth : 0 }, flexShrink: { sm: 0 }}}
