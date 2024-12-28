@@ -34,22 +34,21 @@ export const DynamicChatComponent: React.FC = () => {
   const token = Cookies.get('access_token');
 
   useEffect(() => {
-    if (!session_id) {
-      console.error('No session ID provided');
+    if (!session_id || Array.isArray(session_id)) {
+      console.error('Invalid session ID');
       router.push('/');
       return;
     }
 
     const fetchMessages = async () => {
       try {
-        console.log(session_id);
         if (!token) {
           router.push('/');
           console.error('No token found');
           return;
         }
 
-        const res = await fetch(`${API_LINK}/api/view/chat/${session_id}`, {
+        const res = await fetch(`${API_LINK}/api/view/session/${session_id}`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
@@ -62,7 +61,21 @@ export const DynamicChatComponent: React.FC = () => {
         }
 
         const data = await res.json();
-        setMessages(data);
+        const formattedMessages = data.flatMap((msg: any) => [
+          {
+            id: `${msg.id}-user`,
+            content: msg.message,
+            sender: 'user',
+            timestamp: msg.pub_data,
+          },
+          {
+            id: `${msg.id}-bot`,
+            content: msg.bot_reply,
+            sender: 'bot',
+            timestamp: msg.pub_data,
+          },
+        ]);
+        setMessages(formattedMessages);
       } catch (err) {
         console.error(err);
         setError('Failed to load messages');
@@ -77,6 +90,11 @@ export const DynamicChatComponent: React.FC = () => {
     if (!message.trim()) return;
     if (!token) {
       router.push('/');
+      return;
+    }
+
+    if (!session_id || Array.isArray(session_id)) {
+      console.error('Invalid session ID');
       return;
     }
 
@@ -95,11 +113,12 @@ export const DynamicChatComponent: React.FC = () => {
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,
+          credentials: 'include',
         },
         body: JSON.stringify({
           message: message,
           pub_data: new Date().toISOString(),
-          session_id: session_id,
+          session_id: parseInt(session_id, 10), 
         }),
       });
 
