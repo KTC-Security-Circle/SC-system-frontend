@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, FormEvent } from 'react';
+import React, { useState, useEffect, FormEvent,useRef } from 'react';
 import Cookies from 'js-cookie';
 import { useRouter, useParams } from 'next/navigation';
 
@@ -32,6 +32,7 @@ export const DynamicChatComponent: React.FC = () => {
   const router = useRouter();
   const { session_id } = useParams();
   const token = Cookies.get('access_token');
+  const bottomRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!session_id || Array.isArray(session_id)) {
@@ -84,6 +85,12 @@ export const DynamicChatComponent: React.FC = () => {
 
     fetchMessages();
   }, [session_id, router, token]);
+
+  useEffect(()=> {
+    if(bottomRef.current){
+      bottomRef.current.scrollIntoView({behavior: "smooth"});
+    }
+  },[messages])
 
   const sendMessage = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -185,6 +192,7 @@ export const DynamicChatComponent: React.FC = () => {
               </Box>
             </ListItem>
           ))}
+          <div ref={bottomRef}/>
         </List>
       </Box>
       <Box component="form" onSubmit={sendMessage} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', mb: 2 }}>
