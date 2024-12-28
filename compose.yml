@@ -15,6 +15,8 @@ services:
     networks:
       - next_app_network
     user: node
+    env_file:
+      - .env
 
 networks:
   next_app_network:

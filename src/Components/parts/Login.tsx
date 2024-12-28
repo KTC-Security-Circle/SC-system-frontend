@@ -34,6 +34,8 @@ export const LoginForm: React.FC = () => {
 
       switch (role) {
         case 'student':
+          router.push('/Chat');
+          break;
         case 'staff':
         case 'admin':
           router.push('/Chat');
