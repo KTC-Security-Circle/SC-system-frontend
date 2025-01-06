@@ -1,6 +1,7 @@
 "use client"
 
 import * as React from 'react';
+import { ChatAppbar } from './ChatAppbar';
 import { ChatComponent } from './ChatPage';
 import { DrawerContent } from './DrawerContent';
 import { DrawerItem, PopoverItem, SessionItem } from '../types/drawer';
@@ -116,6 +117,12 @@ export const ResponsiveDrawer: React.FC<Props> = (props: Props) => {
     <Box sx={{ display: 'flex', height: '100vh'}}>
       <CssBaseline />
       {/* ChatAppbar コンポーネント */}
+
+      <ChatAppbar
+        pcOpen={pcOpen}
+        mobileOpen={mobileOpen}
+        handleDrawerToggle={handleDrawerToggle}
+      />
       {/**/}
       <Box
         component="nav"

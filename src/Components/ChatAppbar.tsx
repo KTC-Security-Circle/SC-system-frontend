@@ -1,9 +1,10 @@
 "use client";
 
 import * as React from "react";
-import { AppbarTextButton } from '../types/appbar';
+import { AppbarButton } from '../types/appbar';
 import { AppbarButtons } from './AppbarButton';
 import AlignHorizontalLeftIcon from "@mui/icons-material/AlignHorizontalLeft";
+import SettingsIcon from '@mui/icons-material/Settings';
 import { 
   IconButton,
   AppBar,
@@ -25,9 +26,11 @@ export const ChatAppbar: React.FC<ChatAppbarProps> = ({
   handleDrawerToggle,
 }) => {
 
-  const TextButtons: AppbarTextButton [] = [
-    { text: "Button1", onClick: () => console.log("Button1 clicked"), color: "#616161" },
-    { text: "Button2", onClick: () => console.log("Button2 clicked"), color: "#616161" },
+  const TextButtons: AppbarButton [] = [
+    { text: "button1", icon: <SettingsIcon fontSize="small" />, onClick: () => console.log("1 clicked") },
+    { text: "button2", icon: <SettingsIcon fontSize="small" />, onClick: () => console.log("2 clicked") },
+    { text: "button3", icon: <SettingsIcon fontSize="small" />, onClick: () => console.log("3 clicked") },
+    { text: "button4", icon: <SettingsIcon fontSize="small" />, onClick: () => console.log("4 clicked") },
   ];
   
   return (
@@ -57,12 +60,17 @@ export const ChatAppbar: React.FC<ChatAppbarProps> = ({
         </IconButton>
 
         {/* タイトル */}
-        <Typography variant="h6" component="div" sx={{ color:"#616161",flexGrow: 1 }}>
+        <Typography 
+          variant="h6"
+          component="div" 
+          sx={{ color:"#616161",flexGrow: 1 }}
+        >
           SCsystem
         </Typography>
 
-        {/*ボタン */}
-        <AppbarButtons TextButtons={TextButtons} />
+        {/* プルダウンボタン */}
+        <AppbarButtons 
+        TextButtons={TextButtons} />
       </Toolbar>
     </AppBar>
   );
