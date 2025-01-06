@@ -14,6 +14,7 @@ export const RegisterForm: React.FC = () => {
   const [name, setName] = useState<string>('');
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
+  const [major, setMajor] = useState<string>('');
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [showSnackbar, setShowSnackbar] = useState<boolean>(false);
   const [alertMessage, setAlertMessage] = useState<string>('');
@@ -21,10 +22,12 @@ export const RegisterForm: React.FC = () => {
   const handleClickShowPassword = () => setShowPassword((show) => !show);
   const handleMouseDownPassword = (e: React.MouseEvent<HTMLButtonElement>) => e.preventDefault();
 
+  const API_LINK = process.env.NEXT_PUBLIC_BACKEND_DEV_URL;
+
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      const res = await fetch('http://localhost:7071/api/signup/', {
+      const res = await fetch(`${API_LINK}/auth/signup/`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -33,7 +36,8 @@ export const RegisterForm: React.FC = () => {
           name: name,
           email: email,
           password: password,
-          authority: "student"
+          authority: "student",
+          major: major+"専攻",
         })
       });
       if (res.ok) {
@@ -119,6 +123,24 @@ export const RegisterForm: React.FC = () => {
                     </IconButton>
                   </InputAdornment>
                 )
+              }}
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <TextField
+              fullWidth
+              label="専攻名"
+              variant="outlined"
+              type="major"
+              value={major}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setMajor(e.target.value)}
+              required
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <EmailIcon />
+                  </InputAdornment>
+                ),
               }}
             />
           </Grid>

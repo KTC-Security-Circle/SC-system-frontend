@@ -1,7 +1,7 @@
 "use client"
 
 import * as React from 'react';
-import { ChatComponent } from '@/Components/parts/Chat/Chat';
+import { DynamicChatComponent } from '@/Components/parts/Chat/DynamincChat';
 import { DrawerContent } from './DrawerContent';
 import { DrawerItem, PopoverItem, SessionItem } from '../types/drawer';
 
@@ -26,7 +26,7 @@ interface Props {
   window?: () => Window;
 }
 
-export const Chatwindow: React.FC<Props> = (props: Props) => {
+export const DynamicChatwindow: React.FC<Props> = (props: Props) => {
   
   {/*popover*/}
   const [activePopover, setActivePopover] = React.useState<string | null>(null);
@@ -84,11 +84,11 @@ export const Chatwindow: React.FC<Props> = (props: Props) => {
     setAnchorEl(event.currentTarget);
   };
 
-
   const handlePopoverClose = () => {
     setActivePopover(null);
     setAnchorEl(null);
   };
+
 
   {/* 一番上の閉じる（閉じない）ボタンと新しいセッション開始があるとこ */}
   const drawerButton: DrawerItem[] = [
@@ -199,7 +199,6 @@ export const Chatwindow: React.FC<Props> = (props: Props) => {
             height={height}
           />
         </Drawer>
->>>>>>> main
       </Box>
       <Box
         component="main"
@@ -212,8 +211,9 @@ export const Chatwindow: React.FC<Props> = (props: Props) => {
           transition: 'width 0.3s ease-in-out',   
           }}
       >
-        <ChatComponent />
+        <DynamicChatComponent  />
       </Box>
     </Box>
   );
 }
+>>>>>>> main:src/Components/DynamicChatPage.tsx
