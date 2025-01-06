@@ -31,6 +31,7 @@ export const ChatAppbar: React.FC<ChatAppbarProps> = ({
     { text: "button2", icon: <SettingsIcon fontSize="small" />, onClick: () => console.log("2 clicked") },
     { text: "button3", icon: <SettingsIcon fontSize="small" />, onClick: () => console.log("3 clicked") },
     { text: "button4", icon: <SettingsIcon fontSize="small" />, onClick: () => console.log("4 clicked") },
+
   ];
   
   return (
@@ -58,7 +59,6 @@ export const ChatAppbar: React.FC<ChatAppbarProps> = ({
         >
           <AlignHorizontalLeftIcon />
         </IconButton>
-
         {/* タイトル */}
         <Typography 
           variant="h6"
@@ -71,6 +71,7 @@ export const ChatAppbar: React.FC<ChatAppbarProps> = ({
         {/* プルダウンボタン */}
         <AppbarButtons 
         TextButtons={TextButtons} />
+
       </Toolbar>
     </AppBar>
   );

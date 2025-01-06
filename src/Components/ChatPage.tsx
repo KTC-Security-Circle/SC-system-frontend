@@ -89,9 +89,6 @@ export const Chatwindow: React.FC<Props> = (props: Props) => {
     setActivePopover(null);
     setAnchorEl(null);
   };
-
-
-
   {/* 一番上の閉じる（閉じない）ボタンと新しいセッション開始があるとこ */}
   const drawerButton: DrawerItem[] = [
     { text: 'サイドバーボタン', icon: <AlignHorizontalLeftIcon /> ,tips: '閉じる', onClick: handleDrawerToggle },

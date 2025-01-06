@@ -216,4 +216,3 @@ export const DynamicChatwindow: React.FC<Props> = (props: Props) => {
     </Box>
   );
 }
-
