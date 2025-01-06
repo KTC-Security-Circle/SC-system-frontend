@@ -11,7 +11,6 @@ import {
   Tooltip,
 } from '@mui/material';
 import { DrawerItem, PopoverItem, SessionItem } from '../types/drawer';
-import AlignHorizontalLeftIcon from '@mui/icons-material/AlignHorizontalLeft';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 
 interface DrawerContentProps {
@@ -36,7 +35,6 @@ export const DrawerContent: React.FC<DrawerContentProps> = ({
   popoverLists,
   activePopover,
   anchorEl,
-  handleDrawerToggle,
   handlePopoverOpen,
   handlePopoverClose,
   height,

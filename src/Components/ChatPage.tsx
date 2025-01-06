@@ -84,11 +84,11 @@ export const Chatwindow: React.FC<Props> = (props: Props) => {
     setAnchorEl(event.currentTarget);
   };
 
+
   const handlePopoverClose = () => {
     setActivePopover(null);
     setAnchorEl(null);
   };
-
 
   {/* 一番上の閉じる（閉じない）ボタンと新しいセッション開始があるとこ */}
   const drawerButton: DrawerItem[] = [
@@ -199,6 +199,7 @@ export const Chatwindow: React.FC<Props> = (props: Props) => {
             height={height}
           />
         </Drawer>
+>>>>>>> main
       </Box>
       <Box
         component="main"

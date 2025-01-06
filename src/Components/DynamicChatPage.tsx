@@ -216,3 +216,4 @@ export const DynamicChatwindow: React.FC<Props> = (props: Props) => {
     </Box>
   );
 }
+>>>>>>> main:src/Components/DynamicChatPage.tsx
