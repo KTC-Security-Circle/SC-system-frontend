@@ -1,8 +1,8 @@
 {
   "name": "sc-system-frontend-dev",
   "dockerComposeFile": ["../compose.yml"],
-  "service": "app",
-  "workspaceFolder": "/app",
+  "service": "src",
+  "workspaceFolder": "/workspace",
 
   "remoteUser": "node",
   "customizations": {
