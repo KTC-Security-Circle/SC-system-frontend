@@ -68,7 +68,7 @@ export const AppbarButtons: React.FC<AppbarButtonProps> = ({
               marginRight: 1.5,
             },
             "&:active": {
-              backgroundColor: "#616161", // グレー背景（透明度 8%）
+              backgroundColor: "rgba(0, 0, 0, 0.3)",
             },
           },
         }}
