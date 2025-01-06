@@ -37,7 +37,7 @@ async function CardTitle({ title, icon }: { title: string, icon: ReactNode }) {
 export default async function AdminPageComponent() {
     return (
         <Container>
-            <Stack sx={{ m: 5 }} spacing={2} direction="row">
+            <Stack sx={{ m: 5 }} spacing={2} direction={{ xs: "column", lg: "row" }}>
                 {ADMIN_PAGES.map((page) => {
                     return <AdminCard {...page} />
                 })}
