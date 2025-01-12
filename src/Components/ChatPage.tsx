@@ -14,7 +14,6 @@ import DriveFileRenameOutlineIcon from '@mui/icons-material/DriveFileRenameOutli
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 
 import { 
-  AppBar,
   Box,
   CssBaseline,
   Drawer,
