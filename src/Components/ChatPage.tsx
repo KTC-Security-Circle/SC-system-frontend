@@ -3,6 +3,7 @@
 import * as React from 'react';
 import { ChatComponent } from '@/Components/parts/Chat/Chat';
 import { DrawerContent } from './DrawerContent';
+import { ChatAppbar } from '@/Components/parts/ChatAppbar';
 import { DrawerItem, PopoverItem, SessionItem } from '../types/drawer';
 
 import AddCommentIcon from '@mui/icons-material/AddComment';
@@ -13,6 +14,7 @@ import DriveFileRenameOutlineIcon from '@mui/icons-material/DriveFileRenameOutli
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 
 import { 
+  AppBar,
   Box,
   CssBaseline,
   Drawer,
@@ -210,6 +212,11 @@ export const Chatwindow: React.FC<Props> = (props: Props) => {
           transition: 'width 0.3s ease-in-out',   
           }}
       >
+        <ChatAppbar
+            pcOpen={pcOpen}
+            mobileOpen={mobileOpen}
+            handleDrawerToggle={handleDrawerToggle}
+        />  
         <ChatComponent />
       </Box>
     </Box>
