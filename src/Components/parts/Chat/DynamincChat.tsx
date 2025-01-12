@@ -13,6 +13,7 @@ import {
   ListItem,
   ListItemText,
   Paper,
+  Toolbar
 } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
 
@@ -154,6 +155,7 @@ export const DynamicChatComponent: React.FC = () => {
   return (
     <Container maxWidth="lg" sx={{ height: '100vh', display: 'flex', flexDirection: 'column' }}>
       <Box sx={{ flexGrow: 1, overflowY: 'auto', mb: 2 }}>
+              <Toolbar />
         <List>
           {messages.map((msg: Message) => (
             <ListItem
@@ -195,7 +197,7 @@ export const DynamicChatComponent: React.FC = () => {
           <div ref={bottomRef}/>
         </List>
       </Box>
-      <Box component="form" onSubmit={sendMessage} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', mb: 2 }}>
+      <Box component="form" onSubmit={sendMessage} sx={{ position:'flex', bottom: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', mb:2 }}>
         <TextField
           id="message-input"
           name="message"
