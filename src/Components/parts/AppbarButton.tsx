@@ -10,7 +10,7 @@ import {
   ListItemText,
 } from "@mui/material";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
-import { AppbarButton } from "../types/appbar";
+import { AppbarButton } from "@/types/appbar";
 
 interface AppbarButtonProps {
   TextButtons: AppbarButton[]; // ボタンデータ配列
