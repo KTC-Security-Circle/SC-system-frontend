@@ -8,6 +8,7 @@ import SettingsIcon from '@mui/icons-material/Settings';
 import { 
   IconButton,
   AppBar,
+  Box,
   Toolbar,
   Typography, 
 } from "@mui/material";
@@ -23,7 +24,7 @@ interface ChatAppbarProps {
 export const ChatAppbar: React.FC<ChatAppbarProps> = ({
   pcOpen,
   mobileOpen,
-  handleDrawerToggle,
+  handleDrawerToggle
 }) => {
 
   const TextButtons: AppbarButton [] = [
@@ -36,43 +37,49 @@ export const ChatAppbar: React.FC<ChatAppbarProps> = ({
   
   return (
     <AppBar
-      position="fixed"
-      sx={{
-        backgroundColor: '#ffffff',
-        boxShadow: 'none',
-        width: pcOpen
-          ? { sm: `calc(100% - ${drawerWidth}px)` }
-          : "100%", // pcOpenがfalseなら全幅
-        ml: pcOpen ? { sm: `${drawerWidth}px` } : 0, // 左余白を調整
-        transition: "width 0.3s ease-in-out",
-      }}
-    >
-      <Toolbar>
-        {/* 開閉ボタン */}
-        <IconButton
-          edge="start"
-          aria-label="menu"
-          onClick={handleDrawerToggle}
-          sx={{
-            display: { sm: pcOpen ? "none" : "block" }, // PC画面でDrawerが開いている時は非表示
-          }}
-        >
-          <AlignHorizontalLeftIcon />
-        </IconButton>
-        {/* タイトル */}
-        <Typography 
-          variant="h6"
-          component="div" 
-          sx={{ color:"#616161",flexGrow: 1 }}
-        >
-          SCsystem
-        </Typography>
+    position="fixed"
+    sx={{
+      backgroundColor: '#ffffff',
+      boxShadow: 'none',
+      width: pcOpen
+        ? { sm: `calc(100% - ${drawerWidth}px)` }
+        : "100%", // pcOpenがfalseなら全幅
+      ml: pcOpen ? { sm: `${drawerWidth}px` } : 0, // 左余白を調整
+      transition: "width 0.3s ease-in-out",
+    }}
+  >
+    <Toolbar
+    sx={{
+      display: "flex",
+      justifyContent: "space-between", 
+      alignItems: "center", 
+      padding: 0,
+    }}>
+      {/* 開閉ボタン */}
+      <IconButton
+        edge="start"
+        aria-label="menu"
+        onClick={handleDrawerToggle}
+        sx={{
+          display: { sm: pcOpen ? "none" : "block" }, // PC画面でDrawerが開いている時は非表示
+        }}
+      >
+        <AlignHorizontalLeftIcon />
+      </IconButton>
+      {/* タイトル */}
+      <Typography 
+        variant="h6"
+        component="div" 
+        sx={{ color:"#616161",flexGrow: 1, textAlign: 'left',paddingLeft: { sm: "16px", xs: "16px" } }}
+      >
+        SCsystem
+      </Typography>
 
-        {/* プルダウンボタン */}
-        <AppbarButtons 
-        TextButtons={TextButtons} />
+      {/* プルダウンボタン */}
+      <AppbarButtons 
+      TextButtons={TextButtons} />
 
-      </Toolbar>
-    </AppBar>
+    </Toolbar>
+  </AppBar>
   );
 };
