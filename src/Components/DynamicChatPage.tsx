@@ -3,6 +3,8 @@
 import * as React from 'react';
 import { DynamicChatComponent } from '@/Components/parts/Chat/DynamincChat';
 import { DrawerContent } from './DrawerContent';
+import { ChatAppbar } from '@/Components/parts/ChatAppbar';
+
 import { DrawerItem, PopoverItem, SessionItem } from '../types/drawer';
 
 import AddCommentIcon from '@mui/icons-material/AddComment';
@@ -17,6 +19,7 @@ import {
   CssBaseline,
   Drawer,
   IconButton,
+  Toolbar,
 } from '@mui/material';
 
 
@@ -199,7 +202,12 @@ export const DynamicChatwindow: React.FC<Props> = (props: Props) => {
             height={height}
           />
         </Drawer>
-      </Box>
+      </Box>  
+      <ChatAppbar
+        pcOpen={pcOpen}
+        mobileOpen={mobileOpen}
+        handleDrawerToggle={handleDrawerToggle}
+      />  
       <Box
         component="main"
         sx={{
@@ -209,9 +217,9 @@ export const DynamicChatwindow: React.FC<Props> = (props: Props) => {
             xs: '100%'
           },
           transition: 'width 0.3s ease-in-out',   
-          }}
+        }}
       >
-        <DynamicChatComponent  />
+        <DynamicChatComponent />
       </Box>
     </Box>
   );
