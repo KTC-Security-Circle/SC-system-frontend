@@ -1,0 +1,25 @@
+/*markdown*/
+.markdown-body table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 1em 0;
+  }
+  
+  .markdown-body th,
+  .markdown-body td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+    background-color: #ddd;
+  }
+  
+  .markdown-body th {
+    background-color: #f4f4f4;
+    font-weight: bold;
+  }
+  
+  .markdown-body input[type="checkbox"] {
+    margin-right: 0.5em;
+    transform: scale(1.2); /* チェックボックスの拡大 */
+  }
+  
