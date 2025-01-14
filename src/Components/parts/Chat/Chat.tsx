@@ -16,6 +16,7 @@ import {
   Paper,
 } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
+import CircularProgress from '@mui/material/CircularProgress';
 
 interface Message {
   id: string;
@@ -29,11 +30,13 @@ const API_LINK = process.env.NEXT_PUBLIC_BACKEND_DEV_URL;
 export const ChatComponent: React.FC = () => {
   const { user } = useSelector((state: RootState) => state.auth);
   const [message, setMessage] = useState<string>('');
+  const [loading,setLoading]=useState<boolean>(false);
   const router = useRouter();
 
   const sendMessage = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!message.trim() || !user) return;
+    setLoading(true);
     try {
       const token = Cookies.get('access_token');
       if (!token) {
@@ -73,6 +76,7 @@ export const ChatComponent: React.FC = () => {
       console.error(err);
     } finally {
       setMessage('');
+      setLoading(false);
     }
   };
 
@@ -91,6 +95,7 @@ export const ChatComponent: React.FC = () => {
         <IconButton aria-label="Send" type="submit">
           <SendIcon />
         </IconButton>
+        {loading && <CircularProgress size={24} sx={{ ml: 2 }} />}
       </Box>
     </Container>
   );

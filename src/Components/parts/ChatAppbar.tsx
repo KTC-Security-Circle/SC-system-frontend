@@ -56,16 +56,7 @@ export const ChatAppbar: React.FC<ChatAppbarProps> = ({
       padding: 0,
     }}>
       {/* 開閉ボタン */}
-      <IconButton
-        edge="start"
-        aria-label="menu"
-        onClick={handleDrawerToggle}
-        sx={{
-          display: { sm: pcOpen ? "none" : "block" }, // PC画面でDrawerが開いている時は非表示
-        }}
-      >
         <AlignHorizontalLeftIcon />
-      </IconButton>
       {/* タイトル */}
       <Typography 
         variant="h6"

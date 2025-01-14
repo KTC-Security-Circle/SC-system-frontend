@@ -16,6 +16,8 @@ import {
   Toolbar
 } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
+import CircularProgress from '@mui/material/CircularProgress';
+
 
 interface Message {
   id: string;
@@ -30,6 +32,7 @@ export const DynamicChatComponent: React.FC = () => {
   const [message, setMessage] = useState<string>('');
   const [messages, setMessages] = useState<Message[]>([]);
   const [error, setError] = useState<string | null>(null);
+  const [loading,setLoading]=useState<boolean>(false);
   const router = useRouter();
   const { session_id } = useParams();
   const token = Cookies.get('access_token');
@@ -114,6 +117,7 @@ export const DynamicChatComponent: React.FC = () => {
     };
 
     setMessages([...messages, optimisticMessage]);
+    setLoading(true);
 
     try {
       const res = await fetch(`${API_LINK}/api/input/chat/`, {
@@ -147,6 +151,7 @@ export const DynamicChatComponent: React.FC = () => {
       setError('Failed to send message');
     } finally {
       setMessage('');
+      setLoading(false);
     }
   };
 
@@ -228,6 +233,7 @@ export const DynamicChatComponent: React.FC = () => {
         <IconButton aria-label="Send" size="large" className="send-button" type="submit" sx={{ color: '#1E3C5F' }}>
           <SendIcon fontSize="inherit" />
         </IconButton>
+        {loading && <CircularProgress size={24} sx={{ ml: 2 }} />}
       </Box>
     </Container>
   );
