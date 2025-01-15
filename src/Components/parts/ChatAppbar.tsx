@@ -5,6 +5,10 @@ import { AppbarButton } from '@/types/appbar';
 import { AppbarButtons } from './AppbarButton';
 import AlignHorizontalLeftIcon from "@mui/icons-material/AlignHorizontalLeft";
 import SettingsIcon from '@mui/icons-material/Settings';
+import LogoutIcon from '@mui/icons-material/Logout';
+import { logout } from "@/Context/authSlice";
+import { useDispatch } from 'react-redux';
+import { AppDispatch } from '@/store/index';
 import { 
   IconButton,
   AppBar,
@@ -21,19 +25,28 @@ interface ChatAppbarProps {
   handleDrawerToggle: () => void;
 }
 
+
 export const ChatAppbar: React.FC<ChatAppbarProps> = ({
   pcOpen,
   mobileOpen,
   handleDrawerToggle
 }) => {
 
+  const dispatch = useDispatch<AppDispatch>();
+  const handleLogout = async(e: React.FormEvent<HTMLDivElement>)=>{
+    e.preventDefault();
+    const  res  =await dispatch(logout());
+    return res;
+  }
+
   const TextButtons: AppbarButton [] = [
     { text: "button1", icon: <SettingsIcon fontSize="small" />, onClick: () => console.log("1 clicked") },
     { text: "button2", icon: <SettingsIcon fontSize="small" />, onClick: () => console.log("2 clicked") },
     { text: "button3", icon: <SettingsIcon fontSize="small" />, onClick: () => console.log("3 clicked") },
-    { text: "button4", icon: <SettingsIcon fontSize="small" />, onClick: () => console.log("4 clicked") },
+    { text: "Logout", icon: <LogoutIcon fontSize="small" />, onClick: ()=>handleLogout},
 
   ];
+  
   
   return (
     <AppBar
