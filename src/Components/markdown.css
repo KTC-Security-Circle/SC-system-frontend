@@ -1,25 +1,57 @@
-/*markdown*/
+/* markdown */
 .markdown-body table {
-    border-collapse: collapse;
-    width: 100%;
-    margin: 1em 0;
-  }
-  
-  .markdown-body th,
-  .markdown-body td {
-    border: 1px solid #ddd;
-    padding: 8px;
-    text-align: left;
-    background-color: #ddd;
-  }
-  
-  .markdown-body th {
-    background-color: #f4f4f4;
-    font-weight: bold;
-  }
-  
-  .markdown-body input[type="checkbox"] {
-    margin-right: 0.5em;
-    transform: scale(1.2); /* チェックボックスの拡大 */
-  }
-  
+  border-collapse: collapse;
+  width: 100%;
+  margin: 1em 0 1em 10px ;
+  overflow: hidden; /* テーブル内の内容がはみ出さないようにする */
+}
+
+.markdown-body th,
+.markdown-body td {
+  border: 1px solid #ccc;
+  padding: 12px;
+  text-align: left;
+}
+
+.markdown-body th {
+  background-color: #6c757d; /* ヘッダーの背景色 */
+  color: #ffffff; /* ヘッダーの文字色 */
+  font-weight: bold;
+}
+
+.markdown-body td {
+  background-color: #ffffff; /* セルの背景色 */
+}
+
+.markdown-body tr:nth-child(even) td {
+  background-color: #f2f2f2; /* 偶数行の背景色 */
+}
+
+/* チェックリストのデザイン */
+.markdown-body input[type="checkbox"] {
+  transition: transform 0.2s ease;
+}
+.markdown-body input[type="checkbox"]:checked {
+  transform: scale(1.3);
+}
+
+ 
+.markdown-body ol {
+  margin: 1em 0;
+  padding-left: 2em; /* インデントの調整 */
+  list-style-type: decimal; /* 番号リストのスタイル */
+}
+
+.markdown-body ol li {
+  margin-bottom: 0.5em; /* リスト項目間のスペース */
+}
+
+.markdown-body ul {
+  margin: 1em 0;
+  padding-left: 2em; /* インデントの調整 */
+  list-style-type: disc; /* 通常の箇条書きリスト */
+}
+
+.markdown-body ul li {
+  margin-bottom: 0.5em; /* リスト項目間のスペース */
+}
