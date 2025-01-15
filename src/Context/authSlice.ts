@@ -2,6 +2,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 import Cookies from 'js-cookie';
+import { useRouter } from "next/router";
 
 interface User {
   id: string;
@@ -21,6 +22,7 @@ const initialState: AuthState = {
   loading: false,
 };
 
+const router =useRouter();
 const API_LINK = process.env.NEXT_PUBLIC_BACKEND_DEV_URL;
 
 // 非同期でユーザー情報を取得
@@ -80,6 +82,8 @@ export const logout = createAsyncThunk<void, void, { rejectValue: string }>(
         {},
         { withCredentials: true }
       );
+      Cookies.remove('access_token');
+      router.push('/');
     } catch (err) {
       console.error("Logout failed:", err);
       return thunkAPI.rejectWithValue("Failed to logout");
