@@ -2,7 +2,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 import Cookies from 'js-cookie';
-import { useRouter } from "next/router";
 
 interface User {
   id: string;
@@ -78,12 +77,16 @@ export const logout = createAsyncThunk<void, void, { rejectValue: string }>(
   async (_, thunkAPI) => {
     try {
       await axios.post(
-        `${API_LINK}/api/logout`,
+        `${API_LINK}/auth/logout/`,
         {},
-        { withCredentials: true }
+        {
+          headers: {
+            withCredentials: true, 
+            "Content-Type": "application/json",
+          },
+        }
       );
       Cookies.remove('access_token');
-      router.push('/');
     } catch (err) {
       console.error("Logout failed:", err);
       return thunkAPI.rejectWithValue("Failed to logout");

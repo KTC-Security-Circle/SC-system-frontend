@@ -9,6 +9,7 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import { logout } from "@/Context/authSlice";
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from '@/store/index';
+import { useRouter } from 'next/navigation'
 import { 
   IconButton,
   AppBar,
@@ -32,10 +33,11 @@ export const ChatAppbar: React.FC<ChatAppbarProps> = ({
   handleDrawerToggle
 }) => {
 
+  const router = useRouter();
   const dispatch = useDispatch<AppDispatch>();
-  const handleLogout = async(e: React.FormEvent<HTMLDivElement>)=>{
-    e.preventDefault();
+  const handleLogout = async(e: React.MouseEvent<HTMLButtonElement>)=>{
     const  res  =await dispatch(logout());
+    router.push('/');
     return res;
   }
 
@@ -43,7 +45,7 @@ export const ChatAppbar: React.FC<ChatAppbarProps> = ({
     { text: "button1", icon: <SettingsIcon fontSize="small" />, onClick: () => console.log("1 clicked") },
     { text: "button2", icon: <SettingsIcon fontSize="small" />, onClick: () => console.log("2 clicked") },
     { text: "button3", icon: <SettingsIcon fontSize="small" />, onClick: () => console.log("3 clicked") },
-    { text: "Logout", icon: <LogoutIcon fontSize="small" />, onClick: ()=>handleLogout},
+    { text: "Logout", icon: <LogoutIcon fontSize="small" />, onClick: handleLogout},
 
   ];
   

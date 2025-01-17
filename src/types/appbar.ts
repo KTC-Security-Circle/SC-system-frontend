@@ -3,7 +3,7 @@ import { ReactNode } from 'react';
 
 export interface AppbarButton {
     text: string; // ボタンのテキスト
-    onClick: () => void; // クリック時の動作
+    onClick: (e: React.MouseEvent<HTMLButtonElement>) => void; // クリック時の動作
     icon?: React.ReactNode; // アイコン
 
 }
