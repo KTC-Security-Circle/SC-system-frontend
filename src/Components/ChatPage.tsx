@@ -24,7 +24,7 @@ import {
 const drawerWidth = 240;
 
 interface Props {
-  window?: () => Window;
+  window? : {innerWidth:number, innerHeight:number};
 }
 
 export const Chatwindow: React.FC<Props> = (props: Props) => {
