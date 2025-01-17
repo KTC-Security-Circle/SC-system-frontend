@@ -77,7 +77,7 @@ export const AppbarButtons: React.FC<AppbarButtonProps> = ({
           <React.Fragment key={index}>
             <MenuItem
               onClick={() => {
-                button.onClick();
+                button.onClick;
                 handleMenuClose();
               }}
               disableRipple
