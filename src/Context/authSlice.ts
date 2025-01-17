@@ -21,7 +21,6 @@ const initialState: AuthState = {
   loading: false,
 };
 
-const router =useRouter();
 const API_LINK = process.env.NEXT_PUBLIC_BACKEND_DEV_URL;
 
 // 非同期でユーザー情報を取得
