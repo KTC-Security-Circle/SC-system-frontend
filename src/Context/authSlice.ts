@@ -28,7 +28,7 @@ export const fetchUser = createAsyncThunk<User, void, { rejectValue: string }>(
   "users/fetchUser",
   async (_, thunkAPI) => {
     try {
-      const response = await axios.get(`${API_LINK}/user/me/`, {
+      const response = await axios.get(`${API_LINK}/user/me`, {
         withCredentials: true,
       });
       return response.data; 
@@ -45,7 +45,7 @@ export const login = createAsyncThunk<User, { email: string; password: string },
   async ({ email, password }, thunkAPI) => {
     try {
       const response = await axios.post(
-        `${API_LINK}/auth/login/`,
+        `${API_LINK}/auth/login`,
         { email, password },
         {
           headers: {
@@ -76,7 +76,7 @@ export const logout = createAsyncThunk<void, void, { rejectValue: string }>(
   async (_, thunkAPI) => {
     try {
       await axios.post(
-        `${API_LINK}/auth/logout/`,
+        `${API_LINK}/auth/logout`,
         {},
         {
           headers: {
