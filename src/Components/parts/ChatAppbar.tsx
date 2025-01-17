@@ -36,9 +36,13 @@ export const ChatAppbar: React.FC<ChatAppbarProps> = ({
   const router = useRouter();
   const dispatch = useDispatch<AppDispatch>();
   const handleLogout = async(e: React.MouseEvent<HTMLButtonElement>)=>{
-    const  res  =await dispatch(logout());
-    router.push('/');
-    return res;
+    try {
+      const res = await dispatch(logout());
+      router.push('/');
+      return res;
+    } catch (error) {
+      console.error("Logout failed:", error);
+    }
   }
 
   const TextButtons: AppbarButton [] = [
