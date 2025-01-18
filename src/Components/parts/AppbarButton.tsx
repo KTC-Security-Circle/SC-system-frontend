@@ -74,20 +74,18 @@ export const AppbarButtons: React.FC<AppbarButtonProps> = ({
         }}
       >
         {TextButtons.map((button, index) => (
-          <React.Fragment key={index}>
-            <MenuItem
-              onClick={() => {
-                button.onClick;
-                handleMenuClose();
-              }}
-              disableRipple
-            >
-              <ListItemIcon>{button.icon}</ListItemIcon>
-              <ListItemText>{button.text}</ListItemText>
-            </MenuItem>
-            {/* Divider の挿入 */}
+          <MenuItem
+            key={index}
+            onClick={(e) => {
+              button.onClick(e as unknown as React.MouseEvent<HTMLButtonElement>);
+              handleMenuClose();
+            }}
+            disableRipple
+          >
+            <ListItemIcon>{button.icon}</ListItemIcon>
+            <ListItemText>{button.text}</ListItemText>
             {index === 2 && <Divider sx={{ my: 0.5 }} />}
-          </React.Fragment>
+          </MenuItem>
         ))}
       </Menu>
     </>
