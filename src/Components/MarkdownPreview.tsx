@@ -1,6 +1,7 @@
+import React from 'react';
 import ReactMarkdown from 'react-markdown';
-import breaks from 'remark-breaks';
 import remarkGfm from 'remark-gfm';
+import breaks from 'remark-breaks';
 import 'github-markdown-css/github-markdown.css';
 import './markdown.css';
 
@@ -11,9 +12,8 @@ type MarkdownPreviewProps = {
 const MarkdownPreview: React.FC<MarkdownPreviewProps> = ({ content }) => {
   return (
     <>
-      <h1 className="text-4xl font-bold mb-4 text-left pl-4">プレビュー</h1>
       <div
-        className="markdown-body p-4 border border-gray-300 h-72 overflow-y-auto"
+        className="markdown-body"
         style={{
           fontFamily: 'inherit',
           fontSize: 'inherit',
@@ -22,10 +22,7 @@ const MarkdownPreview: React.FC<MarkdownPreviewProps> = ({ content }) => {
         }}
       >
         <ReactMarkdown
-          remarkPlugins={[remarkGfm]}
-          components={{
-
-          }} // 必要なプラグインを適用
+          remarkPlugins={[remarkGfm, breaks]} // 必要なプラグインを適用
         >
           {content}
         </ReactMarkdown>
