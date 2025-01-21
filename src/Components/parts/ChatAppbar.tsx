@@ -15,7 +15,7 @@ import {
   AppBar,
   Box,
   Toolbar,
-  Typography, 
+  Typography,
 } from "@mui/material";
 
 const drawerWidth = 240;
