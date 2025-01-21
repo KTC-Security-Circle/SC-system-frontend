@@ -41,7 +41,6 @@ export const DynamicChatComponent: React.FC = () => {
 
   useEffect(() => {
     if (!session_id || Array.isArray(session_id)) {
-      console.error('Invalid session ID');
       router.push('/');
       return;
     }
@@ -50,7 +49,6 @@ export const DynamicChatComponent: React.FC = () => {
       try {
         if (!token) {
           router.push('/');
-          console.error('No token found');
           return;
         }
 
@@ -83,7 +81,6 @@ export const DynamicChatComponent: React.FC = () => {
         ]);
         setMessages(formattedMessages);
       } catch (err) {
-        console.error(err);
         setError('Failed to load messages');
       }
     };
@@ -106,7 +103,6 @@ export const DynamicChatComponent: React.FC = () => {
     }
 
     if (!session_id || Array.isArray(session_id)) {
-      console.error('Invalid session ID');
       return;
     }
 
@@ -148,7 +144,6 @@ export const DynamicChatComponent: React.FC = () => {
       };
       setMessages((prevMessages) => [...prevMessages, botReply]);
     } catch (err) {
-      console.error(err);
       setError('Failed to send message');
     } finally {
       setMessage('');
@@ -159,7 +154,7 @@ export const DynamicChatComponent: React.FC = () => {
   if (error) return <div>{error}</div>;
 
   return (
-    <Container maxWidth="lg" sx={{ height: '100vh', display: 'flex', flexDirection: 'column' }}>
+    <Container maxWidth="lg" sx={{ height: '100vh', display: 'flex', flexDirection: 'column', backgroundColor: '#e6ffff' }}>
       <Box sx={{ flexGrow: 1, overflowY: 'auto', mb: 2 }}>
               <Toolbar />
         <List>
@@ -232,6 +227,7 @@ export const DynamicChatComponent: React.FC = () => {
               },
             },
           }}
+          multiline
           value={message}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) => setMessage(e.target.value)}
           sx={{ mx: 'auto' }}
