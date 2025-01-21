@@ -3,6 +3,7 @@
 import React, { useState, useEffect, FormEvent,useRef } from 'react';
 import Cookies from 'js-cookie';
 import { useRouter, useParams } from 'next/navigation';
+import Image from 'next/image';
 
 import {
   Box,
@@ -166,11 +167,16 @@ export const DynamicChatComponent: React.FC = () => {
             <ListItem
               key={msg.id}
               sx={{ justifyContent: msg.sender === 'user' ? 'flex-end' : 'flex-start' }}
-            >
+              >
+              {msg.sender === 'bot' && (
+                <Image src="/ai_icon.png" alt="AI" width={40} height={40}  />
+              )}
               <Box sx={{ maxWidth: '75%', position: 'relative' }}>
                 <Paper
                   elevation={1}
                   sx={{
+                    display: 'flex',
+                    alignItems: 'center',
                     p: 1.4,
                     m: 1,
                     backgroundColor: msg.sender === 'user' ? '#e5e7eb' : '#e5e7eb',
