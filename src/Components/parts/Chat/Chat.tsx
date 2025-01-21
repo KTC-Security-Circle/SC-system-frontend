@@ -81,7 +81,7 @@ export const ChatComponent: React.FC = () => {
   };
 
   return (
-    <Container maxWidth="lg" sx={{ height: '100vh', display: 'flex', flexDirection: 'column' }}>
+    <Container maxWidth="lg" sx={{ height: '100vh', display: 'flex', flexDirection: 'column', backgroundColor: '#e6ffff' }}>
       <Box component="form" onSubmit={sendMessage} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', mb: 2, marginTop: 'auto',bottom: 0 }}>
         <TextField
           id="message-input"
@@ -89,6 +89,7 @@ export const ChatComponent: React.FC = () => {
           fullWidth
           variant="outlined"
           placeholder="Type a message..."
+          multiline
           value={message}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) => setMessage(e.target.value)}
         />
