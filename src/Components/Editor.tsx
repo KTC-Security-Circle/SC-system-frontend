@@ -4,7 +4,12 @@ import dynamic from 'next/dynamic';
 import { useMemo } from 'react';
 import 'easymde/dist/easymde.min.css';
 
-const ReactSimpleMdeEditor = dynamic(() => import('react-simplemde-editor'), { ssr: false });
+const Loading = () => <p>Loading editor...</p>;
+
+const ReactSimpleMdeEditor = dynamic(() => import('react-simplemde-editor'), { 
+  ssr: false,
+  loading: () => <Loading /> // ローディング中に表示するコンポーネントを指定
+});
 
 type EditorProps = {
   value: string;
