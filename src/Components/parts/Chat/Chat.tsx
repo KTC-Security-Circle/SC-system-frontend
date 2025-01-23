@@ -33,7 +33,7 @@ export const ChatComponent: React.FC = () => {
   const [loading,setLoading]=useState<boolean>(false);
   const router = useRouter();
 
-  const sendMessage = async (e: FormEvent<HTMLFormElement>) => {
+  const sendMessage = async (e: FormEvent<HTMLFormElement> | React.KeyboardEvent<HTMLDivElement>) => {
     e.preventDefault();
     if (!message.trim() || !user) return;
     setLoading(true);
@@ -80,24 +80,46 @@ export const ChatComponent: React.FC = () => {
     }
   };
 
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      sendMessage(e);
+    }
+  };
+
   return (
-    <Container maxWidth="lg" sx={{ height: '100vh', display: 'flex', flexDirection: 'column', backgroundColor: '#e6ffff' }}>
-      <Box component="form" onSubmit={sendMessage} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', mb: 2, marginTop: 'auto',bottom: 0 }}>
-        <TextField
-          id="message-input"
-          name="message"
-          fullWidth
-          variant="outlined"
-          placeholder="Type a message..."
-          multiline
-          value={message}
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) => setMessage(e.target.value)}
-        />
-        <IconButton aria-label="Send" type="submit">
-          <SendIcon />
-        </IconButton>
-        {loading && <CircularProgress size={24} sx={{ ml: 2 }} />}
-      </Box>
-    </Container>
+      <Container maxWidth="lg" sx={{ height: '100vh', display: 'flex', flexDirection: 'column', backgroundColor: '#e6ffff' }}>
+        <Box component="form" onSubmit={sendMessage} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', mb: 2, marginTop: 'auto',bottom: 0 }}>
+          <TextField
+            id="message-input"
+            name="message"
+            fullWidth
+            variant="outlined"
+            placeholder="Type a message..."
+            multiline
+            value={message}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setMessage(e.target.value)}
+            onKeyDown={handleKeyDown}
+            sx={{
+              '& .MuiOutlinedInput-root': {
+                backgroundColor: '#d8d8d8',
+                '& fieldset': {
+                  borderColor: 'transparent',
+                },
+                '&:hover fieldset': {
+                  borderColor: 'transparent',
+                },
+                '&.Mui-focused fieldset': {
+                  borderColor: 'transparent',
+                },
+              },
+            }}
+          />
+          <IconButton aria-label="Send" type="submit" >
+            <SendIcon />
+          </IconButton>
+          {loading && <CircularProgress size={24} sx={{ ml: 2 }} />}
+        </Box>
+      </Container>
   );
 };
