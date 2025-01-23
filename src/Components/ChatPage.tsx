@@ -208,6 +208,7 @@ export const Chatwindow: React.FC<Props> = (props: Props) => {
             xs: '100%'
           },
           transition: 'width 0.3s ease-in-out',   
+          backgroundColor: '#e6ffff'
           }}
       >
         <ChatAppbar
