@@ -94,7 +94,7 @@ export const DynamicChatComponent: React.FC = () => {
     }
   },[messages])
 
-  const sendMessage = async (e: FormEvent<HTMLFormElement>) => {
+  const sendMessage = async (e: FormEvent<HTMLFormElement> | React.KeyboardEvent<HTMLDivElement>) => {
     e.preventDefault();
     if (!message.trim()) return;
     if (!token) {
@@ -151,6 +151,13 @@ export const DynamicChatComponent: React.FC = () => {
     }
   };
 
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+      if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        sendMessage(e);
+      }
+    };
+
   if (error) return <div>{error}</div>;
 
   return (
@@ -174,7 +181,7 @@ export const DynamicChatComponent: React.FC = () => {
                     alignItems: 'center',
                     p: 1.4,
                     m: 1,
-                    backgroundColor: msg.sender === 'user' ? '#e5e7eb' : '#e5e7eb',
+                    backgroundColor: msg.sender === 'user' ? '#d8d8d8' : '#d8d8d8',
                     color: msg.sender === 'user' ? '#000000' : '#000000',
                     textAlign: msg.sender === 'user' ? 'center' : 'center',
                     position: 'relative',
@@ -188,8 +195,8 @@ export const DynamicChatComponent: React.FC = () => {
                       borderStyle: 'solid',
                       borderColor:
                         msg.sender === 'user'
-                          ? 'transparent transparent transparent #e5e7eb'
-                          : 'transparent #e5e7eb transparent transparent',
+                          ? 'transparent transparent transparent #d8d8d8'
+                          : 'transparent #d8d8d8 transparent transparent',
                       right: msg.sender === 'user' ? '-20px' : 'auto',
                       left: msg.sender !== 'user' ? '-20px' : 'auto',
                     },
@@ -230,7 +237,22 @@ export const DynamicChatComponent: React.FC = () => {
           multiline
           value={message}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) => setMessage(e.target.value)}
-          sx={{ mx: 'auto' }}
+          onKeyDown={handleKeyDown}
+          sx={{
+            mx: 'auto',
+            '& .MuiOutlinedInput-root': {
+              backgroundColor: '#d8d8d8',
+              '& fieldset': {
+                borderColor: 'transparent',
+              },
+              '&:hover fieldset': {
+                borderColor: 'transparent',
+              },
+              '&.Mui-focused fieldset': {
+                borderColor: 'transparent',
+              },
+            },
+          }} 
         />
         <IconButton aria-label="Send" size="large" className="send-button" type="submit" sx={{ color: '#1E3C5F' }}>
           <SendIcon fontSize="inherit" />
