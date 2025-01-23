@@ -33,7 +33,6 @@ export const fetchUser = createAsyncThunk<User, void, { rejectValue: string }>(
       });
       return response.data; 
     } catch (err) {
-      console.error("Fetch user failed:", err);
       return thunkAPI.rejectWithValue("Failed to fetch user");
     }
   }
@@ -54,7 +53,6 @@ export const login = createAsyncThunk<User, { email: string; password: string },
           },
         }
       );
-      console.log("Login response:", response.data);
       const expires = new Date(new Date().getTime() + 30 * 60 * 1000); // 30 分
       Cookies.set('access_token', response.data.access_token, { expires, sameSite: 'Lax' });
       const user = {
@@ -64,7 +62,6 @@ export const login = createAsyncThunk<User, { email: string; password: string },
       };
       return user;
     } catch (err) {
-      console.error("Login failed:", err);
       return thunkAPI.rejectWithValue("Invalid username or password");
     }
   }
@@ -87,7 +84,6 @@ export const logout = createAsyncThunk<void, void, { rejectValue: string }>(
       );
       Cookies.remove('access_token');
     } catch (err) {
-      console.error("Logout failed:", err);
       return thunkAPI.rejectWithValue("Failed to logout");
     }
   }

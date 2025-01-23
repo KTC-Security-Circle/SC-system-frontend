@@ -23,9 +23,15 @@ export const RegisterForm: React.FC = () => {
   const handleMouseDownPassword = (e: React.MouseEvent<HTMLButtonElement>) => e.preventDefault();
 
   const API_LINK = process.env.NEXT_PUBLIC_BACKEND_DEV_URL;
-
+  
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    const passwordCheck = /^(?=.*[a-zA-Z](?=.*\d)[a-zA-Z\d]{8,}$)/;
+    if(!passwordCheck.test(password)){
+      setAlertMessage('パスワードは8文字以上の英数字で設定してください');
+      setShowSnackbar(true);
+      return;
+    }
     try {
       const res = await fetch(`${API_LINK}/auth/signup`, {
         method: 'POST',

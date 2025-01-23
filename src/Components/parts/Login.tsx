@@ -38,7 +38,7 @@ export const LoginForm: React.FC = () => {
           break;
         case 'staff':
         case 'admin':
-          router.push('/Chat');
+          router.push('/Admin');
           break;
         default:
           router.push('/');
