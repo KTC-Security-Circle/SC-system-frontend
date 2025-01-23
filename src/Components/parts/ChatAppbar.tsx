@@ -18,6 +18,7 @@ import {
   Typography,
 } from "@mui/material";
 import Image from "next/image";
+import styles from "@/styles/image.module.css";
 
 const drawerWidth = 240;
 
@@ -77,7 +78,7 @@ export const ChatAppbar: React.FC<ChatAppbarProps> = ({
     }}>
       {/* 開閉ボタン */}
         <AlignHorizontalLeftIcon />
-        <Image src="/scsystemlogo.png" alt="SCsystemLogo" width={40} height={40} />
+        <Image src="/scsystemlogo.png" alt="SCsystemLogo" width={45} height={45} className={styles.imageStyle}/>
       {/* タイトル */}
       <Typography 
         variant="h6"
