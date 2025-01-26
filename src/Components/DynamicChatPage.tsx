@@ -1,18 +1,14 @@
 "use client"
 
 import * as React from 'react';
+import { useRouter } from 'next/navigation';
 import { DynamicChatComponent } from '@/Components/parts/Chat/DynamincChat';
 import { DrawerContent } from './DrawerContent';
 import { ChatAppbar } from '@/Components/parts/ChatAppbar';
-
-import { DrawerItem, PopoverItem, SessionItem } from '../types/drawer';
-
+import { DrawerItem } from '../types/drawer';
 import AddCommentIcon from '@mui/icons-material/AddComment';
 import AlignHorizontalLeftIcon from '@mui/icons-material/AlignHorizontalLeft';
-import ArchiveIcon from '@mui/icons-material/Archive';
-import DeleteIcon from '@mui/icons-material/Delete';
-import DriveFileRenameOutlineIcon from '@mui/icons-material/DriveFileRenameOutline';
-import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
+import { SessionList } from '@/Components/parts/Nav/SessionList';
 
 import { 
   Box,
@@ -29,10 +25,10 @@ interface Props {
 }
 
 export const DynamicChatwindow: React.FC<Props> = (props: Props) => {
+  const router = useRouter();
   
   {/*popover*/}
   const [activePopover, setActivePopover] = React.useState<string | null>(null);
-  
   const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>(null);
 
   {/*モバイル用の開閉状態*/}
@@ -91,11 +87,14 @@ export const DynamicChatwindow: React.FC<Props> = (props: Props) => {
     setAnchorEl(null);
   };
 
+  const handlecreateSession = () => {
+      router.push('/Chat');
+    };
 
   {/* 一番上の閉じる（閉じない）ボタンと新しいセッション開始があるとこ */}
   const drawerButton: DrawerItem[] = [
     { text: 'サイドバーボタン', icon: <AlignHorizontalLeftIcon /> ,tips: '閉じる', onClick: handleDrawerToggle },
-    { text: 'newsession', icon: <AddCommentIcon /> ,tips: '新しいセッションを作成' },
+    { text: 'newsession', icon: <AddCommentIcon /> ,tips: '新しいセッションを作成', onClick: handlecreateSession },
   ];
 
   const menuItems: DrawerItem[] = [
@@ -104,26 +103,6 @@ export const DynamicChatwindow: React.FC<Props> = (props: Props) => {
     { text: 'button3', icon: <AlignHorizontalLeftIcon /> ,tips: 'ボタン3' },
   ];
 
-  const sessionItems: SessionItem[] = [
-    { id: '1', text: 'session1', icon: <MoreHorizIcon /> },
-    { id: '2', text: 'session2', icon: <MoreHorizIcon /> },
-    { id: '3', text: 'session3', icon: <MoreHorizIcon /> },
-    { id: '4', text: 'session4', icon: <MoreHorizIcon /> },
-    { id: '5', text: 'session5', icon: <MoreHorizIcon /> },
-    { id: '6', text: 'session6', icon: <MoreHorizIcon /> },
-    { id: '7', text: 'session7', icon: <MoreHorizIcon /> },
-    { id: '8', text: 'session8', icon: <MoreHorizIcon /> },
-    { id: '9', text: 'session9', icon: <MoreHorizIcon /> },
-    { id: '10', text: 'session10', icon: <MoreHorizIcon /> },
-    { id: '11', text: 'session11', icon: <MoreHorizIcon /> },
-    { id: '12', text: 'session12', icon: <MoreHorizIcon /> },
-  ];
-
-  const popoverLists: PopoverItem [] = [
-    { text: 'rename', icon: <DriveFileRenameOutlineIcon /> },
-    { text: 'archive', icon: <ArchiveIcon /> },
-    { text: 'delete', icon: <DeleteIcon sx={{ color: '#f44336' }} />},
-  ];
 
   return (
     <Box sx={{ display: 'flex', height: '100vh'}}>
@@ -165,8 +144,6 @@ export const DynamicChatwindow: React.FC<Props> = (props: Props) => {
             listRef={listRef}
             drawerButton={drawerButton}
             menuItems={menuItems}
-            sessionItems={sessionItems}
-            popoverLists={popoverLists}
             activePopover={activePopover}
             anchorEl={anchorEl}
             handleDrawerToggle={handleDrawerToggle}
@@ -174,6 +151,7 @@ export const DynamicChatwindow: React.FC<Props> = (props: Props) => {
             handlePopoverClose={handlePopoverClose}
             height={height}
           />
+          <SessionList />
         </Drawer>
         <Drawer
           variant="permanent"
@@ -191,8 +169,6 @@ export const DynamicChatwindow: React.FC<Props> = (props: Props) => {
             listRef={listRef}
             drawerButton={drawerButton}
             menuItems={menuItems}
-            sessionItems={sessionItems}
-            popoverLists={popoverLists}
             activePopover={activePopover}
             anchorEl={anchorEl}
             handleDrawerToggle={handleDrawerToggle}
@@ -200,6 +176,7 @@ export const DynamicChatwindow: React.FC<Props> = (props: Props) => {
             handlePopoverClose={handlePopoverClose}
             height={height}
           />
+          <SessionList />
         </Drawer>
       </Box>  
       <ChatAppbar
