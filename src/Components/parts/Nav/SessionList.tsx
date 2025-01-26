@@ -44,11 +44,13 @@ export const SessionList: React.FC = () => {
     };
 
     const handleClick = (e: React.MouseEvent<HTMLButtonElement>, id: number) => {
+        e.stopPropagation();
         setAnchorEl(e.currentTarget);
         setActivePopover(id);
     };
 
-    const handleClose = () => {
+    const handleClose = (e: React.MouseEvent<HTMLButtonElement>) => {
+        e.stopPropagation();
         setAnchorEl(null);
         setActivePopover(null);
     };
@@ -57,7 +59,7 @@ export const SessionList: React.FC = () => {
         const loadSessionItems = async () => {
             setLoading(true);
             try {
-                const newItems = await fetchSessionItems(10); 
+                const newItems = await fetchSessionItems(12); 
                 setItems((prev) => [...prev, ...newItems]);
             } catch (error) {
                 console.error('Failed to fetch session items:', error);
@@ -78,8 +80,7 @@ export const SessionList: React.FC = () => {
                     <ListItem key={item.id} disablePadding>
                         <ListItemButton onClick={() => handleSubmit(item.id)}>
                             <ListItemText primary={item.session_name} />
-                        </ListItemButton>
-                        <Tooltip title="More options" placement="top" enterDelay={500} arrow>
+                            <Tooltip title="More options" placement="top" enterDelay={500} arrow>
                             <>
                                 <IconButton onClick={(e) => handleClick(e, item.id)}>
                                     <MoreHorizIcon />
@@ -97,7 +98,7 @@ export const SessionList: React.FC = () => {
                                         vertical: 'top',
                                         horizontal: 'left',
                                     }}
-                                >
+                                    >
                                     <List sx={{ pr: 1, pl: 1 }}>
                                         {popoverLists.map((popoverItem) => (
                                             <ListItem key={popoverItem.text} disablePadding>
@@ -110,7 +111,8 @@ export const SessionList: React.FC = () => {
                                     </List>
                                 </Popover>
                             </>
-                        </Tooltip>
+                            </Tooltip>
+                        </ListItemButton>
                     </ListItem>
                 ))}
             </List>
