@@ -120,6 +120,11 @@ export const DynamicChatwindow: React.FC<Props> = (props: Props) => {
          <AlignHorizontalLeftIcon />
         </IconButton>
       )}
+      <ChatAppbar
+        pcOpen={pcOpen}
+        mobileOpen={mobileOpen}
+        handleDrawerToggle={handleDrawerToggle}
+      />  
       <Box
         component="nav"
         sx={{ width: { sm: pcOpen ? drawerWidth : 0 }, flexShrink: { sm: 0 }}}
@@ -179,11 +184,6 @@ export const DynamicChatwindow: React.FC<Props> = (props: Props) => {
           <SessionList />
         </Drawer>
       </Box>  
-      <ChatAppbar
-        pcOpen={pcOpen}
-        mobileOpen={mobileOpen}
-        handleDrawerToggle={handleDrawerToggle}
-      />  
       <Box
         component="main"
         sx={{
