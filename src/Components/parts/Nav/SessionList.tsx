@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect,useRef } from "react";
 import { useRouter } from "next/navigation";
 import { useIntersection } from '@/hook/sessionList';
 import { fetchSessionItems } from '@/hook/getSession';
@@ -38,6 +38,7 @@ export const SessionList: React.FC = () => {
     const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
     const [activePopover, setActivePopover] = useState<number | null>(null);
     const router = useRouter();
+    const listRef = useRef<HTMLDivElement | null>(null);
 
     const handleSubmit = (id: number): void => {
         router.push(`/Chat/${id}`);
@@ -74,7 +75,7 @@ export const SessionList: React.FC = () => {
     }, [isIntersecting]);
 
     return (
-        <Box>
+        <Box ref={listRef} sx={{ overflowY: 'auto', height: '100%' }}>
             <List>
                 {items.map((item) => (
                     <ListItem key={item.id} disablePadding>
