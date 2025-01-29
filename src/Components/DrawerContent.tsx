@@ -15,7 +15,6 @@ import { DrawerItem } from '../types/drawer';
 interface DrawerContentProps {
   listRef: RefObject<HTMLDivElement>;
   drawerButton: DrawerItem[];
-  menuItems: DrawerItem[];
   activePopover: string | null;
   anchorEl: HTMLElement | null;
   handleDrawerToggle: () => void;
@@ -27,7 +26,6 @@ interface DrawerContentProps {
 export const DrawerContent: React.FC<DrawerContentProps> = ({
   listRef,
   drawerButton,
-  menuItems,
   activePopover,
   anchorEl,
   handlePopoverOpen,
@@ -49,16 +47,6 @@ export const DrawerContent: React.FC<DrawerContentProps> = ({
           ))}
         </List>
         <Divider />
-        <List>
-          {menuItems.map((item) => (
-            <ListItem key={item.text} disablePadding>
-              <ListItemButton>
-                <ListItemIcon>{ item.icon }</ListItemIcon>
-                <ListItemText primary={item.text} />
-              </ListItemButton>
-            </ListItem>
-          ))}
-        </List>
       </div>
       <Divider />
     </>
