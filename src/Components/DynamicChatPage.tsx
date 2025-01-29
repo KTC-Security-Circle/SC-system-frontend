@@ -97,13 +97,6 @@ export const DynamicChatwindow: React.FC<Props> = (props: Props) => {
     { text: 'newsession', icon: <AddCommentIcon /> ,tips: '新しいセッションを作成', onClick: handlecreateSession },
   ];
 
-  const menuItems: DrawerItem[] = [
-    { text: 'button1', icon: <AlignHorizontalLeftIcon /> ,tips: 'ボタン１' },
-    { text: 'button2', icon: <AlignHorizontalLeftIcon /> ,tips: 'ボタン２' },
-    { text: 'button3', icon: <AlignHorizontalLeftIcon /> ,tips: 'ボタン3' },
-  ];
-
-
   return (
     <Box sx={{ display: 'flex', height: '100vh'}}>
       <CssBaseline />
@@ -148,7 +141,6 @@ export const DynamicChatwindow: React.FC<Props> = (props: Props) => {
           <DrawerContent
             listRef={listRef}
             drawerButton={drawerButton}
-            menuItems={menuItems}
             activePopover={activePopover}
             anchorEl={anchorEl}
             handleDrawerToggle={handleDrawerToggle}
@@ -173,7 +165,6 @@ export const DynamicChatwindow: React.FC<Props> = (props: Props) => {
           <DrawerContent
             listRef={listRef}
             drawerButton={drawerButton}
-            menuItems={menuItems}
             activePopover={activePopover}
             anchorEl={anchorEl}
             handleDrawerToggle={handleDrawerToggle}
