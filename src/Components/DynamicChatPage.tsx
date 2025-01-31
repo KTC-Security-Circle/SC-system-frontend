@@ -1,6 +1,6 @@
 "use client"
 
-import * as React from 'react';
+import React,{ useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { DynamicChatComponent } from '@/Components/parts/Chat/DynamincChat';
 import { DrawerContent } from './DrawerContent';
@@ -39,7 +39,7 @@ export const DynamicChatwindow: React.FC<Props> = (props: Props) => {
   const [height, setHeight] = React.useState<number | null>(null);
   const listRef = React.useRef<HTMLDivElement | null>(null);
 
-  React.useEffect(() => {
+  useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth < 600) {
         // モバイルサイズの場合
