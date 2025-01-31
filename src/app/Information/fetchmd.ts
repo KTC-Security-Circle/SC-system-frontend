@@ -10,7 +10,7 @@ export const fetchMarkdown = async () => {
       }
       const data = await response.json(); // JSONとして取得
       console.log("API Response:", data);
-      const key = data[0];
+      const key = data[1];
       console.log("API Response:", key);
       return key;// マークダウンデータを保存
     } catch (error) {

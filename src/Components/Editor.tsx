@@ -2,6 +2,7 @@ import dynamic from 'next/dynamic';
 import { useMemo } from 'react';
 import 'easymde/dist/easymde.min.css';
 import { marked } from 'marked';
+import DOMPurify from 'dompurify';
 
 const Loading = () => <p>Loading editor...</p>;
 
@@ -22,6 +23,8 @@ const Editor: React.FC<EditorProps> = ({ value, onChange }) => {
     breaks: true,    // 改行を <br> に変換
   });
 
+
+
   const options = useMemo(() => {
     return {
       autofocus: true,
@@ -31,11 +34,16 @@ const Editor: React.FC<EditorProps> = ({ value, onChange }) => {
         uniqueId: 'saved_content',
         delay: 1000,
       },
+      toolbar: [
+        'bold', 'italic', 'heading', 'strikethrough', '|',
+        'quote', 'unordered-list', 'ordered-list', 'code', 'table', 'horizontal-rule', '|',
+        'link', 'image', 'side-by-side', 'fullscreen', '|',
+      ]as const ,
+      fullscreen: false,
       previewRender: (markdown: string) => 
         {
           const html = marked(markdown);
-          return `${html}`;
-
+          return DOMPurify.sanitize(html);
         }, // marked を適用
     };
   }, []);
