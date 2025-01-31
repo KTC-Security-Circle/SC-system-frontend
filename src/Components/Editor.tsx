@@ -1,14 +1,13 @@
-'use client';
-
 import dynamic from 'next/dynamic';
 import { useMemo } from 'react';
 import 'easymde/dist/easymde.min.css';
+import { marked } from 'marked';
 
 const Loading = () => <p>Loading editor...</p>;
 
 const ReactSimpleMdeEditor = dynamic(() => import('react-simplemde-editor'), { 
   ssr: false,
-  loading: () => <Loading /> // ローディング中に表示するコンポーネントを指定
+  loading: () => <Loading />,
 });
 
 type EditorProps = {
@@ -17,6 +16,12 @@ type EditorProps = {
 };
 
 const Editor: React.FC<EditorProps> = ({ value, onChange }) => {
+  // marked のオプションを設定
+  marked.setOptions({
+    gfm: true,       // GitHub Flavored Markdown を有効化
+    breaks: true,    // 改行を <br> に変換
+  });
+
   const options = useMemo(() => {
     return {
       autofocus: true,
@@ -26,6 +31,7 @@ const Editor: React.FC<EditorProps> = ({ value, onChange }) => {
         uniqueId: 'saved_content',
         delay: 1000,
       },
+      previewRender: (markdown: string) => marked(markdown), // marked を適用
     };
   }, []);
 

@@ -27,14 +27,6 @@
   background-color: #f2f2f2; /* 偶数行の背景色 */
 }
 
-/* チェックリストのデザイン */
-.markdown-body input[type="checkbox"] {
-  transition: transform 0.2s ease;
-}
-.markdown-body input[type="checkbox"]:checked {
-  transform: scale(1.3);
-}
-
  
 .markdown-body ol {
   margin: 1em 0;
