@@ -3,11 +3,9 @@ import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import breaks from 'remark-breaks';
 import rehypeSlug from 'rehype-slug';
-import 'github-markdown-css';
+import 'github-markdown-css/github-markdown.css';
 import './markdown.css';
 import rehypeToc from '@jsdevtools/rehype-toc';
-import 'github-markdown-css';
-import './markdown.css';
 
 type MarkdownPreviewProps = {
   content: string;
@@ -16,7 +14,7 @@ type MarkdownPreviewProps = {
 const MarkdownPreview: React.FC<MarkdownPreviewProps> = ({ content = '' }) => {
 
   const tocOptions = {
-    headings: "h1 h2",
+    headings: "h1 h2 h3",
     cssClasses: {
       toc: "prose-toc",
       list: "prose",

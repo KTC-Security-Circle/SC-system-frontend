@@ -31,7 +31,12 @@ const Editor: React.FC<EditorProps> = ({ value, onChange }) => {
         uniqueId: 'saved_content',
         delay: 1000,
       },
-      previewRender: (markdown: string) => marked(markdown), // marked を適用
+      previewRender: (markdown: string) => 
+        {
+          const html = marked(markdown);
+          return `${html}`;
+
+        }, // marked を適用
     };
   }, []);
 
