@@ -37,7 +37,7 @@ const Editor: React.FC<EditorProps> = ({ value, onChange }) => {
       toolbar: [
         'bold', 'italic', 'heading', 'strikethrough', '|',
         'quote', 'unordered-list', 'ordered-list', 'code', 'table', 'horizontal-rule', '|',
-        'link', 'image', 'side-by-side', 'fullscreen',
+        'link', 'image', 'side-by-side',
       ]as const ,
       previewRender: (markdown: string) => 
         {
