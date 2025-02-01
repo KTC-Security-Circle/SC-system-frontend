@@ -18,12 +18,7 @@ import {
 import SendIcon from '@mui/icons-material/Send';
 import CircularProgress from '@mui/material/CircularProgress';
 
-interface Message {
-  id: string;
-  content: string;
-  sender: string;
-  timestamp: string;
-}
+
 
 const API_LINK = process.env.NEXT_PUBLIC_BACKEND_DEV_URL;
 
