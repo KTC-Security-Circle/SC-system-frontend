@@ -4,7 +4,7 @@ export const fetchMarkdown = async () => {
     try {
       // 下記のリンクは実装前のapiのため、コメントアウトしています
       // res = await fetch(`${API_LINK}/view/${id}.md`);
-      const response = await fetch(`https://sc-system-backend.azurewebsites.net/test_markdown_dict`);
+      const response = await fetch(`${API_LINK}/test_markdown_dict`);
       if (!response.ok) {
         throw new Error("ファイルの読み込みに失敗しました");
       }
