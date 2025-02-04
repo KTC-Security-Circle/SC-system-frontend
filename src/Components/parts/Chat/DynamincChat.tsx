@@ -4,7 +4,7 @@ import React, { useState, useEffect, FormEvent,useRef } from 'react';
 import Cookies from 'js-cookie';
 import { useRouter, useParams } from 'next/navigation';
 import Image from 'next/image';
-
+import { useSession } from '@/Context/deleteSession';
 import {
   Box,
   Container,
@@ -14,7 +14,12 @@ import {
   ListItem,
   ListItemText,
   Paper,
-  Toolbar
+  Toolbar,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Button,
 } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
 import CircularProgress from '@mui/material/CircularProgress';
@@ -34,10 +39,22 @@ export const DynamicChatComponent: React.FC = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [loading,setLoading]=useState<boolean>(false);
+  const [isDeleted, setIsDeleted] = useState<boolean>(false);
   const router = useRouter();
   const { session_id } = useParams();
+  const { deletedSessionId } = useSession();
   const token = Cookies.get('access_token');
   const bottomRef = useRef<HTMLDivElement>(null);
+
+  const handlemovehome = () => {
+    router.push('/Chat');
+  };
+
+  useEffect(() =>{
+    if(deletedSessionId === Number(session_id)){
+      setIsDeleted(true);
+    }
+  })
 
   useEffect(() => {
     if (!session_id || Array.isArray(session_id)) {
@@ -81,6 +98,10 @@ export const DynamicChatComponent: React.FC = () => {
         ]);
         setMessages(formattedMessages);
       } catch (err) {
+        if (err instanceof Error && err.message.includes('500')) {
+          setIsDeleted(true);
+          return;
+        }
         setError('Failed to load messages');
       }
     };
@@ -109,7 +130,7 @@ export const DynamicChatComponent: React.FC = () => {
     const optimisticMessage: Message = {
       id: Date.now().toString(),
       content: message,
-      sender: 'user', // ユーザーIDを送信しない
+      sender: 'user', 
       timestamp: new Date().toISOString(),
     };
 
@@ -162,6 +183,24 @@ export const DynamicChatComponent: React.FC = () => {
 
   return (
     <Container maxWidth="lg" sx={{ height: '100vh', display: 'flex', flexDirection: 'column', backgroundColor: '#e6ffff' }}>
+      <Dialog
+        open={isDeleted}
+        onClose={handlemovehome}
+        maxWidth="sm"
+        fullWidth
+      >
+        <DialogTitle>セッション削除</DialogTitle>
+        <DialogContent>
+            <Box sx={{ p: 2 }}>
+                このセッションは削除されました。
+            </Box>
+        </DialogContent>
+          <DialogActions>
+              <Button onClick={handlemovehome} variant="contained">
+                  ホームに戻る
+              </Button>
+          </DialogActions>
+      </Dialog>
       <Box sx={{ flexGrow: 1, overflowY: 'auto', mb: 2 }}>
               <Toolbar />
         <List>
