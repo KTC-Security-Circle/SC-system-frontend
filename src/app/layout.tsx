@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { AppRouterCacheProvider } from '@mui/material-nextjs/v14-appRouter';
 import ReduxProvider from "@/provider/reduxprovider";
+import { SessionProvider } from "@/Context/deleteSession";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -20,7 +21,11 @@ const RootLayout: React.FC<RootLayoutProps> = ({ children }) => {
     <html lang="en">
       <body className={inter.className}>
         <AppRouterCacheProvider>
-        <ReduxProvider>{children}</ReduxProvider>
+          <ReduxProvider>
+            <SessionProvider>
+              {children}
+            </SessionProvider>
+          </ReduxProvider>
         </AppRouterCacheProvider>
       </body>
     </html>
