@@ -25,6 +25,7 @@ import {
 } from '@mui/material';
 import Cookies from 'js-cookie';
 import { useSession } from "@/Context/deleteSession";
+import { useCurrentSession } from "@/Context/getcurrentSession";
 
 interface SessionItem {
     id: number;
@@ -42,9 +43,8 @@ export const SessionList: React.FC = () => {
     const API_LINK = process.env.NEXT_PUBLIC_BACKEND_DEV_URL;
     const token = Cookies.get('access_token');
     const params = useParams();
-    const currentSessionId = params?.id ? Number(params.id) : null;
     const { setDeletedSessionId }  = useSession();
-    
+    const { currentSessionId, setCurrentSessionId } = useCurrentSession();    
 
     useEffect(() => {
         const loadSessions = async () => {
@@ -72,6 +72,7 @@ export const SessionList: React.FC = () => {
         setLoading(true);
         try {
             await router.push(`/Chat/${id}`);
+            setCurrentSessionId(id);
         } finally {
             setLoading(false);
         }
