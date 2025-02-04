@@ -101,7 +101,6 @@ export const SessionList: React.FC = () => {
 
 
     const handleDelete = async (id: number) => {
-        setLoading(true);
         try {
             await fetch(`${API_LINK}/api/delete/session/${id}`, {
                 method: 'DELETE',
@@ -115,7 +114,6 @@ export const SessionList: React.FC = () => {
             console.error('Failed to delete session:', error);
         }finally {
             handleClose();
-            setLoading(false);
         }
     };
 
