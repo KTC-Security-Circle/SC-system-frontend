@@ -1,23 +1,23 @@
 'use client';   
 import React,{createContext,SetStateAction,useContext,useState,Dispatch} from "react";
 
-const curSession = createContext<number|null>(null);
-const setCurSession = createContext<Dispatch<SetStateAction<number|null>>>(()=>{});
+const CurSession = createContext<number|null>(null);
+const SetCurSession = createContext<Dispatch<SetStateAction<number|null>>>(()=>{});
 
 export const CurrentSessionProvider:React.FC<{children: React.ReactNode}> = ({ children })  =>{
     const [currentSession,setCurrentSession] = useState<number |null>(null);
     return (
-        <curSession.Provider value={currentSession}>
-            <setCurSession.Provider value={setCurrentSession}>
+        <CurSession.Provider value={currentSession}>
+            <SetCurSession.Provider value={setCurrentSession}>
                 {children}
-            </setCurSession.Provider>
-        </curSession.Provider>
+            </SetCurSession.Provider>
+        </CurSession.Provider>
     );
 };
 
 export const useCurrentSession = () => {
-    const currentSessionId = useContext(curSession);
-    const setCurrentSessionId = useContext(setCurSession);
+    const currentSessionId = useContext(CurSession);
+    const setCurrentSessionId = useContext(SetCurSession);
 
     if (setCurrentSessionId === null) {
         throw new Error("useCurrentSession must be used within a CurrentSessionProvider");
