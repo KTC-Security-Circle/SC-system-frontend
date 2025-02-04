@@ -34,9 +34,7 @@ export const SessionList: React.FC = () => {
     const [items, setItems] = useState<SessionItem[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
     const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
-    const [anchorEl2, setAnchorEl2] = useState<HTMLElement | null>(null);
     const [activePopover, setActivePopover] = useState<number | null>(null);
-    const [activemodulever, setActivemodulever ] = useState<boolean>(false);
     const [renameId, setRenameId] = useState<number | null>(null);
     const [newName, setNewName] = useState<string>('');
     const router = useRouter();
