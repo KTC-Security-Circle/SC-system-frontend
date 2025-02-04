@@ -24,6 +24,7 @@ import {
     DialogActions
 } from '@mui/material';
 import Cookies from 'js-cookie';
+import { useSession } from "@/Context/deleteSession";
 
 interface SessionItem {
     id: number;
@@ -42,6 +43,7 @@ export const SessionList: React.FC = () => {
     const token = Cookies.get('access_token');
     const params = useParams();
     const currentSessionId = params?.id ? Number(params.id) : null;
+    const { setDeletedSessionId }  = useSession();
     
 
     useEffect(() => {
@@ -108,6 +110,7 @@ export const SessionList: React.FC = () => {
                 },
             });
             setItems(items.filter(item => item.id !== id)); 
+            setDeletedSessionId(id);
         } catch (error) {
             console.error('Failed to delete session:', error);
         }finally {
