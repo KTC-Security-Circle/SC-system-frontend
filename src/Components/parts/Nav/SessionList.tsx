@@ -1,7 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { useParams } from "next/navigation";
+import React, { useState,useMemo } from "react";
 import { useRouter } from "next/navigation";
-import { fetchSessionItems } from '@/hook/getSession';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import DeleteIcon from '@mui/icons-material/Delete';
 import DriveFileRenameOutlineIcon from '@mui/icons-material/DriveFileRenameOutline';
@@ -26,14 +24,11 @@ import {
 import Cookies from 'js-cookie';
 import { useSession } from "@/Context/deleteSession";
 import { useCurrentSession } from "@/Context/getcurrentSession";
+import { useGetSession } from "@/Context/sessionContext";
+import { fetchSessionItems } from "@/hook/getSession";
 
-interface SessionItem {
-    id: number;
-    session_name: string;
-}
 
 export const SessionList: React.FC = () => {
-    const [items, setItems] = useState<SessionItem[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
     const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
     const [activePopover, setActivePopover] = useState<number | null>(null);
@@ -42,39 +37,30 @@ export const SessionList: React.FC = () => {
     const router = useRouter();
     const API_LINK = process.env.NEXT_PUBLIC_BACKEND_DEV_URL;
     const token = Cookies.get('access_token');
-    const params = useParams();
     const { setDeletedSessionId }  = useSession();
     const { currentSessionId, setCurrentSessionId } = useCurrentSession();    
+    const { getSession, setGetSession } = useGetSession();
 
-    useEffect(() => {
-        const loadSessions = async () => {
-            setLoading(true);
-            try {
-                const data = await fetchSessionItems(); 
-                if (Array.isArray(data)) {
-                    setItems(data);
-                } else if (data && Array.isArray(data.items)) {
-                    setItems(data.items);
-                } else {
-                    setItems([]);
-                }
-            } catch (error) {
-                console.error('Failed to fetch sessions:', error);
-                setItems([]);
-            } finally {
-                setLoading(false);
-            }
-        };
-        loadSessions();
-    }, []);
+    const sessionData = useMemo(() => getSession, [getSession]);
+
+    const refreshSessions = async () => {
+        setLoading(true);
+        try {
+            const updatedSessions = await fetchSessionItems();
+            setGetSession(updatedSessions);
+        } catch (error) {
+            console.error("Failed to refresh sessions:", error);
+        } finally {
+            setLoading(false);
+        }
+    };
 
     const handleSubmit = async (id: number) => {
-        setLoading(true);
         try {
             await router.push(`/Chat/${id}`);
             setCurrentSessionId(id);
-        } finally {
-            setLoading(false);
+        } catch (error) {
+            throw new Error('Failed to change session');
         }
     };
 
@@ -110,10 +96,10 @@ export const SessionList: React.FC = () => {
                     Authorization: `Bearer ${token}`,
                 },
             });
-            setItems(items.filter(item => item.id !== id)); 
             setDeletedSessionId(id);
+            refreshSessions();
         } catch (error) {
-            console.error('Failed to delete session:', error);
+            throw new Error('Failed to delete session');
         }finally {
             handleClose();
         }
@@ -130,9 +116,9 @@ export const SessionList: React.FC = () => {
                 },
                 body: JSON.stringify({ session_name: newName }),
             });
-            setItems(items.map(item => item.id === id ? { ...item, session_name: newName } : item)); 
+            refreshSessions();
         } catch (error) {
-            console.error('Failed to rename session:', error);
+            throw new Error('Failed to rename session');
         } finally {
             setRenameId(null);
             setNewName('');
@@ -140,7 +126,6 @@ export const SessionList: React.FC = () => {
             handleClose();
         }
     };
-
     const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement> ) => {
         if (e.key === 'Enter' && !e.shiftKey) {
           e.preventDefault();
@@ -155,7 +140,7 @@ export const SessionList: React.FC = () => {
                 </Box>
             ) : (
                 <List>
-                    {items.map((item) => (
+                    {sessionData.map((item) => (
                         <ListItem key={item.id} disablePadding
                         sx={{
                             backgroundColor: item.id === currentSessionId ? 'rgba(25, 118, 210, 0.15)' : 'transparent',
