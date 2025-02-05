@@ -5,6 +5,7 @@ import { AppRouterCacheProvider } from '@mui/material-nextjs/v14-appRouter';
 import ReduxProvider from "@/provider/reduxprovider";
 import { SessionProvider } from "@/Context/deleteSession";
 import { CurrentSessionProvider } from "@/Context/getcurrentSession";
+import { GetSessionProvider } from "@/Context/sessionContext";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -25,7 +26,9 @@ const RootLayout: React.FC<RootLayoutProps> = ({ children }) => {
           <ReduxProvider>
             <SessionProvider>
               <CurrentSessionProvider> 
-                {children}
+                <GetSessionProvider>
+                  {children}
+                </GetSessionProvider>
               </CurrentSessionProvider>
             </SessionProvider>
           </ReduxProvider>
