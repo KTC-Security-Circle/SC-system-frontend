@@ -16,4 +16,5 @@ export interface SessionItem {
 export interface PopoverItem {
     text: string;
     icon: ReactNode;
+    onClick?: (id:number) => void;
 }
