@@ -1,4 +1,4 @@
-import { Plagiarism, Edit } from '@mui/icons-material';
+import { FindInPage, OpenInNew, BorderColor } from '@mui/icons-material';
 import { Container } from "@mui/material";
 import { Stack } from "@mui/system";
 import { ReactNode } from 'react';
@@ -7,12 +7,17 @@ import AdminCard from "./parts/AdminCard";
 
 const ADMIN_PAGES = [
     {
-        title: <CardTitle title={"学校情報の閲覧"} icon={<Plagiarism />} />,
+        title: <CardTitle title={"学校情報の閲覧"} icon={<FindInPage />} />,
         description: "学校情報を閲覧します。",
         href: "/Information"
     },
     {
-        title: <CardTitle title={"学校情報の編集"} icon={<Edit />} />,
+        title: <CardTitle title={"学校情報の新規作成"} icon={<OpenInNew />} />,
+        description: "学校情報の新規作成をします。",
+        href: "/Markdown"
+    },
+    {
+        title: <CardTitle title={"学校情報の編集"} icon={<BorderColor />} />,
         description: "学校情報を編集・削除します。",
         href: "/Markdown"
     }
