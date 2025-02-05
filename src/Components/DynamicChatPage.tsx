@@ -98,97 +98,97 @@ export const DynamicChatwindow: React.FC<Props> = (props: Props) => {
   ];
 
   return (
-    <Box sx={{ display: 'flex', height: '100vh'}}>
-      <CssBaseline />
-      {/* 開閉ボタン */}
-      {(window.innerWidth < 600 || !pcOpen) && (
-        <IconButton
-          onClick={handleDrawerToggle}
-          sx={{
-            position: 'fixed',
-            m:1,
-            zIndex: mobileOpen ? 0 : 1300, // Drawer が開いた時は非表示
-          }}
+      <Box sx={{ display: 'flex', height: '100vh'}}>
+        <CssBaseline />
+        {/* 開閉ボタン */}
+        {(window.innerWidth < 600 || !pcOpen) && (
+          <IconButton
+            onClick={handleDrawerToggle}
+            sx={{
+              position: 'fixed',
+              m:1,
+              zIndex: mobileOpen ? 0 : 1300, // Drawer が開いた時は非表示
+            }}
+          >
+           <AlignHorizontalLeftIcon />
+          </IconButton>
+        )}
+        <ChatAppbar
+          pcOpen={pcOpen}
+          mobileOpen={mobileOpen}
+          handleDrawerToggle={handleDrawerToggle}
+        />
+        <Box
+          component="nav"
+          sx={{ width: { sm: pcOpen ? drawerWidth : 0 }, flexShrink: { sm: 0 }}}
+          aria-label=""
         >
-         <AlignHorizontalLeftIcon />
-        </IconButton>
-      )}
-      <ChatAppbar
-        pcOpen={pcOpen}
-        mobileOpen={mobileOpen}
-        handleDrawerToggle={handleDrawerToggle}
-      />  
-      <Box
-        component="nav"
-        sx={{ width: { sm: pcOpen ? drawerWidth : 0 }, flexShrink: { sm: 0 }}}
-        aria-label=""
-      >
-        <Drawer
-          variant="temporary"
-          open={mobileOpen}
-          onClose={handleDrawerToggle}
-          ModalProps={{
-            keepMounted: true,
-          }}
+          <Drawer
+            variant="temporary"
+            open={mobileOpen}
+            onClose={handleDrawerToggle}
+            ModalProps={{
+              keepMounted: true,
+            }}
+            sx={{
+              display: { xs: 'block', sm: 'none' },
+              '& .MuiDrawer-paper': {
+                boxSizing: 'border-box',
+                width: drawerWidth
+              },
+            }}
+          >
+            <DrawerContent
+              listRef={listRef}
+              drawerButton={drawerButton}
+              activePopover={activePopover}
+              anchorEl={anchorEl}
+              handleDrawerToggle={handleDrawerToggle}
+              handlePopoverOpen={handlePopoverOpen}
+              handlePopoverClose={handlePopoverClose}
+              height={height}
+            />
+            <SessionList />
+          </Drawer>
+          <Drawer
+            variant="permanent"
+            sx={{
+              display: { xs: 'none', sm: 'block' },
+              '& .MuiDrawer-paper': {
+                boxSizing: 'border-box',
+                width: pcOpen ? drawerWidth : 0, // PC画面で開閉状態を反映
+                transition: 'width 0.2s ease-in-out', // アニメーションを追加
+              },
+            }}
+            open
+          >
+            <DrawerContent
+              listRef={listRef}
+              drawerButton={drawerButton}
+              activePopover={activePopover}
+              anchorEl={anchorEl}
+              handleDrawerToggle={handleDrawerToggle}
+              handlePopoverOpen={handlePopoverOpen}
+              handlePopoverClose={handlePopoverClose}
+              height={height}
+            />
+            <SessionList />
+          </Drawer>
+        </Box>
+        <Box
+          component="main"
           sx={{
-            display: { xs: 'block', sm: 'none' },
-            '& .MuiDrawer-paper': { 
-              boxSizing: 'border-box', 
-              width: drawerWidth
+            flexGrow: 1,
+            width: {
+              sm: `calc(100% - ${drawerWidth}px)`,
+              xs: '100%'
             },
+            transition: 'width 0.3s ease-in-out',
+            backgroundColor: '#e6ffff'
           }}
         >
-          <DrawerContent
-            listRef={listRef}
-            drawerButton={drawerButton}
-            activePopover={activePopover}
-            anchorEl={anchorEl}
-            handleDrawerToggle={handleDrawerToggle}
-            handlePopoverOpen={handlePopoverOpen}
-            handlePopoverClose={handlePopoverClose}
-            height={height}
-          />
-          <SessionList />
-        </Drawer>
-        <Drawer
-          variant="permanent"
-          sx={{
-            display: { xs: 'none', sm: 'block' },
-            '& .MuiDrawer-paper': { 
-              boxSizing: 'border-box', 
-              width: pcOpen ? drawerWidth : 0, // PC画面で開閉状態を反映
-              transition: 'width 0.2s ease-in-out', // アニメーションを追加
-            },
-          }}
-          open
-        >
-          <DrawerContent
-            listRef={listRef}
-            drawerButton={drawerButton}
-            activePopover={activePopover}
-            anchorEl={anchorEl}
-            handleDrawerToggle={handleDrawerToggle}
-            handlePopoverOpen={handlePopoverOpen}
-            handlePopoverClose={handlePopoverClose}
-            height={height}
-          />
-          <SessionList />
-        </Drawer>
-      </Box>  
-      <Box
-        component="main"
-        sx={{
-          flexGrow: 1,
-          width: {
-            sm: `calc(100% - ${drawerWidth}px)`,
-            xs: '100%'
-          },
-          transition: 'width 0.3s ease-in-out',   
-          backgroundColor: '#e6ffff'
-        }}
-      >
-        <DynamicChatComponent />
+          <DynamicChatComponent />
+        </Box>
       </Box>
-    </Box>
   );
 }
