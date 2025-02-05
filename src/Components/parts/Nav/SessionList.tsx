@@ -1,4 +1,5 @@
-import React, { useState,useMemo } from "react";
+import React, { useState,useMemo,useEffect } from "react";
+import { usePathname } from "next/navigation";
 import { useRouter } from "next/navigation";
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -26,6 +27,7 @@ import { useSession } from "@/Context/deleteSession";
 import { useCurrentSession } from "@/Context/getcurrentSession";
 import { useGetSession } from "@/Context/sessionContext";
 import { fetchSessionItems } from "@/hook/getSession";
+import { reverse } from "dns";
 
 
 export const SessionList: React.FC = () => {
@@ -35,18 +37,29 @@ export const SessionList: React.FC = () => {
     const [renameId, setRenameId] = useState<number | null>(null);
     const [newName, setNewName] = useState<string>('');
     const router = useRouter();
+    const pathname = usePathname();
     const API_LINK = process.env.NEXT_PUBLIC_BACKEND_DEV_URL;
     const token = Cookies.get('access_token');
     const { setDeletedSessionId }  = useSession();
     const { currentSessionId, setCurrentSessionId } = useCurrentSession();    
     const { getSession, setGetSession } = useGetSession();
 
-    const sessionData = useMemo(() => getSession, [getSession]);
+    const sessionData = useMemo(() => {
+        return [...getSession].reverse(); 
+    }, [getSession]);
+
+    useEffect(() => {
+        if (pathname === "/Chat") {
+            setCurrentSessionId(null);
+        }
+    }, [pathname]);
+
 
     const refreshSessions = async () => {
         setLoading(true);
         try {
-            const updatedSessions = await fetchSessionItems();
+            let updatedSessions = await fetchSessionItems();
+            updatedSessions = updatedSessions.reverse();
             setGetSession(updatedSessions);
         } catch (error) {
             console.error("Failed to refresh sessions:", error);
