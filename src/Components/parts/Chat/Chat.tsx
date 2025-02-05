@@ -17,6 +17,8 @@ import {
 } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
 import CircularProgress from '@mui/material/CircularProgress';
+import { fetchSessionItems } from '@/hook/getSession';
+import { useGetSession } from '@/Context/sessionContext';
 
 
 
@@ -27,6 +29,7 @@ export const ChatComponent: React.FC = () => {
   const [message, setMessage] = useState<string>('');
   const [loading,setLoading]=useState<boolean>(false);
   const router = useRouter();
+  const { setGetSession } = useGetSession();
 
   const sendMessage = async (e: FormEvent<HTMLFormElement> | React.KeyboardEvent<HTMLDivElement>) => {
     e.preventDefault();
@@ -60,7 +63,8 @@ export const ChatComponent: React.FC = () => {
           router.push('/');
           return;
         }
-        // URLにsession_idを含めてリダイレクト
+        const updatedSessions = await fetchSessionItems();
+        setGetSession(updatedSessions); 
         router.push(`/Chat/${session_id}`);
       } else {
         const errorData = await res.json();
