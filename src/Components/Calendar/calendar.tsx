@@ -162,7 +162,7 @@ export default function Calendar() {
           />
         </Box>
       </Container>
-      <Dialog open={open} onClose={handleClose}>
+      <Dialog open={open} onClose={handleClose} maxWidth="sm" fullWidth>
         <DialogTitle>新しい予定を追加</DialogTitle>
         <DialogContent>
           <TextField
