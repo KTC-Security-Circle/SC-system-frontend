@@ -7,7 +7,7 @@ import timeGridPlugin from "@fullcalendar/timegrid";
 import listPlugin from "@fullcalendar/list";
 import jaLocale from "@fullcalendar/core/locales/ja";
 import { Box, Container, Paper } from "@mui/material";
-import { DateSelectArg } from "@fullcalendar/core/index.js";
+import { DateSelectArg, EventClickArg } from "@fullcalendar/core/index.js";
 import {
   TextField,
   Dialog,
@@ -21,52 +21,73 @@ export default function Calendar() {
   const [open, setOpen] = useState(false);
   const [selectedDate, setSelectedDate] = useState<DateSelectArg | null>(null);
   const [title, setTitle] = useState<string>("");
+  const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
+  const [eventToDelete, setEventToDelete] = useState<EventClickArg | null>(null);
   const [calendarEvents, setCalendarEvents] = useState([
-    {
-      title: "ミーティング",
-      start: "2025-02-14",
-      backgroundColor: "#4CAF50",
-      borderColor: "#4CAF50",
-    },
-    {
-      title: "締め切り",
-      start: "2025-02-16",
-      end: "2025-02-18",
-      backgroundColor: "#FF5722",
-      borderColor: "#FF5722",
-    },
-  ]);
+        {
+          title: "ミーティング",
+          start: "2025-02-14",
+          backgroundColor: "#4CAF50",
+          borderColor: "#4CAF50",
+        },
+        {
+          title: "締め切り",
+          start: "2025-02-16",
+          end: "2025-02-18",
+          backgroundColor: "#FF5722",
+          borderColor: "#FF5722",
+        },
+    ]);
 
-  const handleDateClick = (arg: DateSelectArg) => {
-    setSelectedDate(arg);
-    setOpen(true);
-  };
+    const handleDateClick = (arg: DateSelectArg) => {
+        setSelectedDate(arg);
+        setOpen(true);
+        };
 
-  const handleClose = () => {
-    setOpen(false);
-    setTitle("");
-  };
+    const handleClose = () => {
+        setOpen(false);
+        setTitle("");
+    };
 
-  const handleAddEvent = () => {
-    if (selectedDate && title) {
-      const newEvent = {
-        title: title,
-        start: selectedDate.startStr,
-        end: selectedDate.endStr,
-        backgroundColor: "#4CAF50",
-        borderColor: "#4CAF50",
-      };
+    const handleAddEvent = () => {
+        if (selectedDate && title) {
+        const newEvent = {
+            title: title,
+            start: selectedDate.startStr,
+            end: selectedDate.endStr,
+            backgroundColor: "#4CAF50",
+            borderColor: "#4CAF50",
+        };
+        setCalendarEvents((prevEvents) => [...prevEvents, newEvent]);
+        handleClose();
+        }
+    };
 
-      setCalendarEvents((prevEvents) => [...prevEvents, newEvent]);
+    const handleDeleteClick = (arg: EventClickArg) => {
+        setEventToDelete(arg);
+        setDeleteConfirmOpen(true);
+    };
 
-      handleClose();
-    }
-  };
+    const handleDeleteConfirm = () => {
+        if (eventToDelete) {
+            eventToDelete.event.remove();
+            setCalendarEvents(prevEvents => 
+            prevEvents.filter(event => event.start !== eventToDelete.event.startStr)
+            );
+        }
+        setDeleteConfirmOpen(false);
+        setEventToDelete(null);
+    };
+
+    const handleDeleteCancel = () => {
+        setDeleteConfirmOpen(false);
+        setEventToDelete(null);
+    };
 
   return (
     <Paper
       sx={{
-        backgroundColor: "#efffff",
+        backgroundColor: "#effff",
         p: 3,
         borderRadius: 2,
         boxShadow: "rgb(0 0 0 / 5%) 0px 2px 4px",
@@ -74,8 +95,7 @@ export default function Calendar() {
       }}
     >
       <Container maxWidth="lg">
-        <Box
-          sx={{
+        <Box sx={{
             "& .fc": {
               fontFamily: "Arial, sans-serif",
               border: "none",
@@ -117,8 +137,12 @@ export default function Calendar() {
                 boxShadow: "none",
               },
             },
+            "& .fc-button-active": {
+              backgroundColor: "#2196F3 !important", 
+              color: "#ffffff !important",
+            },
             "& .fc-day-today": {
-              backgroundColor: "rgba(25, 118, 210, 0.05) !important",
+              backgroundColor: "rgba(25, 118, 210, 0.1) !important",
             },
             "& .fc-event": {
               borderRadius: "4px",
@@ -134,8 +158,9 @@ export default function Calendar() {
             "& .fc-day-sun .fc-daygrid-day-number": {
               color: "#d32f2f",
             },
-          }}
+        }}
         >
+
           <FullCalendar
             plugins={[dayGridPlugin, interactionPlugin, timeGridPlugin, listPlugin]}
             headerToolbar={{
@@ -154,6 +179,7 @@ export default function Calendar() {
             aspectRatio={1.8}
             events={calendarEvents} 
             eventDisplay="block"
+            eventClick={handleDeleteClick}
             eventTimeFormat={{
               hour: "2-digit",
               minute: "2-digit",
@@ -178,6 +204,32 @@ export default function Calendar() {
           <Button onClick={handleClose}>キャンセル</Button>
           <Button onClick={() => handleAddEvent()} variant="contained" color="primary">
             追加
+          </Button>
+        </DialogActions>
+      </Dialog>
+      <Dialog
+        open={deleteConfirmOpen}
+        onClose={handleDeleteCancel}
+        maxWidth="sm"
+        fullWidth
+      >
+        <DialogTitle>予定の削除</DialogTitle>
+        <DialogContent>
+          <Box sx={{ mt: 2 }}>
+            以下の予定を削除してもよろしいですか？
+            <Box sx={{ mt: 1, fontWeight: 'bold' }}>
+              {eventToDelete?.event.title}
+            </Box>
+          </Box>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleDeleteCancel}>キャンセル</Button>
+          <Button 
+            onClick={handleDeleteConfirm} 
+            variant="contained" 
+            color="error"
+          >
+            削除
           </Button>
         </DialogActions>
       </Dialog>
