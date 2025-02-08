@@ -4,6 +4,14 @@ import { useEffect, useState } from "react";
 import MarkdownPreview from "@/Components/MarkdownPreview";
 import { Box, CircularProgress } from "@mui/material";
 import { fetchMarkdown } from "./fetchmd";
+import { BackButton } from "@/types/navigateback";
+import { NavigateBackButton } from "@/Components/NavigateBackButton";
+import { KeyboardReturn } from '@mui/icons-material';
+import { Container } from "@mui/material";
+
+const TextButtons: BackButton [] = [
+  { text: "戻る", color: "#616161", href: "/Admin/School", icon: <KeyboardReturn /> }
+];
 
 const Information: React.FC = () => {
   const [markdownContent, setMarkdownContent] = useState<string>("");
@@ -43,11 +51,16 @@ const Information: React.FC = () => {
   }
 
   return (
-    <Box className="InformationPreview" sx={{ display: "flex", justifyContent: "center", alignItems: "center", backgroundColor: "background.default", color: "text.primary", padding: "20px", minHeight: "100vh" }}>
-      <Box sx={{ width: "210mm",  backgroundColor: "white", boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)", borderRadius: "4px", padding: "20mm", overflow: "auto" }}>
-        <MarkdownPreview content={markdownContent} />
+    <Container>
+      <Box sx={{ m: 5 }}>
+        <NavigateBackButton TextButtons={TextButtons} />
       </Box>
-    </Box>
+      <Box className="InformationPreview" sx={{ display: "flex", justifyContent: "center", alignItems: "center", backgroundColor: "background.default", color: "text.primary", padding: "20px", minHeight: "100vh" }}>
+        <Box sx={{ width: "210mm",  backgroundColor: "white", boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)", borderRadius: "4px", padding: "20mm", overflow: "auto" }}>
+          <MarkdownPreview content={markdownContent} />
+        </Box>
+      </Box>
+    </Container>
   );
 };
 
