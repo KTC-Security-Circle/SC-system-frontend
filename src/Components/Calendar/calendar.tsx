@@ -8,6 +8,9 @@ import listPlugin from "@fullcalendar/list";
 import jaLocale from "@fullcalendar/core/locales/ja";
 import { Box, Container, Paper } from "@mui/material";
 import { DateSelectArg, EventClickArg } from "@fullcalendar/core/index.js";
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
+import CircularProgress from '@mui/material/CircularProgress';
 import {
   TextField,
   Dialog,
@@ -15,6 +18,10 @@ import {
   DialogContent,
   DialogActions,
   Button,
+  Menu,
+  MenuItem,
+  ListItemIcon,
+  ListItemText,
 } from "@mui/material";
 
 export default function Calendar() {
@@ -22,7 +29,12 @@ export default function Calendar() {
   const [selectedDate, setSelectedDate] = useState<DateSelectArg | null>(null);
   const [title, setTitle] = useState<string>("");
   const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
-  const [eventToDelete, setEventToDelete] = useState<EventClickArg | null>(null);
+  const [deleteEvent, setDeleteEvent] = useState<EventClickArg | null>(null);
+  const [editOpen, setEditOpen] = useState(false);
+  const [editTitle, setEditTitle] = useState('');
+  const [editDate, setEditDate] = useState<{ start: string; end: string | null }>({ start: '', end: '' });
+  const [loading,setLoading]=useState<boolean>(false);
+  const [menuAnchorEl, setMenuAnchorEl] = useState<null | HTMLElement>(null);
   const [calendarEvents, setCalendarEvents] = useState([
         {
           title: "ミーティング",
@@ -39,14 +51,57 @@ export default function Calendar() {
         },
     ]);
 
+    const handleEventClick = (arg: EventClickArg) => {
+      setDeleteEvent(arg);
+      setMenuAnchorEl(arg.el);
+    };
+
+    const handleEditClick = () => {
+      setMenuAnchorEl(null);
+      if (deleteEvent) {
+        setEditTitle(deleteEvent.event.title);
+        setEditDate({
+          start: deleteEvent.event.startStr,
+          end: deleteEvent.event.endStr || null
+        });
+        setEditOpen(true);
+      }
+    };
+
+    const handleEditConfirm = async () => {
+      try {
+        setLoading(true);
+        if (deleteEvent && editTitle) {
+          const event = deleteEvent.event;
+          event.setProp('title', editTitle);
+          if (editDate.start) event.setStart(editDate.start);
+          if (editDate.end) event.setEnd(editDate.end);
+          
+          setCalendarEvents(prevEvents => 
+            prevEvents.map(e => 
+              e.start === event.startStr ? 
+              { ...e, title: editTitle, start: editDate.start, end: editDate.end || undefined } : 
+              e
+            )
+          );
+        }
+        setEditOpen(false);
+        setDeleteEvent(null);
+      } catch (error) {
+        throw new Error('Failed to edit event');
+      } finally {
+        setLoading(false);
+      }
+    };
+
     const handleDateClick = (arg: DateSelectArg) => {
-        setSelectedDate(arg);
-        setOpen(true);
-        };
+      setSelectedDate(arg);
+      setOpen(true);
+    };
 
     const handleClose = () => {
-        setOpen(false);
-        setTitle("");
+      setOpen(false);
+      setTitle("");
     };
 
     const handleAddEvent = () => {
@@ -59,29 +114,25 @@ export default function Calendar() {
             borderColor: "#4CAF50",
         };
         setCalendarEvents((prevEvents) => [...prevEvents, newEvent]);
-        handleClose();
-        }
+      }
+      setLoading(false);
     };
 
-    const handleDeleteClick = (arg: EventClickArg) => {
-        setEventToDelete(arg);
-        setDeleteConfirmOpen(true);
-    };
 
     const handleDeleteConfirm = () => {
-        if (eventToDelete) {
-            eventToDelete.event.remove();
-            setCalendarEvents(prevEvents => 
-            prevEvents.filter(event => event.start !== eventToDelete.event.startStr)
-            );
-        }
-        setDeleteConfirmOpen(false);
-        setEventToDelete(null);
+      if (deleteEvent) {
+        deleteEvent.event.remove();
+        setCalendarEvents(prevEvents => 
+        prevEvents.filter(event => event.start !== deleteEvent.event.startStr)
+        );
+      }
+      setDeleteConfirmOpen(false);
+      setDeleteEvent(null);
     };
 
     const handleDeleteCancel = () => {
-        setDeleteConfirmOpen(false);
-        setEventToDelete(null);
+      setDeleteConfirmOpen(false);
+      setDeleteEvent(null);
     };
 
   return (
@@ -160,7 +211,6 @@ export default function Calendar() {
             },
         }}
         >
-
           <FullCalendar
             plugins={[dayGridPlugin, interactionPlugin, timeGridPlugin, listPlugin]}
             headerToolbar={{
@@ -179,7 +229,7 @@ export default function Calendar() {
             aspectRatio={1.8}
             events={calendarEvents} 
             eventDisplay="block"
-            eventClick={handleDeleteClick}
+            eventClick={handleEventClick}
             eventTimeFormat={{
               hour: "2-digit",
               minute: "2-digit",
@@ -213,23 +263,69 @@ export default function Calendar() {
         maxWidth="sm"
         fullWidth
       >
-        <DialogTitle>予定の削除</DialogTitle>
+        <DialogTitle>予定の削除確認</DialogTitle>
         <DialogContent>
-          <Box sx={{ mt: 2 }}>
-            以下の予定を削除してもよろしいですか？
-            <Box sx={{ mt: 1, fontWeight: 'bold' }}>
-              {eventToDelete?.event.title}
-            </Box>
-          </Box>
+          <p>この予定を削除してもよろしいですか？</p>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleDeleteCancel}>キャンセル</Button>
-          <Button 
-            onClick={handleDeleteConfirm} 
-            variant="contained" 
-            color="error"
-          >
+          <Button onClick={handleDeleteConfirm} variant="contained" color="error">
             削除
+          </Button>
+        </DialogActions>
+      </Dialog>
+      <Menu
+        anchorEl={menuAnchorEl}
+        open={Boolean(menuAnchorEl)}
+        onClose={() => setMenuAnchorEl(null)}
+      >
+        <MenuItem onClick={handleEditClick}>
+          <ListItemIcon>
+            <EditIcon fontSize="small" />
+          </ListItemIcon>
+          <ListItemText primary="変更" />
+        </MenuItem>
+        <MenuItem onClick={() => {
+          setMenuAnchorEl(null);
+          setDeleteConfirmOpen(true);
+        }}>
+          <ListItemIcon>
+            <DeleteIcon fontSize="small" color="error" />
+          </ListItemIcon>
+          <ListItemText primary="削除" />
+        </MenuItem>
+      </Menu>
+      <Dialog open={editOpen} onClose={() => setEditOpen(false)} maxWidth="sm" fullWidth>
+        <DialogTitle>予定の変更</DialogTitle>
+        <DialogContent>
+          <TextField
+            label="タイトル"
+            variant="outlined"
+            fullWidth
+            value={editTitle}
+            onChange={(e) => setEditTitle(e.target.value)}
+            sx={{ mt: 2, mb: 2 }}
+          />
+          <TextField
+            label="開始日"
+            type="date"
+            fullWidth
+            value={editDate.start}
+            onChange={(e) => setEditDate(prev => ({ ...prev, start: e.target.value }))}
+            sx={{ mb: 2 }}
+          />
+          <TextField
+            label="終了日"
+            type="date"
+            fullWidth
+            value={editDate.end || ''}
+            onChange={(e) => setEditDate(prev => ({ ...prev, end: e.target.value }))}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setEditOpen(false)}>キャンセル</Button>
+          <Button onClick={handleEditConfirm} variant="contained" color="primary" disabled={loading}>
+            {loading ? <CircularProgress size={24} /> : '変更'}
           </Button>
         </DialogActions>
       </Dialog>
