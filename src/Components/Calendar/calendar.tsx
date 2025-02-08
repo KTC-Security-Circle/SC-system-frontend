@@ -76,7 +76,6 @@ export default function Calendar() {
           event.setProp('title', editTitle);
           if (editDate.start) event.setStart(editDate.start);
           if (editDate.end) event.setEnd(editDate.end);
-          
           setCalendarEvents(prevEvents => 
             prevEvents.map(e => 
               e.start === event.startStr ? 
