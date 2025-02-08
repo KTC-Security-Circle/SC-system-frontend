@@ -18,6 +18,9 @@ services:
     env_file:
       - .env
     command: sh -c "npm install && npm run dev"
+    environment:
+      - WATCHPACK_POLLING=true
+      - CHOKIDAR_USEPOLLING=true
 
 networks:
   next_app_network:
