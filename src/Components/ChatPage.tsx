@@ -1,16 +1,16 @@
 "use client"
 
 import * as React from 'react';
+import { useEffect, useState, useRef } from 'react';
+import { useRouter } from 'next/navigation';
 import { ChatComponent } from '@/Components/parts/Chat/Chat';
-import { DrawerContent } from './DrawerContent';
-import { DrawerItem, PopoverItem, SessionItem } from '../types/drawer';
-
+import { DrawerContent } from '@/Components/DrawerContent';
+import { ChatAppbar } from '@/Components/parts/ChatAppbar';
+import { DrawerItem } from '../types/drawer';
+import { SessionList } from '@/Components/parts/Nav/SessionList';
 import AddCommentIcon from '@mui/icons-material/AddComment';
 import AlignHorizontalLeftIcon from '@mui/icons-material/AlignHorizontalLeft';
-import ArchiveIcon from '@mui/icons-material/Archive';
-import DeleteIcon from '@mui/icons-material/Delete';
-import DriveFileRenameOutlineIcon from '@mui/icons-material/DriveFileRenameOutline';
-import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
+
 
 import { 
   Box,
@@ -19,62 +19,63 @@ import {
   IconButton,
 } from '@mui/material';
 
-
 const drawerWidth = 240;
 
 interface Props {
-  window?: () => Window;
+  window?: { innerWidth: number, innerHeight: number };
 }
 
 export const Chatwindow: React.FC<Props> = (props: Props) => {
-  
-  {/*popover*/}
-  const [activePopover, setActivePopover] = React.useState<string | null>(null);
-  
-  const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>(null);
+  const [isClient, setIsClient] = useState(false);
+  const router = useRouter();
 
-  {/*モバイル用の開閉状態*/}
-  const [mobileOpen, setMobileOpen] = React.useState(false);
-  const [pcOpen, setPcOpen] = React.useState(window.innerWidth >= 600); // PC画面用の状態を追加
-  
-  {/*リストの高さ*/}
-  const [height, setHeight] = React.useState<number | null>(null);
-  const listRef = React.useRef<HTMLDivElement | null>(null);
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
-  React.useEffect(() => {
+  // popover
+  const [activePopover, setActivePopover] = useState<string | null>(null);
+  const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
+
+  // モバイル用の開閉状態
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const [pcOpen, setPcOpen] = useState(false);
+
+  // リストの高さ
+  const [height, setHeight] = useState<number | null>(null);
+  const listRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth < 600) {
-        // モバイルサイズの場合
-        setPcOpen(false); // PC用Drawerを閉じる
-        setMobileOpen(false); // モバイルDrawerも閉じる（初期状態）
+        setPcOpen(false);
+      } else {
+        setPcOpen(true);
       }
     };
-  
-    // 初期実行
-    handleResize();
-  
-    // イベントリスナーを追加
+
     window.addEventListener('resize', handleResize);
-  
-    // クリーンアップ
+    handleResize();
+
     return () => {
       window.removeEventListener('resize', handleResize);
     };
-  }, [pcOpen]); // pcOpenが変化した場合に再実行
-  
-  React.useEffect(() => {
+  }, []);
+
+  useEffect(() => {
     if (listRef.current) {
-      {/*リストとDividerの合計高さを取得*/}
       setHeight(listRef.current.clientHeight);
     }
-  }, [])
-  
+  }, []);
+
+  if (!isClient) {
+    return null; // SSR中は何もレンダリングしない
+  }
+
   const handleDrawerToggle = () => {
     if (window.innerWidth >= 600) {
-      // PC画面用のDrawerを制御
       setPcOpen(!pcOpen);
     } else {
-      // モバイル用のDrawerを制御
       setMobileOpen(!mobileOpen);
     }
   };
@@ -84,61 +85,40 @@ export const Chatwindow: React.FC<Props> = (props: Props) => {
     setAnchorEl(event.currentTarget);
   };
 
-
   const handlePopoverClose = () => {
     setActivePopover(null);
     setAnchorEl(null);
   };
 
-  {/* 一番上の閉じる（閉じない）ボタンと新しいセッション開始があるとこ */}
+  const handlecreateSession = () => {
+    router.push('/Chat');
+  };
+
   const drawerButton: DrawerItem[] = [
     { text: 'サイドバーボタン', icon: <AlignHorizontalLeftIcon /> ,tips: '閉じる', onClick: handleDrawerToggle },
-    { text: 'newsession', icon: <AddCommentIcon /> ,tips: '新しいセッションを作成' },
-  ];
-
-  const menuItems: DrawerItem[] = [
-    { text: 'button1', icon: <AlignHorizontalLeftIcon /> ,tips: 'ボタン１' },
-    { text: 'button2', icon: <AlignHorizontalLeftIcon /> ,tips: 'ボタン２' },
-    { text: 'button3', icon: <AlignHorizontalLeftIcon /> ,tips: 'ボタン3' },
-  ];
-
-  const sessionItems: SessionItem[] = [
-    { id: '1', text: 'session1', icon: <MoreHorizIcon /> },
-    { id: '2', text: 'session2', icon: <MoreHorizIcon /> },
-    { id: '3', text: 'session3', icon: <MoreHorizIcon /> },
-    { id: '4', text: 'session4', icon: <MoreHorizIcon /> },
-    { id: '5', text: 'session5', icon: <MoreHorizIcon /> },
-    { id: '6', text: 'session6', icon: <MoreHorizIcon /> },
-    { id: '7', text: 'session7', icon: <MoreHorizIcon /> },
-    { id: '8', text: 'session8', icon: <MoreHorizIcon /> },
-    { id: '9', text: 'session9', icon: <MoreHorizIcon /> },
-    { id: '10', text: 'session10', icon: <MoreHorizIcon /> },
-    { id: '11', text: 'session11', icon: <MoreHorizIcon /> },
-    { id: '12', text: 'session12', icon: <MoreHorizIcon /> },
-  ];
-
-  const popoverLists: PopoverItem [] = [
-    { text: 'rename', icon: <DriveFileRenameOutlineIcon /> },
-    { text: 'archive', icon: <ArchiveIcon /> },
-    { text: 'delete', icon: <DeleteIcon sx={{ color: '#f44336' }} />},
+    { text: 'newsession', icon: <AddCommentIcon /> ,tips: '新しいセッションを作成', onClick: handlecreateSession },
   ];
 
   return (
     <Box sx={{ display: 'flex', height: '100vh'}}>
       <CssBaseline />
-      {/* 開閉ボタン */}
       {(window.innerWidth < 600 || !pcOpen) && (
         <IconButton
           onClick={handleDrawerToggle}
           sx={{
             position: 'fixed',
             m:1,
-            zIndex: mobileOpen ? 0 : 1300, // Drawer が開いた時は非表示
+            zIndex: mobileOpen ? 0 : 1300,
           }}
         >
          <AlignHorizontalLeftIcon />
         </IconButton>
       )}
+      <ChatAppbar
+            pcOpen={pcOpen}
+            mobileOpen={mobileOpen}
+            handleDrawerToggle={handleDrawerToggle}
+        />  
       <Box
         component="nav"
         sx={{ width: { sm: pcOpen ? drawerWidth : 0 }, flexShrink: { sm: 0 }}}
@@ -162,9 +142,6 @@ export const Chatwindow: React.FC<Props> = (props: Props) => {
           <DrawerContent
             listRef={listRef}
             drawerButton={drawerButton}
-            menuItems={menuItems}
-            sessionItems={sessionItems}
-            popoverLists={popoverLists}
             activePopover={activePopover}
             anchorEl={anchorEl}
             handleDrawerToggle={handleDrawerToggle}
@@ -172,6 +149,7 @@ export const Chatwindow: React.FC<Props> = (props: Props) => {
             handlePopoverClose={handlePopoverClose}
             height={height}
           />
+          <SessionList />
         </Drawer>
         <Drawer
           variant="permanent"
@@ -179,8 +157,8 @@ export const Chatwindow: React.FC<Props> = (props: Props) => {
             display: { xs: 'none', sm: 'block' },
             '& .MuiDrawer-paper': { 
               boxSizing: 'border-box', 
-              width: pcOpen ? drawerWidth : 0, // PC画面で開閉状態を反映
-              transition: 'width 0.2s ease-in-out', // アニメーションを追加
+              width: pcOpen ? drawerWidth : 0,
+              transition: 'width 0.2s ease-in-out',
             },
           }}
           open
@@ -188,9 +166,6 @@ export const Chatwindow: React.FC<Props> = (props: Props) => {
           <DrawerContent
             listRef={listRef}
             drawerButton={drawerButton}
-            menuItems={menuItems}
-            sessionItems={sessionItems}
-            popoverLists={popoverLists}
             activePopover={activePopover}
             anchorEl={anchorEl}
             handleDrawerToggle={handleDrawerToggle}
@@ -198,8 +173,8 @@ export const Chatwindow: React.FC<Props> = (props: Props) => {
             handlePopoverClose={handlePopoverClose}
             height={height}
           />
+          <SessionList />
         </Drawer>
->>>>>>> main
       </Box>
       <Box
         component="main"
@@ -210,6 +185,7 @@ export const Chatwindow: React.FC<Props> = (props: Props) => {
             xs: '100%'
           },
           transition: 'width 0.3s ease-in-out',   
+          backgroundColor: '#e6ffff'
           }}
       >
         <ChatComponent />

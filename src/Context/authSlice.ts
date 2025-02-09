@@ -28,12 +28,11 @@ export const fetchUser = createAsyncThunk<User, void, { rejectValue: string }>(
   "users/fetchUser",
   async (_, thunkAPI) => {
     try {
-      const response = await axios.get(`${API_LINK}/user/me/`, {
+      const response = await axios.get(`${API_LINK}/user/me`, {
         withCredentials: true,
       });
       return response.data; 
     } catch (err) {
-      console.error("Fetch user failed:", err);
       return thunkAPI.rejectWithValue("Failed to fetch user");
     }
   }
@@ -45,7 +44,7 @@ export const login = createAsyncThunk<User, { email: string; password: string },
   async ({ email, password }, thunkAPI) => {
     try {
       const response = await axios.post(
-        `${API_LINK}/auth/login/`,
+        `${API_LINK}/auth/login`,
         { email, password },
         {
           headers: {
@@ -54,7 +53,6 @@ export const login = createAsyncThunk<User, { email: string; password: string },
           },
         }
       );
-      console.log("Login response:", response.data);
       const expires = new Date(new Date().getTime() + 30 * 60 * 1000); // 30 分
       Cookies.set('access_token', response.data.access_token, { expires, sameSite: 'Lax' });
       const user = {
@@ -64,7 +62,6 @@ export const login = createAsyncThunk<User, { email: string; password: string },
       };
       return user;
     } catch (err) {
-      console.error("Login failed:", err);
       return thunkAPI.rejectWithValue("Invalid username or password");
     }
   }
@@ -76,12 +73,17 @@ export const logout = createAsyncThunk<void, void, { rejectValue: string }>(
   async (_, thunkAPI) => {
     try {
       await axios.post(
-        `${API_LINK}/api/logout`,
+        `${API_LINK}/auth/logout`,
         {},
-        { withCredentials: true }
+        {
+          headers: {
+            withCredentials: true, 
+            "Content-Type": "application/json",
+          },
+        }
       );
+      Cookies.remove('access_token');
     } catch (err) {
-      console.error("Logout failed:", err);
       return thunkAPI.rejectWithValue("Failed to logout");
     }
   }

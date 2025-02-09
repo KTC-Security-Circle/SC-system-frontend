@@ -1,9 +1,10 @@
 import { LockPerson, People, School } from '@mui/icons-material';
+import EditCalendarIcon from '@mui/icons-material/EditCalendar';
 import { Container } from "@mui/material";
 import { Stack } from "@mui/system";
 import { ReactNode } from 'react';
 import AdminCard from "./parts/AdminCard";
-
+import ScheduleManagement from "@/Components/Calendar/calendar";
 
 const ADMIN_PAGES = [
     {
@@ -20,6 +21,11 @@ const ADMIN_PAGES = [
         title: <CardTitle title={"学校情報ページ"} icon={<School />} />,
         description: "学校情報を閲覧・編集します。",
         href: "/Admin/School"
+    },
+    {
+        title: <CardTitle title={"スケジュール管理"} icon={<EditCalendarIcon />} />,
+        description: "学校の年間スケジュールを閲覧・編集します。",
+        href: "/Admin/ScheduleManagement"
     }
 ]
 
@@ -34,14 +40,17 @@ async function CardTitle({ title, icon }: { title: string, icon: ReactNode }) {
     )
 }
 
-export default async function AdminPageComponent() {
+export default  async function AdminPageComponent() {
     return (
         <Container>
-            <Stack sx={{ m: 5 }} spacing={2} direction={{ xs: "column", lg: "row" }}>
-                {ADMIN_PAGES.map((page) => {
-                    return <AdminCard {...page} />
-                })}
-            </Stack>
+            {ADMIN_PAGES.map((page, index) => (
+                <AdminCard
+                    key={index}
+                    title={page.title}
+                    description={page.description}
+                    href={page.href}
+                />
+            ))}
         </Container>
-    )
+    );
 }

@@ -16,24 +16,25 @@ import {
   Paper,
 } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
+import CircularProgress from '@mui/material/CircularProgress';
+import { fetchSessionItems } from '@/hook/getSession';
+import { useGetSession } from '@/Context/sessionContext';
 
-interface Message {
-  id: string;
-  content: string;
-  sender: string;
-  timestamp: string;
-}
+
 
 const API_LINK = process.env.NEXT_PUBLIC_BACKEND_DEV_URL;
 
 export const ChatComponent: React.FC = () => {
   const { user } = useSelector((state: RootState) => state.auth);
   const [message, setMessage] = useState<string>('');
+  const [loading,setLoading]=useState<boolean>(false);
   const router = useRouter();
+  const { setGetSession } = useGetSession();
 
-  const sendMessage = async (e: FormEvent<HTMLFormElement>) => {
+  const sendMessage = async (e: FormEvent<HTMLFormElement> | React.KeyboardEvent<HTMLDivElement>) => {
     e.preventDefault();
     if (!message.trim() || !user) return;
+    setLoading(true);
     try {
       const token = Cookies.get('access_token');
       if (!token) {
@@ -62,7 +63,8 @@ export const ChatComponent: React.FC = () => {
           router.push('/');
           return;
         }
-        // URLにsession_idを含めてリダイレクト
+        const updatedSessions = await fetchSessionItems();
+        setGetSession(updatedSessions); 
         router.push(`/Chat/${session_id}`);
       } else {
         const errorData = await res.json();
@@ -73,25 +75,50 @@ export const ChatComponent: React.FC = () => {
       console.error(err);
     } finally {
       setMessage('');
+      setLoading(false);
+    }
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      sendMessage(e);
     }
   };
 
   return (
-    <Container maxWidth="lg" sx={{ height: '100vh', display: 'flex', flexDirection: 'column' }}>
-      <Box component="form" onSubmit={sendMessage} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', mb: 2, marginTop: 'auto' }}>
-        <TextField
-          id="message-input"
-          name="message"
-          fullWidth
-          variant="outlined"
-          placeholder="Type a message..."
-          value={message}
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) => setMessage(e.target.value)}
-        />
-        <IconButton aria-label="Send" type="submit">
-          <SendIcon />
-        </IconButton>
-      </Box>
-    </Container>
+      <Container maxWidth="lg" sx={{ height: '100vh', display: 'flex', flexDirection: 'column', backgroundColor: '#e6ffff' }}>
+        <Box component="form" onSubmit={sendMessage} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', mb: 2, marginTop: 'auto',bottom: 0 }}>
+          <TextField
+            id="message-input"
+            name="message"
+            fullWidth
+            variant="outlined"
+            placeholder="Type a message..."
+            multiline
+            value={message}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setMessage(e.target.value)}
+            onKeyDown={handleKeyDown}
+            sx={{
+              '& .MuiOutlinedInput-root': {
+                backgroundColor: '#d8d8d8',
+                '& fieldset': {
+                  borderColor: 'transparent',
+                },
+                '&:hover fieldset': {
+                  borderColor: 'transparent',
+                },
+                '&.Mui-focused fieldset': {
+                  borderColor: 'transparent',
+                },
+              },
+            }}
+          />
+          <IconButton aria-label="Send" type="submit" >
+            <SendIcon />
+          </IconButton>
+          {loading && <CircularProgress size={24} sx={{ ml: 2 }} />}
+        </Box>
+      </Container>
   );
 };

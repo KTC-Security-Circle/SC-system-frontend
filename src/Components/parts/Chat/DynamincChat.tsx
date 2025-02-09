@@ -3,7 +3,8 @@
 import React, { useState, useEffect, FormEvent,useRef } from 'react';
 import Cookies from 'js-cookie';
 import { useRouter, useParams } from 'next/navigation';
-
+import Image from 'next/image';
+import { useSession } from '@/Context/deleteSession';
 import {
   Box,
   Container,
@@ -13,8 +14,16 @@ import {
   ListItem,
   ListItemText,
   Paper,
+  Toolbar,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Button,
 } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
+import CircularProgress from '@mui/material/CircularProgress';
+
 
 interface Message {
   id: string;
@@ -29,14 +38,26 @@ export const DynamicChatComponent: React.FC = () => {
   const [message, setMessage] = useState<string>('');
   const [messages, setMessages] = useState<Message[]>([]);
   const [error, setError] = useState<string | null>(null);
+  const [loading,setLoading]=useState<boolean>(false);
+  const [isDeleted, setIsDeleted] = useState<boolean>(false);
   const router = useRouter();
   const { session_id } = useParams();
+  const { deletedSessionId } = useSession();
   const token = Cookies.get('access_token');
   const bottomRef = useRef<HTMLDivElement>(null);
 
+  const handlemovehome = () => {
+    router.push('/Chat');
+  };
+
+  useEffect(() =>{
+    if(deletedSessionId === Number(session_id)){
+      setIsDeleted(true);
+    }
+  })
+
   useEffect(() => {
     if (!session_id || Array.isArray(session_id)) {
-      console.error('Invalid session ID');
       router.push('/');
       return;
     }
@@ -45,7 +66,6 @@ export const DynamicChatComponent: React.FC = () => {
       try {
         if (!token) {
           router.push('/');
-          console.error('No token found');
           return;
         }
 
@@ -78,7 +98,10 @@ export const DynamicChatComponent: React.FC = () => {
         ]);
         setMessages(formattedMessages);
       } catch (err) {
-        console.error(err);
+        if (err instanceof Error && err.message.includes('500')) {
+          setIsDeleted(true);
+          return;
+        }
         setError('Failed to load messages');
       }
     };
@@ -92,7 +115,7 @@ export const DynamicChatComponent: React.FC = () => {
     }
   },[messages])
 
-  const sendMessage = async (e: FormEvent<HTMLFormElement>) => {
+  const sendMessage = async (e: FormEvent<HTMLFormElement> | React.KeyboardEvent<HTMLDivElement>) => {
     e.preventDefault();
     if (!message.trim()) return;
     if (!token) {
@@ -101,18 +124,18 @@ export const DynamicChatComponent: React.FC = () => {
     }
 
     if (!session_id || Array.isArray(session_id)) {
-      console.error('Invalid session ID');
       return;
     }
 
     const optimisticMessage: Message = {
       id: Date.now().toString(),
       content: message,
-      sender: 'user', // ユーザーIDを送信しない
+      sender: 'user', 
       timestamp: new Date().toISOString(),
     };
 
     setMessages([...messages, optimisticMessage]);
+    setLoading(true);
 
     try {
       const res = await fetch(`${API_LINK}/api/input/chat/`, {
@@ -142,31 +165,62 @@ export const DynamicChatComponent: React.FC = () => {
       };
       setMessages((prevMessages) => [...prevMessages, botReply]);
     } catch (err) {
-      console.error(err);
       setError('Failed to send message');
     } finally {
       setMessage('');
+      setLoading(false);
     }
   };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+      if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        sendMessage(e);
+      }
+    };
 
   if (error) return <div>{error}</div>;
 
   return (
-    <Container maxWidth="lg" sx={{ height: '100vh', display: 'flex', flexDirection: 'column' }}>
+    <Container maxWidth="lg" sx={{ height: '100vh', display: 'flex', flexDirection: 'column', backgroundColor: '#e6ffff' }}>
+      <Dialog
+        open={isDeleted}
+        onClose={handlemovehome}
+        maxWidth="sm"
+        fullWidth
+      >
+        <DialogTitle>セッション削除</DialogTitle>
+        <DialogContent>
+            <Box sx={{ p: 2 }}>
+                このセッションは削除されました。
+            </Box>
+        </DialogContent>
+          <DialogActions>
+              <Button onClick={handlemovehome} variant="contained">
+                  ホームに戻る
+              </Button>
+          </DialogActions>
+      </Dialog>
       <Box sx={{ flexGrow: 1, overflowY: 'auto', mb: 2 }}>
+              <Toolbar />
         <List>
           {messages.map((msg: Message) => (
             <ListItem
               key={msg.id}
               sx={{ justifyContent: msg.sender === 'user' ? 'flex-end' : 'flex-start' }}
-            >
+              >
+              {msg.sender === 'bot' && (
+                <Image src="/ai_icon.png" alt="AI" width={40} height={40}  />
+              )}
               <Box sx={{ maxWidth: '75%', position: 'relative' }}>
                 <Paper
                   elevation={1}
                   sx={{
+                    display: 'flex',
+                    alignItems: 'center',
                     p: 1.4,
                     m: 1,
-                    backgroundColor: msg.sender === 'user' ? '#e5e7eb' : '#e5e7eb',
+                    backgroundColor: msg.sender === 'user' ? '#d8d8d8' : '#d8d8d8',
                     color: msg.sender === 'user' ? '#000000' : '#000000',
                     textAlign: msg.sender === 'user' ? 'center' : 'center',
                     position: 'relative',
@@ -180,8 +234,8 @@ export const DynamicChatComponent: React.FC = () => {
                       borderStyle: 'solid',
                       borderColor:
                         msg.sender === 'user'
-                          ? 'transparent transparent transparent #e5e7eb'
-                          : 'transparent #e5e7eb transparent transparent',
+                          ? 'transparent transparent transparent #d8d8d8'
+                          : 'transparent #d8d8d8 transparent transparent',
                       right: msg.sender === 'user' ? '-20px' : 'auto',
                       left: msg.sender !== 'user' ? '-20px' : 'auto',
                     },
@@ -195,7 +249,7 @@ export const DynamicChatComponent: React.FC = () => {
           <div ref={bottomRef}/>
         </List>
       </Box>
-      <Box component="form" onSubmit={sendMessage} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', mb: 2 }}>
+      <Box component="form" onSubmit={sendMessage} sx={{ position:'flex', bottom: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', mb:2 }}>
         <TextField
           id="message-input"
           name="message"
@@ -219,13 +273,30 @@ export const DynamicChatComponent: React.FC = () => {
               },
             },
           }}
+          multiline
           value={message}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) => setMessage(e.target.value)}
-          sx={{ mx: 'auto' }}
+          onKeyDown={handleKeyDown}
+          sx={{
+            mx: 'auto',
+            '& .MuiOutlinedInput-root': {
+              backgroundColor: '#d8d8d8',
+              '& fieldset': {
+                borderColor: 'transparent',
+              },
+              '&:hover fieldset': {
+                borderColor: 'transparent',
+              },
+              '&.Mui-focused fieldset': {
+                borderColor: 'transparent',
+              },
+            },
+          }} 
         />
         <IconButton aria-label="Send" size="large" className="send-button" type="submit" sx={{ color: '#1E3C5F' }}>
           <SendIcon fontSize="inherit" />
         </IconButton>
+        {loading && <CircularProgress size={24} sx={{ ml: 2 }} />}
       </Box>
     </Container>
   );
