@@ -1,0 +1,184 @@
+/* markdown */
+.markdown-body table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 1em 0 1em 10px ;
+  overflow: hidden; /* テーブル内の内容がはみ出さないようにする */
+}
+
+.markdown-body th,
+.markdown-body td {
+  border: 1px solid #ccc;
+  padding: 12px;
+  text-align: left;
+}
+
+.markdown-body th {
+  background-color: #6c757d; /* ヘッダーの背景色 */
+  color: #ffffff; /* ヘッダーの文字色 */
+  font-weight: bold;
+}
+
+.markdown-body td {
+  background-color: #ffffff; /* セルの背景色 */
+}
+
+.markdown-body tr:nth-child(even) td {
+  background-color: #f2f2f2; /* 偶数行の背景色 */
+}
+
+ 
+.markdown-body ol {
+  margin: 1em 0;
+  padding-left: 2em; /* インデントの調整 */
+  list-style-type: decimal; /* 番号リストのスタイル */
+}
+
+.markdown-body ol li {
+  margin-bottom: 0.5em; /* リスト項目間のスペース */
+}
+
+.markdown-body ul {
+  margin: 1em 0;
+  padding-left: 2em; /* インデントの調整 */
+  list-style-type: disc; /* 通常の箇条書きリスト */
+}
+
+.markdown-body ul li {
+  margin-bottom: 0.5em; /* リスト項目間のスペース */
+}
+
+.editor-preview-side {
+  font-family: Arial, sans-serif;
+  line-height: 1.6;
+  padding: 20px;
+  background-color: #f5f5f5;
+  border-radius: 4px;
+}
+
+.editor-preview-side h1,
+.editor-preview-side h2,
+.editor-preview-side h3,
+.editor-preview-side h4,
+.editor-preview-side h5,
+.editor-preview-side h6 {
+  margin-top: 24px;
+  font-weight: bold;
+}
+
+.editor-preview-side h1 {
+  font-size: 2em;
+}
+
+.editor-preview-side h2 {
+  font-size: 1.75em;
+}
+
+.editor-preview-side h3 {
+  font-size: 1.5em;
+}
+
+.editor-preview-side h4 {
+  font-size: 1.25em;
+}
+
+.editor-preview-side h5 {
+  font-size: 1em;
+}
+
+.editor-preview-side h6 {
+  font-size: 0.875em;
+}
+
+.editor-preview-side p {
+  margin-top: 1em;
+  margin-bottom: 1em;
+}
+
+.editor-preview-side ul{
+  list-style: initial;
+  margin-top: 1em;
+  margin-bottom: 1em;
+  padding-left: 40px;
+}
+.editor-preview-side ol {
+  list-style: decimal;
+  margin-top: 1em;
+  margin-bottom: 1em;
+  padding-left: 40px;
+}
+
+.editor-preview-side ul li,
+.editor-preview-side ol li {
+  margin-bottom: 0.5em;
+}
+
+.editor-preview-side blockquote {
+  margin-top: 1em;
+  margin-bottom: 1em;
+  padding: 10px 20px;
+  border-left: 5px solid #ccc;
+}
+
+.editor-preview-side code {
+  font-family: 'Courier New', Courier, monospace;
+  padding: 2px 4px;
+  border-radius: 4px;
+}
+
+.editor-preview-side pre {
+  font-family: 'Courier New', Courier, monospace;
+  background-color: #272822;
+  color: #f8f8f2;
+  padding: 10px;
+  border-radius: 4px;
+  overflow-x: auto;
+}
+
+.editor-preview-side hr {
+  border: 1px solid #ddd;
+  margin-top: 1.5em;
+  margin-bottom: 1.5em;
+}
+
+.editor-preview-side a {
+  color: #007bff;
+  text-decoration: none;
+}
+
+.editor-preview-side a:hover {
+  text-decoration: underline;
+}
+
+.editor-preview-side img {
+  max-width: 100%;
+  height: auto;
+}
+
+.editor-preview-side table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 1em 0 1em 10px ;
+  overflow: hidden; /* テーブル内の内容がはみ出さないようにする */
+}
+
+.editor-preview-side th,
+.editor-preview-side td {
+  border: 1px solid #ccc;
+  padding: 12px;
+  text-align: left;
+}
+
+.editor-preview-side th {
+  background-color: #6c757d; /* ヘッダーの背景色 */
+  color: #ffffff; /* ヘッダーの文字色 */
+  font-weight: bold;
+}
+
+.editor-preview-side td {
+  background-color: #ffffff; /* セルの背景色 */
+}
+
+.editor-preview-side tr:nth-child(even) td {
+  background-color: #f2f2f2; /* 偶数行の背景色 */
+}
