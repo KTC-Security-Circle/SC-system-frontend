@@ -1,8 +1,9 @@
 "use client";
 
 import FeaturePart from '@/Components/parts/LP/FeaturePart';
+import UseButton from '@/Components/parts/LP/UseButton';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import { Box, Button, Stack, Typography } from '@mui/material';
+import { Box, Stack, Typography } from '@mui/material';
 import { motion } from "framer-motion";
 import Image from 'next/image';
 import Link from 'next/link';
@@ -59,7 +60,7 @@ export default function LandingPage() {
                     AIにおまかせ。
                 </p>
                 <Image src={"/scsystemlogo.png"} alt="placeholder" width={300} height={300} />
-                <Button variant="contained" color="primary" style={{ marginTop: '1.5em', width: "9em", height: "2.5em", fontSize: "1.05em" }}>使ってみる</Button>
+                <UseButton />
             </Box>
             <Box
                 sx={{
@@ -70,8 +71,12 @@ export default function LandingPage() {
                     marginRight: "auto",
                     marginBottom: "2em",
                 }}
+                component={Link}
+                href="#features"
+                scroll={false}
+                onClick={scrollToFeatures}
             >
-                <Typography sx={{ mb: 1 }} component={Link} href="#features" scroll={false} onClick={scrollToFeatures}>
+                <Typography sx={{ mb: 1 }}>
                     もっと詳しく
                 </Typography>
                 <motion.div
@@ -232,7 +237,7 @@ export default function LandingPage() {
                     学校生活を、もっと便利に。
                 </Typography>
                 <Typography fontSize={"1.1em"}>AIの力で、学生生活をもっとサポート。</Typography>
-                <Button variant="contained" color="primary" style={{ marginTop: '1.5em', width: "9em", height: "2.5em", fontSize: "1.05em" }}>使ってみる</Button>
+                <UseButton />
             </Box>
         </Box>
     </Box>
