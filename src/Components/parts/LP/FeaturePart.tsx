@@ -29,10 +29,10 @@ export default function FeaturePart({ title, description, reversed, simulatedCha
             </Stack>
         </Grid>
         <Grid size={6} alignItems={"center"} marginLeft={"auto"} marginRight={"auto"}>
-            <Box sx={{ minWidth: 350, minHeight: 240, textAlign: textAlign, "background": "#fff", "borderRadius": "3px" }} p={3}>
+            <Box sx={{ minWidth: 350, minHeight: 240, textAlign: { xs: "left", md: textAlign }, "background": "#fff", "borderRadius": "3px" }} p={3}>
                 <Stack spacing={2} alignContent={"center"} sx={{ position: 'relative', overflow: 'hidden', maxHeight: '240px' }}>
                     {simulatedChatMessages.map((message, index) =>
-                        <div>
+                        <div key={index}>
                             <Typography>
                                 {message.prompt}
                             </Typography>
