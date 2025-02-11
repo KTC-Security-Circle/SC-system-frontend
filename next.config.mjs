@@ -14,15 +14,6 @@ const nextConfig = {
 
     return config;
   },
-  images: {
-    remotePatterns: [
-      {
-        // TODO: プレースホルダー画像のAPIなので、使わなくなったら消す
-        protocol: "https",
-        hostname: "placehold.co",
-      },
-    ],
-  },
 };
 
 export default nextConfig;
