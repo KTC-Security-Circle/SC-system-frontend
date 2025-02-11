@@ -1,6 +1,7 @@
 "use client";
 
 import FeaturePart from '@/Components/parts/LP/FeaturePart';
+import LPFooter from '@/Components/parts/LP/Footer';
 import UseButton from '@/Components/parts/LP/UseButton';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { Box, Stack, Typography } from '@mui/material';
@@ -239,6 +240,8 @@ export default function LandingPage() {
                 <Typography fontSize={"1.1em"}>AIの力で、学生生活をもっとサポート。</Typography>
                 <UseButton />
             </Box>
+
+            <LPFooter />
         </Box>
     </Box>
 }
