@@ -14,7 +14,6 @@ export const RegisterForm: React.FC = () => {
   const [name, setName] = useState<string>('');
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
-  const [major, setMajor] = useState<string>('');
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [showSnackbar, setShowSnackbar] = useState<boolean>(false);
   const [alertMessage, setAlertMessage] = useState<string>('');
@@ -27,7 +26,7 @@ export const RegisterForm: React.FC = () => {
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      const res = await fetch(`${API_LINK}/auth/signup/`, {
+      const res = await fetch(`${API_LINK}/auth/signup`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -37,7 +36,6 @@ export const RegisterForm: React.FC = () => {
           email: email,
           password: password,
           authority: "student",
-          major: major+"専攻",
         })
       });
       if (res.ok) {
@@ -123,24 +121,6 @@ export const RegisterForm: React.FC = () => {
                     </IconButton>
                   </InputAdornment>
                 )
-              }}
-            />
-          </Grid>
-          <Grid item xs={12}>
-            <TextField
-              fullWidth
-              label="専攻名"
-              variant="outlined"
-              type="major"
-              value={major}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setMajor(e.target.value)}
-              required
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <EmailIcon />
-                  </InputAdornment>
-                ),
               }}
             />
           </Grid>
