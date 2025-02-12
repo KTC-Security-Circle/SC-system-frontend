@@ -1,9 +1,9 @@
-import React from 'react';
-import { HomePage } from '@/Components/HomePage';
+"use client";
 
-const Page: React.FC = () => {
-  return (
-    <HomePage />
-  );
-};
-export default Page;
+import LandingPageComponent from "@/Components/LandingPageComponent";
+
+export default function LandingPage() {
+    return (
+        <LandingPageComponent />
+    )
+}
