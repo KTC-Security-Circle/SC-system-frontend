@@ -34,7 +34,7 @@ export default function LandingPageComponent() {
                 }}>
                     教師と学⽣をつなぎ、学びの距離をゼロにする。
                 </Typography>
-                <p style={{ fontSize: '1.4em', display: 'inline-block' }}>
+                <Typography style={{ fontSize: '1.4em', display: 'inline-block' }} fontWeight={"bold"}>
                     <TypeAnimation
                         preRenderFirstString
                         sequence={[
@@ -59,7 +59,7 @@ export default function LandingPageComponent() {
                     も、
                     <br />
                     AIにおまかせ。
-                </p>
+                </Typography>
                 <Image src={"/scsystemlogo.png"} alt="placeholder" width={300} height={300} />
                 <UseButton />
             </Box>
