@@ -53,7 +53,7 @@ export const InformationList:React.FC<LinkIDProps> =({LinkAdress}) => {
     }
 
     return (
-    <Box sx={{ overflowX: "auto", overflowY: "auto", height: "calc(100vh - 60px)", width: "100%", padding: "0 8px" }}> {/* 縦スクロールの許可 */}
+    <Box sx={{ width: "100%", padding: "0 8px" }}> {/* 縦スクロールの許可 */}
       <Typography variant="h4">学内情報一覧</Typography>
       <Grid 
         container 

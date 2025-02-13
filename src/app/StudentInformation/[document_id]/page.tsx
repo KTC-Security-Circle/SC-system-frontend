@@ -60,7 +60,7 @@ const Information: React.FC = () => {
   return (
     <Container>
         <NavigateBackButton TextButtons={TextButtons} />
-      <Box className="InformationPreview" sx={{ display: "flex", justifyContent: "center", alignItems: "center", backgroundColor: "background.default", color: "text.primary", padding: "20px", minHeight: "100vh" }}>
+      <Box className="InformationPreview" sx={{ display: "flex", justifyContent: "center", alignItems: "center", backgroundColor: "background.default", color: "text.primary", padding: "20px", }}>
         <Box sx={{ width: "210mm",  backgroundColor: "white", boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)", borderRadius: "4px", padding: "20mm", overflow: "auto" }}>
           <MarkdownPreview content={markdownContent} />
         </Box>
