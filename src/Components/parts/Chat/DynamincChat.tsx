@@ -20,6 +20,7 @@ import {
   DialogContent,
   DialogActions,
   Button,
+  Link,
 } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
 import CircularProgress from '@mui/material/CircularProgress';
@@ -30,6 +31,7 @@ interface Message {
   content: string;
   sender: string;
   timestamp: string;
+  documentId?:string;
 }
 
 const API_LINK = process.env.NEXT_PUBLIC_BACKEND_DEV_URL;
@@ -94,6 +96,7 @@ export const DynamicChatComponent: React.FC = () => {
             content: msg.bot_reply,
             sender: 'bot',
             timestamp: msg.pub_data,
+            documentId: msg.documentid,
           },
         ]);
         setMessages(formattedMessages);
@@ -162,6 +165,7 @@ export const DynamicChatComponent: React.FC = () => {
         content: data.bot_reply,
         sender: 'bot',
         timestamp: new Date().toISOString(),
+        documentId: data.documentid,
       };
       setMessages((prevMessages) => [...prevMessages, botReply]);
     } catch (err) {
@@ -244,6 +248,25 @@ export const DynamicChatComponent: React.FC = () => {
                   <ListItemText primary={msg.content} sx={{ wordWrap: 'break-word' }} />
                 </Paper>
               </Box>
+              {msg.documentId && (
+                <Link
+                href={`/documents/${msg.documentId}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                sx={{
+                  mt: 1,
+                  fontSize: '0.8rem',
+                  color: '#1976d2',
+                  textDecoration: 'underline',
+                  '&:hover': {
+                    backgroundColor: 'transparent',
+                    textDecoration: 'underline',
+                  }
+                }}
+              >
+                参照リンク
+              </Link>
+              )}
             </ListItem>
           ))}
           <div ref={bottomRef}/>
