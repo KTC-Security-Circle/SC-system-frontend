@@ -6,7 +6,7 @@ export const fetchtitle = async (): Promise<ListButton[]> => {
 try {
     const access_token = Cookies.get("access_token");
     if (!access_token) {
-    throw new Error("No token found");
+        throw new Error("No token found");
     }
     const response = await fetch(`${API_LINK}/api/view/schoolinfo/title?offset=0`,
     {
@@ -30,6 +30,6 @@ try {
     }));
 } catch (error) {
     console.error("Error fetching data:", error);
-    return [];
+    throw new Error("データの取得に失敗しました");
 }
 };

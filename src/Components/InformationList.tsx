@@ -7,12 +7,12 @@ import Link from "next/link";
 
 interface LinkIDProps {
   LinkAdress: string; // ボタンデータ配列
+  PageTitle : string; // ページタイトル
 }
 
-export const InformationList:React.FC<LinkIDProps> =({LinkAdress}) => {
+export const InformationList:React.FC<LinkIDProps> =({LinkAdress, PageTitle}) => {
     
     const [textButtons, setTextButtons] = useState<ListButton[]>([]);
-    const [NoneDataMessage, setNoneDataMessage] = useState<string | null>(null);
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
 
@@ -20,14 +20,8 @@ export const InformationList:React.FC<LinkIDProps> =({LinkAdress}) => {
         const getTitles = async () => {
             try {
                 const documents = await fetchtitle();
-                if (documents.length === 0) {
-                    console.log("No documents found.");
-                    setTextButtons([]);
-                    setNoneDataMessage("データがありません");
-                    return;
-                }
                 setTextButtons(documents);
-            } catch (error) {
+            } catch (error: any) {
                 setError("情報の取得に失敗しました。");
             } finally {
                 setLoading(false);
@@ -37,24 +31,24 @@ export const InformationList:React.FC<LinkIDProps> =({LinkAdress}) => {
     }, []);
     
     if (loading) {
-        return (
-          <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", minHeight: "100vh" }}>
-            <CircularProgress />
-          </Box>
-        );
+      return (
+        <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", minHeight: "70vh" }}>
+          <CircularProgress />
+        </Box>
+      );
     }
-
+  
     if (error) {
-        return (
-          <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", minHeight: "100vh", color: "error.main" }}>
-            <Typography>{error}</Typography>
-          </Box>
-        );
+      return (
+        <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", minHeight: "70vh", color: "error.main" }}>
+          <Typography>{error}</Typography>
+        </Box>
+      );
     }
 
     return (
     <Box sx={{ width: "100%", padding: "0 8px" }}> {/* 縦スクロールの許可 */}
-      <Typography variant="h4">学内情報一覧</Typography>
+      <Typography variant="h5">{PageTitle}</Typography>
       <Grid 
         container 
         spacing={2} 
@@ -66,7 +60,7 @@ export const InformationList:React.FC<LinkIDProps> =({LinkAdress}) => {
               <Link href={`/${LinkAdress}/${btn.document_id}`} passHref>
                 <CardActionArea>
                   <CardContent>
-                    <Typography variant="h5">{btn.title}</Typography>
+                    <Typography variant="h5" sx={{borderBottom: "2px solid #616161", pb: 0.3 }}>{btn.title}</Typography>
                   </CardContent>
                 </CardActionArea>
               </Link>

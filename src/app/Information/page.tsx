@@ -7,6 +7,7 @@ import { KeyboardReturn } from '@mui/icons-material';
 import { Container } from "@mui/material";
 
 const LinkAdress: string = "Information";
+const PageTitle: string = "学校情報の閲覧";
 
 const TextButtons: BackButton [] = [
   { text: "戻る", color: "#616161", href: "Admin/School", icon: <KeyboardReturn /> }
@@ -18,7 +19,7 @@ export default function Information() {
   return (
     <Container>
         <NavigateBackButton TextButtons={TextButtons} />
-        <InformationList LinkAdress={LinkAdress} />
+        <InformationList LinkAdress={LinkAdress} PageTitle={PageTitle} />
     </Container>
   );
 }
