@@ -80,8 +80,8 @@ export const UserTable: React.FC = () => {
   const [rows, setRows] = useState<Data[]>([]);
   const [open, setOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState<Data | null>(null);
-  const [createopen, createOpen] = useState(false);
-  const [createdUser, setCleatedUser] = useState<createData | null>(null);
+  const [createopen, setCreateOpen] = useState(false);
+  const [createdUser, setcreatedUser] = useState<createData | null>(null);
   const { user } = useSelector((state: RootState) => state.auth);
 
   const createSortHandler = (property: keyof Data) => (
@@ -108,13 +108,41 @@ export const UserTable: React.FC = () => {
     setOpen(true);
   };
 
-  const handlecreateClick = () => {
-    createOpen(true);
-  };
 
-  const handleCreate = async () => {
-    //api/signupを作成
+  const handleCreate = async () => {if (!createdUser?.name || !createdUser?.email || !createdUser?.password || !createdUser?.authority) {
+    alert("すべてのフィールドを入力してください");
+    return;
   }
+
+  const passwordCheck = /^(?=.*[a-zA-Z])(?=.*\d)[a-zA-Z\d]{8,}$/;
+  if (!passwordCheck.test(createdUser.password)) {
+    alert("パスワードは8文字以上の英数字で設定してください");
+  }
+
+  try {
+    const res = await fetch(`${API_LINK}/auth/signup`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        name: createdUser.name,
+        email: createdUser.email,
+        password: createdUser.password,
+        authority: createdUser.authority,
+        major: createdUser.major ? `${createdUser.major}専攻` : "",
+      }),
+    });
+
+    if (!res.ok) throw new Error("ユーザー登録に失敗しました");
+
+    alert("ユーザー登録に成功しました");
+    setCreateOpen(false);
+    window.location.reload();
+  } catch (error) {
+    alert("エラーが発生しました");
+  }
+};
 
   const handleDeleteClick = async (id: string) => {
     if (window.confirm("本当に削除しますか？")) {
@@ -139,21 +167,33 @@ export const UserTable: React.FC = () => {
       const originalUser = rows.find(row => row.id === selectedUser.id);
       if (!originalUser) return;
   
-      // 変更されていないフィールドを null にする
       const updatedFields = Object.keys(originalUser).reduce((acc, key) => {
-        if (key !== "id" && (selectedUser as any)[key] === (originalUser as any)[key]) {
-          acc[key] = null;
-        } else if (key !== "id") {
-          acc[key] = (selectedUser as any)[key];
+        const newValue = (selectedUser as any)[key];
+        const oldValue = (originalUser as any)[key];
+
+        // ID は更新しない
+        if (key === "id") return acc;
+
+        // 空のデータ（null, "" など）は変更しないものとして扱う
+        if (newValue === "" || newValue === null) return acc;
+
+        // 変更された値のみ含める
+        if (newValue !== oldValue) {
+          acc[key] = newValue;
         }
+
         return acc;
       }, {} as Record<string, any>);
+
+      // 変更がある場合のみリクエストを送信
+      if (Object.keys(updatedFields).length === 0) {
+        console.log("変更なしのため送信しません。");
+        return;
+      }
   
-      const payload = { ...updatedFields, password: null }; // パスワードも明示的に null にする
+      console.log("送信データ:", JSON.stringify(updatedFields, null, 2));
   
-      console.log("送信データ:", JSON.stringify(payload, null, 2));
-  
-      await axios.put(`${API_LINK}/api/update/user/${selectedUser.id}`, payload, {
+      await axios.put(`${API_LINK}/api/update/user/${selectedUser.id}`, updatedFields, {
         headers: {
           withCredentials: true,
           "Authorization": `Bearer ${Cookies.get("access_token")}`,
@@ -169,12 +209,11 @@ export const UserTable: React.FC = () => {
     }
   };
   
-  //handleCreateClick未実装
   return (
     <>
       <Box sx={{ maxWidth: "80%", margin: "auto", display: "flex", justifyContent: "space-between", alignItems: "center", mb: 2 }}>
         <Typography variant="h6">ユーザー一覧</Typography>
-        <Button variant="contained" color="primary" onClick={handlecreateClick}> 
+        <Button variant="contained" color="primary" onClick={() => setCreateOpen(true)}>
           新規作成
         </Button>
       </Box>
@@ -245,7 +284,7 @@ export const UserTable: React.FC = () => {
         </Box>
       </Modal>
 
-      <Modal open={createopen} onClose={() => createOpen(false)}>
+      <Modal open={createopen} onClose={() => setCreateOpen(false)}>
         <Box sx={{
           position: 'absolute',
           top: '50%',
@@ -257,12 +296,12 @@ export const UserTable: React.FC = () => {
           p: 4,
         }}>
           <Typography variant="h6">ユーザー作成</Typography>
-          <TextField fullWidth margin="normal" label="Name" value={createdUser?.name || ""} onChange={(e) => setCleatedUser({ ...createdUser!, name:e.target.value })}/>
-          <TextField fullWidth margin="normal" label="Email" value={createdUser?.email || ""} onChange={(e) => setCleatedUser({ ...createdUser!, email:e.target.value })}/>
-          <TextField fullWidth margin="normal" label="Password" value={createdUser?.password || ""} onChange={(e) => setCleatedUser({ ...createdUser!, password:e.target.value })}/>
-          <TextField fullWidth margin="normal" label="Authority" value={createdUser?.authority || ""} onChange={(e) => setCleatedUser({ ...createdUser!, authority:e.target.value })}/>
+          <TextField fullWidth margin="normal" label="Name" value={createdUser?.name || ""} onChange={(e) => setcreatedUser({ ...createdUser!, name:e.target.value })}/>
+          <TextField fullWidth margin="normal" label="Email" value={createdUser?.email || ""} onChange={(e) => setcreatedUser({ ...createdUser!, email:e.target.value })}/>
+          <TextField fullWidth margin="normal" label="Password" value={createdUser?.password || ""} onChange={(e) => setcreatedUser({ ...createdUser!, password:e.target.value })}/>
+          <TextField fullWidth margin="normal" label="Authority" value={createdUser?.authority || ""} onChange={(e) => setcreatedUser({ ...createdUser!, authority:e.target.value })}/>
           <Button onClick={handleCreate} variant="contained" color="primary" sx={{ mt: 2 }}>作成</Button>
-          <Button onClick={() => createOpen(false)} variant="outlined" sx={{ mt: 2, ml: 2 }}>キャンセル</Button>
+          <Button onClick={() => setCreateOpen(false)} variant="outlined" sx={{ mt: 2, ml: 2 }}>キャンセル</Button>
         </Box>
       </Modal>
     </>
