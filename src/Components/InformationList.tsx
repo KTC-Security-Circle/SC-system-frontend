@@ -57,7 +57,7 @@ export const InformationList:React.FC<LinkIDProps> =({LinkAdress, PageTitle}) =>
         {textButtons.map((btn) => (
           <Grid item xs={12} sm={6} md={4} lg={3} key={btn.document_id}>
             <Card sx={{ cursor: "pointer", width: "100%", maxWidth: "100%", minWidth: 250 }}>
-              <Link href={`/${LinkAdress}/${btn.document_id}`} passHref>
+              <Link href={`/${LinkAdress}/${btn.document_id}`} passHref prefetch={false}>
                 <CardActionArea>
                   <CardContent>
                     <Typography variant="h5" sx={{borderBottom: "2px solid #616161", pb: 0.3 }}>{btn.title}</Typography>
