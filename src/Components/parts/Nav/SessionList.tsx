@@ -1,34 +1,17 @@
-import React, { useState,useMemo,useEffect } from "react";
-import { usePathname } from "next/navigation";
-import { useRouter } from "next/navigation";
+import React, { useState, useMemo, useEffect } from "react";
+import { usePathname, useRouter } from "next/navigation";
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import DeleteIcon from '@mui/icons-material/Delete';
 import DriveFileRenameOutlineIcon from '@mui/icons-material/DriveFileRenameOutline';
 import {
-    Box,
-    CircularProgress,
-    IconButton,
-    List,
-    ListItem,
-    ListItemButton,
-    ListItemText,
-    ListItemIcon,
-    Tooltip,
-    Popover,
-    TextField,
-    Button,
-    Dialog,
-    DialogTitle,
-    DialogContent,
-    DialogActions
+    Box, CircularProgress, IconButton, List, ListItem, ListItemButton,
+    ListItemText, ListItemIcon, Tooltip, Popover,
 } from '@mui/material';
 import Cookies from 'js-cookie';
 import { useSession } from "@/Context/deleteSession";
 import { useCurrentSession } from "@/Context/getcurrentSession";
 import { useGetSession } from "@/Context/sessionContext";
 import { fetchSessionItems } from "@/hook/getSession";
-import { reverse } from "dns";
-
 
 export const SessionList: React.FC = () => {
     const [loading, setLoading] = useState<boolean>(false);
@@ -36,17 +19,18 @@ export const SessionList: React.FC = () => {
     const [activePopover, setActivePopover] = useState<number | null>(null);
     const [renameId, setRenameId] = useState<number | null>(null);
     const [newName, setNewName] = useState<string>('');
+    const [error, setError] = useState<string | null>(null);
+    
     const router = useRouter();
     const pathname = usePathname();
     const API_LINK = process.env.NEXT_PUBLIC_BACKEND_DEV_URL;
     const token = Cookies.get('access_token');
+
     const { setDeletedSessionId }  = useSession();
     const { currentSessionId, setCurrentSessionId } = useCurrentSession();    
     const { getSession, setGetSession } = useGetSession();
 
-    const sessionData = useMemo(() => {
-        return [...getSession].reverse(); 
-    }, [getSession]);
+    const sessionData = useMemo(() => [...getSession].reverse(), [getSession]);
 
     useEffect(() => {
         if (pathname === "/Chat") {
@@ -54,15 +38,43 @@ export const SessionList: React.FC = () => {
         }
     }, [pathname]);
 
+    useEffect(() => {
+        const validateSession = async () => {
+            if (!token || pathname === "/Chat" || sessionData.length > 0) return;
+            
+            setLoading(true);
+            try {
+                const updatedSessions = await fetchSessionItems();
+                if (updatedSessions) {
+                    setGetSession(updatedSessions);
+                }
+            } catch (error) {
+                console.error('セッション取得エラー:', error);
+                setError('セッションの取得に失敗しました');
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        validateSession();
+    }, [token, pathname, setGetSession, sessionData.length]); 
 
     const refreshSessions = async () => {
+        if (!token) {
+            console.error('認証トークンが見つかりません');
+            router.push('/');
+            return;
+        }
+
         setLoading(true);
         try {
-            let updatedSessions = await fetchSessionItems();
-            updatedSessions = updatedSessions.reverse();
-            setGetSession(updatedSessions);
+            const updatedSessions = await fetchSessionItems();
+            if (updatedSessions) {
+                setGetSession(updatedSessions);
+            }
         } catch (error) {
-            console.error("Failed to refresh sessions:", error);
+            console.error('セッション更新エラー:', error);
+            setError('セッションの更新に失敗しました');
         } finally {
             setLoading(false);
         }
@@ -99,7 +111,6 @@ export const SessionList: React.FC = () => {
         handleClose();
     };
 
-
     const handleDelete = async (id: number) => {
         try {
             await fetch(`${API_LINK}/api/delete/session/${id}`, {
@@ -113,7 +124,7 @@ export const SessionList: React.FC = () => {
             refreshSessions();
         } catch (error) {
             throw new Error('Failed to delete session');
-        }finally {
+        } finally {
             handleClose();
         }
     };
@@ -139,12 +150,14 @@ export const SessionList: React.FC = () => {
             handleClose();
         }
     };
+
     const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement> ) => {
         if (e.key === 'Enter' && !e.shiftKey) {
-          e.preventDefault();
-          handleRenameSubmit(renameId!);
+            e.preventDefault();
+            handleRenameSubmit(renameId!);
         }
-      };
+    };
+
     return (
         <Box sx={{ overflowY: 'auto', height: '100%' }}>
             {loading ? (
@@ -155,10 +168,10 @@ export const SessionList: React.FC = () => {
                 <List>
                     {sessionData.map((item) => (
                         <ListItem key={item.id} disablePadding
-                        sx={{
-                            backgroundColor: item.id === currentSessionId ? 'rgba(25, 118, 210, 0.15)' : 'transparent',
-                            borderLeft: item.id === currentSessionId ? '4px solid #1976d2' : 'none',
-                        }}
+                            sx={{
+                                backgroundColor: item.id === currentSessionId ? 'rgba(25, 118, 210, 0.15)' : 'transparent',
+                                borderLeft: item.id === currentSessionId ? '4px solid #1976d2' : 'none',
+                            }}
                         >
                             <ListItemButton onClick={() => handleSubmit(item.id)}>
                                 <ListItemText primary={item.session_name}/>
@@ -207,35 +220,6 @@ export const SessionList: React.FC = () => {
                     ))}
                 </List>
             )}
-            <Dialog
-                open={renameId !== null}
-                onClose={handleRenameCancel}
-                maxWidth="sm"
-                fullWidth
-            >
-                <DialogTitle>セッション名の変更</DialogTitle>
-                <DialogContent>
-                    <TextField
-                        autoFocus
-                        fullWidth
-                        label="新しいセッション名"
-                        value={newName}
-                        onChange={(e) => setNewName(e.target.value)}
-                        onKeyDown={handleKeyDown}
-                        sx={{ mt: 1 }}
-                    />
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={handleRenameCancel}>キャンセル</Button>
-                    <Button 
-                        onClick={() => handleRenameSubmit(renameId!)}
-                        variant="contained"
-                        disabled={loading}
-                    >
-                        {loading ? <CircularProgress size={24} /> : '変更'}
-                    </Button>
-                </DialogActions>
-            </Dialog>
         </Box>
     );
 };
