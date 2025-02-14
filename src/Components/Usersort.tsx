@@ -1,18 +1,12 @@
 'use client'
 import React, { useState, useEffect } from "react";
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
-import TableContainer from "@mui/material/TableContainer";
-import TableHead from "@mui/material/TableHead";
-import TableRow from "@mui/material/TableRow";
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import axios from "axios";
 import Cookies from 'js-cookie';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/store/index';
-import { Modal, Box, Button, TextField, Typography, TableSortLabel } from "@mui/material";
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Modal, Box, Button, TextField, Typography, TableSortLabel } from "@mui/material";
 
 const API_LINK = process.env.NEXT_PUBLIC_BACKEND_DEV_URL;
 
@@ -153,7 +147,7 @@ export const UserTable: React.FC = () => {
             'Authorization': `Bearer ${Cookies.get('access_token')}`,
           },
         });
-        setRows(rows.filter(row => row.id !== id));
+        setRows((prevRows)=>prevRows.filter(row => row.id !== id));
       } catch (error) {
         console.error("Error deleting user:", error);
       }
