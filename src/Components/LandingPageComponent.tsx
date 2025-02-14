@@ -92,7 +92,7 @@ export default function LandingPageComponent() {
                 </motion.div>
             </Box>
 
-            <Box sx={{ justifyItems: "center" }}>
+            <Box sx={{ justifyItems: "center" }} marginBottom={"2em"}>
                 <Typography fontSize={"2em"} fontWeight={"bold"} style={{
                     textDecoration: "underline",
                     textDecorationColor: "yellow",
@@ -233,6 +233,37 @@ export default function LandingPageComponent() {
                 </Stack>
             </Box>
 
+            <Box sx={{ justifyItems: "center" }} marginBottom={"2em"}>
+                <Typography fontSize={"2em"} fontWeight={"bold"} style={{
+                    textDecoration: "underline",
+                    textDecorationColor: "yellow",
+                    textDecorationThickness: "0.5em",
+                    textUnderlineOffset: "-0.3em"
+                }}
+                    gutterBottom>
+                    開発背景
+                </Typography>
+                <Stack>
+                    <Typography gutterBottom>
+                        「京都デザイン&テクノロジー専門学校」は、2022年に開校した専門学校です。
+                        <br />
+                        新しい学校ゆえ制度が頻繁に変わっていたり、気軽に質問できる場所が少なかったりと、多数の問題を抱えています。
+                    </Typography>
+                    <Typography gutterBottom>
+                        また在籍する学生数が多くなるにつれ、情報が多くの場所に混在するようになり、情報の取得が困難になっています。
+                        <br />
+                        情報を得るには、Teamsに公開されている情報から探し出すか、教員の方に聞くしかありませんでした。
+                        <br />
+                        そこで、それらの情報を整理し、教員の方々の負担を軽減し、また学校生活がより便利になるようなシステムを開発しました。
+                    </Typography>
+                    <Typography gutterBottom>
+                        私たちは生成AIを活用し、「チャット」というインターフェースを用いることで
+                        <br />
+                        情報収集や各種申請を簡単に行えるようなシステムを作ることを目指しました。
+                    </Typography>
+                </Stack>
+            </Box>
+
             <Box sx={{ justifyItems: "center" }} marginY={"2em"}>
                 <Typography fontSize={"2em"} fontWeight={"bold"}>
                     学校生活を、もっと便利に。
@@ -240,7 +271,6 @@ export default function LandingPageComponent() {
                 <Typography fontSize={"1.1em"}>AIの力で、学生生活をもっとサポート。</Typography>
                 <UseButton />
             </Box>
-
             <LPFooter />
         </Box>
     </Box>
