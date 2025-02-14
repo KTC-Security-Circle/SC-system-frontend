@@ -20,9 +20,9 @@ const ADMIN_PAGES = [
     {
         title: "学校情報の編集",
         icon: <BorderColor />,
-        description: "学校情報を編集・削除します。",
+        description: "学校情報を編集します。",
         href: "/Markdown"
-    }
+    }//・削除も追加する
 ];
 
 function CardTitle({ title, icon }: { title: string, icon: ReactNode }) {
