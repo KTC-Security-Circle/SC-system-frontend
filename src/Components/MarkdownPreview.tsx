@@ -2,6 +2,7 @@ import React from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import breaks from 'remark-breaks';
+import { Box, Typography } from '@mui/material';
 import rehypeSlug from 'rehype-slug';
 import 'github-markdown-css/github-markdown.css';
 import './markdown.css';
@@ -25,9 +26,9 @@ const MarkdownPreview: React.FC<MarkdownPreviewProps> = ({ content = '' }) => {
 
   return (
     <>
-      <div
+      <Box
         className="markdown-body"
-        style={{
+        sx={{
           fontFamily: 'inherit',
           fontSize: 'inherit',
           backgroundColor: 'white', // 背景色を白に
@@ -42,9 +43,9 @@ const MarkdownPreview: React.FC<MarkdownPreviewProps> = ({ content = '' }) => {
           {content}
         </ReactMarkdown>
       ) : (
-        <p style={{ color: 'gray' }}>コンテンツがありません。</p> // 空の場合のメッセージ
+        <Typography variant="h5" sx={{ color: 'gray' }}>コンテンツがありません。</Typography> // 空の場合のメッセージ
       )}
-      </div>
+      </Box>
     </>
   );
 };
