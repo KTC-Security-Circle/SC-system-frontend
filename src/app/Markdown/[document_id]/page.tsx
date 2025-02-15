@@ -7,7 +7,7 @@ import  EditorButton from '@/Components/EditorButton';
 import { fetchMarkdown } from '@/api/fetchmd';
 import { PutMarkdown } from '@/api/putmd';
 import MarkdownPreview from '@/Components/MarkdownPreview';
-import { CircularProgress, Typography, Divider, Box, TextField, Button } from '@mui/material';
+import { CircularProgress, Typography, Divider, Box, TextField, Snackbar,Alert } from '@mui/material';
 import { BackButton } from "@/types/navigateback";
 import { NavigateBackButton } from "@/Components/NavigateBackButton";
 import { KeyboardReturn } from '@mui/icons-material';
@@ -20,8 +20,9 @@ const TextButtons: BackButton [] = [
 const MarkdownEditor = () => {
   const [markdownTitle, setMarkdownTitle] = useState<string>('');
   const [markdownValue, setMarkdownValue] = useState<string>('');
-  const [loading, setLoading] = useState<boolean>(true);
+  const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
+  
   const router = useParams();
   const document_id = Array.isArray(router.document_id) ? router.document_id[0] : router.document_id;
 
@@ -36,8 +37,9 @@ const MarkdownEditor = () => {
 
     try{
       await PutMarkdown(document_id as string, markdownTitle, markdownValue);
+      alert("保存に成功しました");
     }catch(error: any){
-      alert("保存に失敗しました");
+      setError("マークダウンの保存に失敗しました。");
     }
   };
 
@@ -45,13 +47,15 @@ const MarkdownEditor = () => {
 
     if (document_id) {
       const getMarkdown = async () => {
+        setLoading(true);
+        setError(null);
         try {
           const data = await fetchMarkdown(document_id as string);
           setMarkdownTitle(data.title);
           setMarkdownValue(data.contents);
+          
         } catch (error: any) {
           setError("マークダウンの読み込みに失敗しました。");
-          setLoading(false);
         } finally {
           setLoading(false);
         }
@@ -78,9 +82,18 @@ const MarkdownEditor = () => {
       );
     }
 
+    /**
+     * 今後実装
+     <Snackbar open={open} autoHideDuration={3000} onClose={() => setOpen(false)}>
+      <Alert onClose={() => setOpen(false)} severity="success">
+        保存に成功しました
+      </Alert>
+    </Snackbar>
+    */
 
   return (
     <Container>
+    {/* 成功メッセージをポップアップ表示 */}
       <NavigateBackButton TextButtons={TextButtons} />    
       <Box sx={{ display: "flex", justifyContent: "center" }}>
         <TextField
@@ -109,7 +122,7 @@ const MarkdownEditor = () => {
           }}
           />
       </Box>
-          <Box sx={{ display: "flex", justifyContent: "right", mr: 3 }}>
+          <Box sx={{ display: "flex", justifyContent: "flex-end", mr: 3 }}>
             <EditorButton SaveLink={SaveLink} onSave={handleSave} />
           </Box>
       <Box sx={{ p: 3 }}>

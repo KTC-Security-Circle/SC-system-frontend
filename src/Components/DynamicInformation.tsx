@@ -16,7 +16,7 @@ interface DynamicInformationProps {
 const DynamicInformation: React.FC<DynamicInformationProps> = ({ TextButtons }) => {
   const [markdownTitle, setMarkdownTitle] = useState<string>("");
   const [markdownContent, setMarkdownContent] = useState<string>("");
-  const [loading, setLoading] = useState<boolean>(true);
+  const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const router = useParams();
   const document_id = router.document_id;
@@ -25,13 +25,14 @@ const DynamicInformation: React.FC<DynamicInformationProps> = ({ TextButtons }) 
 
     if (document_id) {
       const getMarkdown = async () => {
+        setLoading(true);
+        setError(null);
         try {
           const data = await fetchMarkdown(document_id as string);
           setMarkdownTitle(data.title);
           setMarkdownContent(data.contents);
         } catch (error: any) {
           setError("マークダウンの読み込みに失敗しました。");
-          setLoading(false);
         } finally {
           setLoading(false);
         }
