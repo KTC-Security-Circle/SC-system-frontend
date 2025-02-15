@@ -7,7 +7,7 @@ import  EditorButton from '@/Components/EditorButton';
 import { fetchMarkdown } from '@/api/fetchmd';
 import { PutMarkdown } from '@/api/putmd';
 import MarkdownPreview from '@/Components/MarkdownPreview';
-import { CircularProgress, Typography, Divider, Box, TextField, Snackbar,Alert } from '@mui/material';
+import { CircularProgress, Typography, Divider, Box, TextField } from '@mui/material';
 import { BackButton } from "@/types/navigateback";
 import { NavigateBackButton } from "@/Components/NavigateBackButton";
 import { KeyboardReturn } from '@mui/icons-material';
@@ -39,6 +39,7 @@ const MarkdownEditor = () => {
       await PutMarkdown(document_id as string, markdownTitle, markdownValue);
       alert("保存に成功しました");
     }catch(error: any){
+      alert("保存に失敗しました");
       setError("マークダウンの保存に失敗しました。");
     }
   };
