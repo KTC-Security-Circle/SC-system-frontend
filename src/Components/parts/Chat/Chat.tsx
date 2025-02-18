@@ -9,11 +9,6 @@ import {
   Container,
   TextField,
   IconButton,
-  Typography,
-  List,
-  ListItem,
-  ListItemText,
-  Paper,
 } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
 import CircularProgress from '@mui/material/CircularProgress';

@@ -20,6 +20,7 @@ import {
   DialogContent,
   DialogActions,
   Button,
+  Link,
 } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
 import CircularProgress from '@mui/material/CircularProgress';
@@ -30,6 +31,9 @@ interface Message {
   content: string;
   sender: string;
   timestamp: string;
+  document_id?: {
+    [key: string]: string;
+  };
 }
 
 const API_LINK = process.env.NEXT_PUBLIC_BACKEND_DEV_URL;
@@ -94,6 +98,7 @@ export const DynamicChatComponent: React.FC = () => {
             content: msg.bot_reply,
             sender: 'bot',
             timestamp: msg.pub_data,
+            document_id: msg.document_id,
           },
         ]);
         setMessages(formattedMessages);
@@ -162,6 +167,7 @@ export const DynamicChatComponent: React.FC = () => {
         content: data.bot_reply,
         sender: 'bot',
         timestamp: new Date().toISOString(),
+        document_id: data.document_id,
       };
       setMessages((prevMessages) => [...prevMessages, botReply]);
     } catch (err) {
@@ -244,6 +250,28 @@ export const DynamicChatComponent: React.FC = () => {
                   <ListItemText primary={msg.content} sx={{ wordWrap: 'break-word' }} />
                 </Paper>
               </Box>
+              {msg.document_id && Object.entries(msg.document_id).map(([id, title]) => (
+                <Link
+                key={id}
+                href={`/documents/${id}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                sx={{
+                  mt: 1,
+                  mr: 1,
+                  fontSize: '0.8rem',
+                  color: '#1976d2',
+                  textDecoration: 'underline',
+                  display: 'block',
+                  '&:hover': {
+                    backgroundColor: 'transparent',
+                    textDecoration: 'underline',
+                  }
+                }}
+              >
+                {title}
+              </Link>
+              ))}
             </ListItem>
           ))}
           <div ref={bottomRef}/>
