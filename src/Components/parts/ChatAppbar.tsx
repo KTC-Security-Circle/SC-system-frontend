@@ -40,7 +40,7 @@ export const ChatAppbar: React.FC<ChatAppbarProps> = ({
   const handleLogout = async(e: React.MouseEvent<HTMLButtonElement>)=>{
     try {
       const res = await dispatch(logout());
-      router.push('/');
+      router.push('/Home');
       return res;
     } catch (error) {
       console.error("Logout failed:", error);
