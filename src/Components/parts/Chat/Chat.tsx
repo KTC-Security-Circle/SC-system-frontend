@@ -9,32 +9,26 @@ import {
   Container,
   TextField,
   IconButton,
-  Typography,
-  List,
-  ListItem,
-  ListItemText,
-  Paper,
+  CircularProgress
 } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
-import CircularProgress from '@mui/material/CircularProgress';
 import { fetchSessionItems } from '@/hook/getSession';
 import { useGetSession } from '@/Context/sessionContext';
-
-
+import LinearLoading from '@/Components/parts/LinearLoading';
 
 const API_LINK = process.env.NEXT_PUBLIC_BACKEND_DEV_URL;
 
 export const ChatComponent: React.FC = () => {
   const { user } = useSelector((state: RootState) => state.auth);
   const [message, setMessage] = useState<string>('');
-  const [loading,setLoading]=useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
   const router = useRouter();
   const { setGetSession } = useGetSession();
 
   const sendMessage = async (e: FormEvent<HTMLFormElement> | React.KeyboardEvent<HTMLDivElement>) => {
     e.preventDefault();
-    if (!message.trim() || !user) return;
     setLoading(true);
+    console.log("Loading state set to true");
     try {
       const token = Cookies.get('access_token');
       if (!token) {
@@ -65,6 +59,7 @@ export const ChatComponent: React.FC = () => {
         }
         const updatedSessions = await fetchSessionItems();
         setGetSession(updatedSessions); 
+        setLoading(false);
         router.push(`/Chat/${session_id}`);
       } else {
         const errorData = await res.json();
@@ -75,6 +70,7 @@ export const ChatComponent: React.FC = () => {
       console.error(err);
     } finally {
       setMessage('');
+      console.log("Loading state set to false");
       setLoading(false);
     }
   };
@@ -87,9 +83,27 @@ export const ChatComponent: React.FC = () => {
   };
 
   return (
-      <Container maxWidth="lg" sx={{ height: '100vh', display: 'flex', flexDirection: 'column', backgroundColor: '#e6ffff' }}>
-        <Box component="form" onSubmit={sendMessage} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', mb: 2, marginTop: 'auto',bottom: 0 }}>
-          <TextField
+    <Container maxWidth="lg" sx={{ height: '100vh', display:'flex', flexDirection: 'column', backgroundColor: '#e6ffff' }}>
+      <Box 
+        component="form" 
+        onSubmit={sendMessage} 
+        sx={{ 
+          display: 'flex', 
+          flexDirection: 'column', 
+          alignItems: 'center', 
+          justifyContent: 'center', 
+          width: '100%', 
+          mb: 2, 
+          marginTop: 'auto'
+        }}
+      >
+        {loading && (
+          <Box sx={{ width: '100%', mb: 1 }}>
+            <LinearLoading />
+          </Box>
+        )}
+        <Box sx={{ display: 'flex', alignItems: 'center', width: '100%' }}>
+          <TextField          
             id="message-input"
             name="message"
             fullWidth
@@ -97,9 +111,11 @@ export const ChatComponent: React.FC = () => {
             placeholder="Type a message..."
             multiline
             value={message}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setMessage(e.target.value)}
+            onChange={(e) => setMessage(e.target.value)}
             onKeyDown={handleKeyDown}
-            sx={{
+            disabled={loading}
+            sx={{ 
+              flexGrow: 1,
               '& .MuiOutlinedInput-root': {
                 backgroundColor: '#d8d8d8',
                 '& fieldset': {
@@ -114,11 +130,11 @@ export const ChatComponent: React.FC = () => {
               },
             }}
           />
-          <IconButton aria-label="Send" type="submit" >
+          <IconButton aria-label="Send" type="submit" sx={{ ml: 1 }}>
             <SendIcon />
           </IconButton>
-          {loading && <CircularProgress size={24} sx={{ ml: 2 }} />}
         </Box>
-      </Container>
+      </Box>
+    </Container>
   );
 };
