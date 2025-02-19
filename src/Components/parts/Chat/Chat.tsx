@@ -9,7 +9,6 @@ import {
   Container,
   TextField,
   IconButton,
-  CircularProgress
 } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
 import { fetchSessionItems } from '@/hook/getSession';
