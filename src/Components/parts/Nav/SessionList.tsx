@@ -5,7 +5,8 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import DriveFileRenameOutlineIcon from '@mui/icons-material/DriveFileRenameOutline';
 import {
     Box, CircularProgress, IconButton, List, ListItem, ListItemButton,
-    ListItemText, ListItemIcon, Tooltip, Popover,
+    ListItemText, ListItemIcon, Tooltip, Popover,Dialog,DialogTitle,
+    DialogContent, TextField, DialogActions, Button
 } from '@mui/material';
 import Cookies from 'js-cookie';
 import { useSession } from "@/Context/deleteSession";
@@ -220,6 +221,35 @@ export const SessionList: React.FC = () => {
                     ))}
                 </List>
             )}
+            <Dialog
+                open={renameId !== null}
+                onClose={handleRenameCancel}
+                maxWidth="sm"
+                fullWidth
+            >
+                <DialogTitle>セッション名の変更</DialogTitle>
+                <DialogContent>
+                    <TextField
+                        autoFocus
+                        fullWidth
+                        label="新しいセッション名"
+                        value={newName}
+                        onChange={(e) => setNewName(e.target.value)}
+                        onKeyDown={handleKeyDown}
+                        sx={{ mt: 1 }}
+                    />
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleRenameCancel}>キャンセル</Button>
+                    <Button 
+                        onClick={() => handleRenameSubmit(renameId!)}
+                        variant="contained"
+                        disabled={loading}
+                    >
+                        {loading ? <CircularProgress size={24} /> : '変更'}
+                    </Button>
+                </DialogActions>
+            </Dialog>
         </Box>
     );
 };
