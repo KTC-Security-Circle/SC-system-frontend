@@ -122,18 +122,25 @@ export const DynamicChatComponent: React.FC = () => {
       return;
     }
 
-    if (!session_id || Array.isArray(session_id)) {
-      return;
-    }
+    if (!session_id || Array.isArray(session_id)) return;
 
-    const optimisticMessage: Message = {
+    const userMesage:Message = {
       id: Date.now().toString(),
       content: message,
       sender: 'user',
       timestamp: new Date().toISOString(),
-    };
+    }
+    
+    const tempId = "temp_"+Date.now().toString();
+    const thinkingMessage:Message ={
+      id: tempId,
+      content: 'thinking...',
+      sender: 'bot',
+      timestamp: new Date().toISOString(),
+    }
 
-    setMessages([...messages, optimisticMessage]);
+
+    setMessages((prevMessages) => [...prevMessages, userMesage, thinkingMessage]);
     setLoading(true);
 
     try {
@@ -162,7 +169,7 @@ export const DynamicChatComponent: React.FC = () => {
         sender: 'bot',
         timestamp: new Date().toISOString(),
       };
-      setMessages((prevMessages) => [...prevMessages, botReply]);
+      setMessages((prevMessages) => prevMessages.map((msg) => msg.id === tempId ? botReply : msg));
     } catch (err) {
       setError('Failed to send message');
     } finally {
