@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, FormEvent,useRef } from 'react';
+import React, { useState, useEffect, FormEvent, useRef } from 'react';
 import Cookies from 'js-cookie';
 import { useRouter, useParams } from 'next/navigation';
 import Image from 'next/image';
@@ -22,8 +22,7 @@ import {
   Button,
 } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
-import CircularProgress from '@mui/material/CircularProgress';
-
+import LinearLoading from '@/Components/parts/LinearLoading';
 
 interface Message {
   id: string;
@@ -38,7 +37,7 @@ export const DynamicChatComponent: React.FC = () => {
   const [message, setMessage] = useState<string>('');
   const [messages, setMessages] = useState<Message[]>([]);
   const [error, setError] = useState<string | null>(null);
-  const [loading,setLoading]=useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
   const [isDeleted, setIsDeleted] = useState<boolean>(false);
   const router = useRouter();
   const { session_id } = useParams();
@@ -50,11 +49,11 @@ export const DynamicChatComponent: React.FC = () => {
     router.push('/Chat');
   };
 
-  useEffect(() =>{
-    if(deletedSessionId === Number(session_id)){
+  useEffect(() => {
+    if (deletedSessionId === Number(session_id)) {
       setIsDeleted(true);
     }
-  })
+  }, [deletedSessionId, session_id]);
 
   useEffect(() => {
     if (!session_id || Array.isArray(session_id)) {
@@ -109,11 +108,11 @@ export const DynamicChatComponent: React.FC = () => {
     fetchMessages();
   }, [session_id, router, token]);
 
-  useEffect(()=> {
-    if(bottomRef.current){
-      bottomRef.current.scrollIntoView({behavior: "smooth"});
+  useEffect(() => {
+    if (bottomRef.current) {
+      bottomRef.current.scrollIntoView({ behavior: 'smooth' });
     }
-  },[messages])
+  }, [messages]);
 
   const sendMessage = async (e: FormEvent<HTMLFormElement> | React.KeyboardEvent<HTMLDivElement>) => {
     e.preventDefault();
@@ -123,18 +122,25 @@ export const DynamicChatComponent: React.FC = () => {
       return;
     }
 
-    if (!session_id || Array.isArray(session_id)) {
-      return;
-    }
+    if (!session_id || Array.isArray(session_id)) return;
 
-    const optimisticMessage: Message = {
+    const userMesage:Message = {
       id: Date.now().toString(),
       content: message,
-      sender: 'user', 
+      sender: 'user',
       timestamp: new Date().toISOString(),
-    };
+    }
+    
+    const tempId = "temp_"+Date.now().toString();
+    const thinkingMessage:Message ={
+      id: tempId,
+      content: 'thinking...',
+      sender: 'bot',
+      timestamp: new Date().toISOString(),
+    }
 
-    setMessages([...messages, optimisticMessage]);
+
+    setMessages((prevMessages) => [...prevMessages, userMesage, thinkingMessage]);
     setLoading(true);
 
     try {
@@ -148,7 +154,7 @@ export const DynamicChatComponent: React.FC = () => {
         body: JSON.stringify({
           message: message,
           pub_data: new Date().toISOString(),
-          session_id: parseInt(session_id, 10), 
+          session_id: parseInt(session_id, 10),
         }),
       });
 
@@ -163,7 +169,7 @@ export const DynamicChatComponent: React.FC = () => {
         sender: 'bot',
         timestamp: new Date().toISOString(),
       };
-      setMessages((prevMessages) => [...prevMessages, botReply]);
+      setMessages((prevMessages) => prevMessages.map((msg) => msg.id === tempId ? botReply : msg));
     } catch (err) {
       setError('Failed to send message');
     } finally {
@@ -173,113 +179,58 @@ export const DynamicChatComponent: React.FC = () => {
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
-      if (e.key === 'Enter' && !e.shiftKey) {
-        e.preventDefault();
-        sendMessage(e);
-      }
-    };
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      sendMessage(e);
+    }
+  };
 
   if (error) return <div>{error}</div>;
 
   return (
     <Container maxWidth="lg" sx={{ height: '100vh', display: 'flex', flexDirection: 'column', backgroundColor: '#e6ffff' }}>
-      <Dialog
-        open={isDeleted}
-        onClose={handlemovehome}
-        maxWidth="sm"
-        fullWidth
-      >
+      <Dialog open={isDeleted} onClose={handlemovehome} maxWidth="sm" fullWidth>
         <DialogTitle>セッション削除</DialogTitle>
         <DialogContent>
-            <Box sx={{ p: 2 }}>
-                このセッションは削除されました。
-            </Box>
+          <Box sx={{ p: 2 }}>このセッションは削除されました。</Box>
         </DialogContent>
-          <DialogActions>
-              <Button onClick={handlemovehome} variant="contained">
-                  ホームに戻る
-              </Button>
-          </DialogActions>
+        <DialogActions>
+          <Button onClick={handlemovehome} variant="contained">
+            ホームに戻る
+          </Button>
+        </DialogActions>
       </Dialog>
+
       <Box sx={{ flexGrow: 1, overflowY: 'auto', mb: 2 }}>
-              <Toolbar />
+        <Toolbar />
         <List>
           {messages.map((msg: Message) => (
-            <ListItem
-              key={msg.id}
-              sx={{ justifyContent: msg.sender === 'user' ? 'flex-end' : 'flex-start' }}
-              >
-              {msg.sender === 'bot' && (
-                <Image src="/ai_icon.png" alt="AI" width={40} height={40}  />
-              )}
-              <Box sx={{ maxWidth: '75%', position: 'relative' }}>
-                <Paper
-                  elevation={1}
-                  sx={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    p: 1.4,
-                    m: 1,
-                    backgroundColor: msg.sender === 'user' ? '#d8d8d8' : '#d8d8d8',
-                    color: msg.sender === 'user' ? '#000000' : '#000000',
-                    textAlign: msg.sender === 'user' ? 'center' : 'center',
-                    position: 'relative',
-                    borderRadius: '20px',
-                    '&::after': {
-                      content: '""',
-                      position: 'absolute',
-                      top: '50%',
-                      transform: 'translateY(-50%)',
-                      borderWidth: '11px',
-                      borderStyle: 'solid',
-                      borderColor:
-                        msg.sender === 'user'
-                          ? 'transparent transparent transparent #d8d8d8'
-                          : 'transparent #d8d8d8 transparent transparent',
-                      right: msg.sender === 'user' ? '-20px' : 'auto',
-                      left: msg.sender !== 'user' ? '-20px' : 'auto',
-                    },
-                  }}
-                >
-                  <ListItemText primary={msg.content} sx={{ wordWrap: 'break-word' }} />
-                </Paper>
-              </Box>
+            <ListItem key={msg.id} sx={{ justifyContent: msg.sender === 'user' ? 'flex-end' : 'flex-start' }}>
+              {msg.sender === 'bot' && <Image src="/ai_icon.png" alt="AI" width={40} height={40} />}
+              <Paper sx={{ p: 1.4, m: 1, backgroundColor: '#d8d8d8', borderRadius: '20px' }}>
+                <ListItemText primary={msg.content} />
+              </Paper>
             </ListItem>
           ))}
-          <div ref={bottomRef}/>
+          <div ref={bottomRef} />
         </List>
       </Box>
-      <Box component="form" onSubmit={sendMessage} sx={{ position:'flex', bottom: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', mb:2 }}>
+      <Box sx={{ width: '100%', height: '4px', visibility: loading ? 'visible' : 'hidden', justifyContent: 'center', mb: 1 }}>
+        <LinearLoading />
+      </Box>
+
+      <Box component="form" onSubmit={sendMessage} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center',  mb: 2, marginTop: 'auto' }}>
         <TextField
-          id="message-input"
-          name="message"
           fullWidth
           variant="outlined"
           placeholder="Type a message..."
-          InputProps={{
-            sx: {
-              '&::placeholder': {
-                fontSize: '18px', // プレースホルダーのフォントサイズ
-              },
-              '& .MuiOutlinedInput-notchedOutline': {
-                borderColor: '#1E3C5F', // 枠線の色
-                borderRadius: '30px', // 角を丸く
-              },
-              '&:hover .MuiOutlinedInput-notchedOutline': {
-                borderColor: '#1E3C5F', // ホバー時の枠線の色
-              },
-              '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                borderColor: 'rgb(0, 123, 255)', // フォーカス時の枠線の色
-              },
-            },
-          }}
           multiline
           value={message}
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) => setMessage(e.target.value)}
+          onChange={(e) => setMessage(e.target.value)}
           onKeyDown={handleKeyDown}
-          sx={{
-            mx: 'auto',
-            '& .MuiOutlinedInput-root': {
+          disabled={loading}
+          sx={{ flexGrow: 1,
+              '& .MuiOutlinedInput-root': {
               backgroundColor: '#d8d8d8',
               '& fieldset': {
                 borderColor: 'transparent',
@@ -291,12 +242,11 @@ export const DynamicChatComponent: React.FC = () => {
                 borderColor: 'transparent',
               },
             },
-          }} 
+          }}
         />
-        <IconButton aria-label="Send" size="large" className="send-button" type="submit" sx={{ color: '#1E3C5F' }}>
-          <SendIcon fontSize="inherit" />
+        <IconButton type="submit">
+          <SendIcon />
         </IconButton>
-        {loading && <CircularProgress size={24} sx={{ ml: 2 }} />}
       </Box>
     </Container>
   );
