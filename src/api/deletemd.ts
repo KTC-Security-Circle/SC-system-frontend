@@ -2,7 +2,7 @@ import Cookies from "js-cookie";
 
 const API_LINK = process.env.NEXT_PUBLIC_BACKEND_DEV_URL;
 
-export const fetchMarkdown = async (document_id: string) => {
+export const DeleteMarkdown = async (document_id: string) => {
   try {
     const access_token = Cookies.get("access_token");
     if (!access_token) {
