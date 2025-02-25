@@ -23,7 +23,6 @@ export const DeleteMarkdown = async (document_id: string) => {
 
     return; // 最初の要素のcontentsを返す
   } catch (error) {
-    console.error(error);
     throw new Error("削除に失敗しました");
   }
 };

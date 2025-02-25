@@ -15,11 +15,13 @@ export const StudentInformationList:React.FC<LinkIDProps> =({LinkAdress, PageTit
     const router = useRouter();
 
     const [textButtons, setTextButtons] = useState<ListButton[]>([]);
-    const [loading, setLoading] = useState<boolean>(true);
+    const [loading, setLoading] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
       const getTitles = async () => {
+        setLoading(true);
+        setError(null);
         try {
           const documents = await fetchtitle();
           setTextButtons(documents);

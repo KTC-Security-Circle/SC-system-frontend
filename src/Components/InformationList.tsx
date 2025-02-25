@@ -5,7 +5,8 @@ import { fetchtitle } from "@/api/fetchtitle";
 import { ListButton } from "@/types/listbutton";
 import { 
   Box, Grid, Card, CardActionArea, CardContent, Typography, 
-  CircularProgress, Checkbox, Button, Alert 
+  CircularProgress, Checkbox, Button, Alert, 
+  Snackbar
 } from "@mui/material";
 import { useRouter } from "next/navigation";
 import { DeleteMarkdown } from "@/api/deletemd";
@@ -29,6 +30,8 @@ export const InformationList: React.FC<LinkIDProps> = ({ LinkAdress, PageTitle }
 
   useEffect(() => {
     const getTitles = async () => {
+      setAlertMessage(null);
+      setAlertSeverity(undefined);
       try {
         const documents = await fetchtitle();
         setTextButtons(documents);
@@ -52,37 +55,34 @@ export const InformationList: React.FC<LinkIDProps> = ({ LinkAdress, PageTitle }
 
   // 削除処理（仮の処理、API連携が必要）
   const handleDelete = async () => {
-    if (selectedIds.length === 0) {
-      alert("削除する項目を選択してください");
-      return;
-    }
+    setLoading(true);
+    setError(null);
 
     try {
-      // 実際にはAPI経由で削除処理を行う
-      console.log("削除対象のID:", selectedIds);
-      // APIリクエストを送信（例: await deleteDocuments(selectedIds);）
-      for (let i = 0; i < selectedIds.length; i++) {
-        await DeleteMarkdown(selectedIds[i]);
-        console.log("削除しました", selectedIds[i]);
-      }
+      await Promise.all(selectedIds.map((id) => DeleteMarkdown(id)));
       setAlertMessage("選択した項目を削除しました。");
       setAlertSeverity("success");
 
-      router.refresh(); // リロード
+      // データを再取得して状態を更新
+      const updatedDocuments = await fetchtitle();
+      setTextButtons(updatedDocuments);
 
       setSelectedIds([]); // 選択リセット
       setDeleteMode(false); // 削除モード終了
     } catch (error) {
-      console.error("削除に失敗しました", error);
       setAlertMessage("削除に失敗しました。");
       setAlertSeverity("error");
+    }
+    finally {
+      setLoading(false);
     }
   };
 
   if (loading) {
     return (
-      <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", minHeight: "70vh" }}>
+      <Box sx={{ display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", minHeight: "70vh" }}>
         <CircularProgress />
+        <Typography sx={{ mt: 2 }}>Loding...</Typography>
       </Box>
     );
   }
@@ -100,9 +100,15 @@ export const InformationList: React.FC<LinkIDProps> = ({ LinkAdress, PageTitle }
       <Typography variant="h5">{PageTitle}</Typography>
 
       {alertMessage && (
-        <Alert severity={alertSeverity} sx={{ mb: 2 }}>
-          {alertMessage}
-        </Alert>
+        <Snackbar
+          open={Boolean(alertMessage)}
+          autoHideDuration={3000}
+          onClose={() => setAlertMessage(null)}
+        >
+          <Alert severity={alertSeverity} sx={{ mb: 2 }}>
+            {alertMessage}
+          </Alert>
+        </Snackbar>
       )}
 
 

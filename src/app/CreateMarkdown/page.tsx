@@ -7,7 +7,7 @@ import MarkdownEditorUI from '@/Components/MarkdownEditorUI';
 import { BackButton } from "@/types/navigateback";
 import { KeyboardReturn } from '@mui/icons-material';
 import { NavigateBackButton } from "@/Components/NavigateBackButton";
-import { Container } from '@mui/material';
+import { Container, Box, Typography, CircularProgress } from '@mui/material';
 
 const TextButtons: BackButton [] = [
   { text: "戻る", color: "#616161", href: "/Admin/School", icon: <KeyboardReturn /> }
@@ -28,6 +28,9 @@ const MarkdownEditor: React.FC = () => {
 
   const handleSave = async () => {
 
+    setLoading(true);
+    setError(null);
+
     try {
       await InputMarkdown(markdownTitle, markdownValue, router);
       setOpen(true); // 成功時にSnackbarを開く
@@ -37,6 +40,15 @@ const MarkdownEditor: React.FC = () => {
         setLoading(false);
     }
   };
+
+  if (loading) {
+    return (
+      <Box sx={{ display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", minHeight: "70vh" }}>
+        <CircularProgress />
+        <Typography sx={{ mt: 2 }}>Loding...</Typography>
+      </Box>
+    );
+  }
 
   return (
     <Container>

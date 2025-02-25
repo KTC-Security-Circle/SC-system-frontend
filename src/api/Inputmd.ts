@@ -38,11 +38,9 @@ export const InputMarkdown = async (
     }
 
     response.json().then((data) => {
-        console.log(data);
         router.push(`/Information/${data.id}`);
     });
     } catch (error) {
-      console.error("エラー:", error);
       throw new Error("マークダウンの保存に失敗しました");
     }
   };

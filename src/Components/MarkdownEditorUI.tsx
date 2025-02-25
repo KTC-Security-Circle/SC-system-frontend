@@ -28,8 +28,9 @@ const MarkdownEditorUI: React.FC<MarkdownEditorUIProps> = ({
 }) => {
   if (loading) {
     return (
-      <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", minHeight: "70vh" }}>
+      <Box sx={{ display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", minHeight: "70vh" }}>
         <CircularProgress />
+        <Typography sx={{ mt: 2 }}>Loding...</Typography>
       </Box>
     );
   }
@@ -53,6 +54,7 @@ const MarkdownEditorUI: React.FC<MarkdownEditorUIProps> = ({
 
       <Box sx={{ display: "flex", justifyContent: "center" }}>
         <TextField
+          label="タイトル"
           variant="standard"
           value={markdownTitle}
           onChange={(e) => setMarkdownTitle(e.target.value)}
