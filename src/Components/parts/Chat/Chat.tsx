@@ -14,6 +14,7 @@ import SendIcon from '@mui/icons-material/Send';
 import { fetchSessionItems } from '@/hook/getSession';
 import { useGetSession } from '@/Context/sessionContext';
 import LinearLoading from '@/Components/parts/LinearLoading';
+import ChatTemplateList from '@/Components/parts/Chat/ChatTemplate';
 
 const API_LINK = process.env.NEXT_PUBLIC_BACKEND_DEV_URL;
 
@@ -81,8 +82,13 @@ export const ChatComponent: React.FC = () => {
     }
   };
 
+  const handleTemplateSelect = (templateMessage: string) => {
+    setMessage(templateMessage);
+  }
+
   return (
     <Container maxWidth="lg" sx={{ height: '100vh', display:'flex', flexDirection: 'column', backgroundColor: '#e6ffff' }}>
+      <ChatTemplateList onTemplateSelect={handleTemplateSelect} />
       <Box 
         component="form" 
         onSubmit={sendMessage} 
