@@ -45,8 +45,9 @@ const DynamicInformation: React.FC<DynamicInformationProps> = ({ TextButtons }) 
 
     if (loading) {
       return (
-        <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", minHeight: "70vh" }}>
+        <Box sx={{ display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", minHeight: "70vh" }}>
           <CircularProgress />
+          <Typography sx={{ mt: 2 }}>Loding...</Typography>
         </Box>
       );
     }

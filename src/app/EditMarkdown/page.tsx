@@ -6,7 +6,7 @@ import { InformationList } from "@/Components/InformationList";
 import { KeyboardReturn } from '@mui/icons-material';
 import { Container } from "@mui/material";
 
-const LinkAdress: string = "Markdown";
+const LinkAdress: string = "EditMarkdown";
 const PageTitle: string = "学校情報の編集";
 
 const TextButtons: BackButton [] = [
