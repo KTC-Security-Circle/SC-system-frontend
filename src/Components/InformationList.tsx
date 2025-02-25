@@ -106,27 +106,28 @@ export const InformationList: React.FC<LinkIDProps> = ({ LinkAdress, PageTitle }
       )}
 
 
-      {/* 削除モードの切り替えボタン */}
-      <Button 
-        variant="contained" 
-        color={deleteMode ? "error" : "primary"} 
-        onClick={() => setDeleteMode(!deleteMode)} 
-        sx={{ mb: 2 }}
-      >
-        {deleteMode ? "キャンセル" : "削除モード"}
-      </Button>
-
-      {deleteMode && (
+      <Box sx={{ display: "flex", justifyContent: "flex-end", gap: 2, mb: 2 }}>
         <Button 
           variant="contained" 
-          color="secondary" 
-          onClick={handleDelete} 
-          sx={{ ml: 2 }}
-          disabled={selectedIds.length === 0}
+          color={deleteMode ? "error" : "primary"} 
+          onClick={() => setDeleteMode(!deleteMode)}
         >
-          選択した項目を削除
+          {deleteMode ? "キャンセル" : "削除モード"}
         </Button>
-      )}
+        
+        {deleteMode && (
+          <Button 
+            variant="contained" 
+            color="secondary" 
+            onClick={handleDelete} 
+            disabled={selectedIds.length === 0}
+          >
+            選択した項目を削除
+          </Button>
+        )}
+
+      </Box>
+
 
       <Grid container spacing={2} sx={{  margin: "auto" }}>
         {textButtons.map((btn) => (
