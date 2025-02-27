@@ -36,8 +36,9 @@ export const StudentInformationList:React.FC<LinkIDProps> =({LinkAdress, PageTit
     
     if (loading) {
       return (
-        <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", minHeight: "70vh" }}>
+        <Box sx={{ display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", minHeight: "70vh" }}>
           <CircularProgress />
+          <Typography sx={{ mt: 2 }}>Loading...</Typography>
         </Box>
       );
     }
