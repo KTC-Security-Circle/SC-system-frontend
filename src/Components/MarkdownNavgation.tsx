@@ -15,14 +15,14 @@ const ADMIN_PAGES = [
         title: "学校情報の新規作成",
         icon: <OpenInNew />,
         description: "学校情報の新規作成をします。",
-        href: "/Markdown"
+        href: "/CreateMarkdown"
     },
     {
         title: "学校情報の編集",
         icon: <BorderColor />,
-        description: "学校情報を編集します。",
-        href: "/Markdown"
-    }//・削除も追加する
+        description: "学校情報を編集・削除します。",
+        href: "/EditMarkdown"
+    }
 ];
 
 function CardTitle({ title, icon }: { title: string, icon: ReactNode }) {

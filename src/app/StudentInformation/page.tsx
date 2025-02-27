@@ -2,7 +2,7 @@
 
 import { BackButton } from "@/types/navigateback";
 import { NavigateBackButton } from "@/Components/NavigateBackButton";
-import { InformationList } from "@/Components/InformationList";
+import { StudentInformationList } from "@/Components/StudentInformationList";
 import { KeyboardReturn } from '@mui/icons-material';
 import { Container } from "@mui/material";
 
@@ -18,7 +18,7 @@ export default function Information() {
   return (
     <Container>
         <NavigateBackButton TextButtons={TextButtons} />
-        <InformationList LinkAdress={LinkAdress} PageTitle={PageTitle} />
+        <StudentInformationList LinkAdress={LinkAdress} PageTitle={PageTitle} />
     </Container>
   );
 }
